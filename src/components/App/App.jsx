@@ -18,18 +18,17 @@ import RegisterPage from "../RegisterPage/RegisterPage";
 import { ColorModeContext, useMode } from "../../theme";
 import { CssBaseline, ThemeProvider, Box } from "@mui/material";
 // //global components
-import Topbar from "./../Global/Topbar";
+import Topbar from "../Global/Topbar";
 import Sidebar from "../Global/Sidebar";
 // //all scenes
 import Dashboard from "../Dashboard/Dashboard";
-// import Menu from "./scenes/Menu/Menu.jsx";
-// import Inventory from "./scenes/Inventory/Inventory.jsx";
-// import Orders from "./scenes/Orders/Orders";
-// import Team from "./scenes/Team/Team.jsx";
-// import Sales from "./scenes/Sales/Sales.jsx";
-// import Contacts from "./scenes/Contacts/Contacts.jsx";
-// import Graphs from "./scenes/Graphs/Graphs.jsx";
-// import Calendar from "./scenes/Calendar/Calendar.jsx";
+import Menu from "../Menu/Menu";
+import Inventory from "../Inventory/Inventory";
+import Orders from "../Orders/Orders";
+import Team from "../Team/Team";
+import Contacts from "../Contacts/Contacts";
+import Graphs from "../Graphs/Graphs";
+import Calendar from "../Calendar/Calendar";
 
 function App() {
   //giving app access to theme and color mode
@@ -51,82 +50,100 @@ function App() {
           {/* resets css to baseline */}
           <CssBaseline />
           <Box className="app">
-            {/* <Sidebar display="flex" height="100vh" /> */}
             <Switch>
               {/* Visiting localhost:3000 will redirect to localhost:3000/home */}
-              <Redirect exact from="/" to="/home" />
+              {/* <Redirect exact from="/" to="/dashboard" /> */}
 
               {/* Visiting localhost:3000/about will show the about page. */}
-              <Route
+              {/* <Route
                 // shows AboutPage at all times (logged in or not)
                 exact
                 path="/about"
               >
                 <AboutPage />
-              </Route>
+              </Route> */}
 
-              <ProtectedRoute
-                // logged in shows InfoPage else shows LoginPage
-                exact
-                path="/info"
-              ></ProtectedRoute>
-
-              <Route exact path="/login">
+              {/* <Route exact path="/login">
                 {user.id ? (
                   // If the user is already logged in,
-                  // redirect to the /home page
+                  // redirect to the /dashboard page
                   <Redirect to="/dashboard" />
                 ) : (
                   // Otherwise, show the login page
                   <LoginPage />
                 )}
-              </Route>
+              </Route> */}
 
-              <Route exact path="/registration">
+              {/* <Route exact path="/registration">
                 {user.id ? (
                   // If the user is already logged in,
-                  // redirect them to the /home page
-                  <Redirect to="/home" />
+                  // redirect them to the /dashboard page
+                  <Redirect to="/dashboard" />
                 ) : (
                   // Otherwise, show the registration page
                   <RegisterPage />
                 )}
-              </Route>
+              </Route> */}
 
               {/* For protected routes, the view could show one of several things on the same route.
             Visiting localhost:3000/user will show the UserPage if the user is logged in.
             If the user is not logged in, the ProtectedRoute will show the LoginPage (component).
             Even though it seems like they are different pages, the user is always on localhost:3000/user */}
-              <ProtectedRoute
+              {/* <ProtectedRoute
                 // logged in shows home else shows LoginPage
                 exact
-                path="/home"
+                path="/"
               >
-                <UserPage />
-              </ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute> */}
 
-              {/* <Route exact path="/home">
-            {user.id ? (
-              // If the user is already logged in,
-              // redirect them to the /user page
-              <Redirect to="/user" />
-            ) : (
-              // Otherwise, show the Landing page
-              <LandingPage />
-            )}
-          </Route> */}
-              <Sidebar display="flex" height="100vh" />
-
-              {/* content to show if the user is logged in */}
-              <Box>
-                <ProtectedRoute
-                  // logged in shows home else shows LoginPage
-                  exact
-                  path="/dashboard"
+              {/* <Route exact path="/">
+                {user.id ? (
+                  // If the user is already logged in,
+                  // redirect them to the /dashboard page
+                  <Redirect to="/dashboard" />
+                ) : (
+                  // Otherwise, show the Landing page
+                  <LandingPage />
+                )}
+              </Route> */}
+              <Box className="app">
+                <Sidebar display="flex" height="100vh" />
+                <Box
+                  className="content"
+                  width="95vw"
+                  sx={{ m: "auto", pl: "80px" }}
                 >
-                  <Dashboard />
-                </ProtectedRoute>
+                  <Topbar />
+
+                  <ProtectedRoute exact path="/dashboard">
+                    <Dashboard />
+                  </ProtectedRoute>
+                  <ProtectedRoute exact path="/menu">
+                    <Menu />
+                  </ProtectedRoute>
+                  <ProtectedRoute exact path="/inventory">
+                    <Inventory />
+                  </ProtectedRoute>
+                  <ProtectedRoute exact path="/team">
+                    <Team />
+                  </ProtectedRoute>
+
+                  <ProtectedRoute exact path="/orders">
+                    <Orders />
+                  </ProtectedRoute>
+                  <ProtectedRoute exact path="/contacts">
+                    <Contacts />
+                  </ProtectedRoute>
+                  <ProtectedRoute exact path="/calendar">
+                    <Calendar />
+                  </ProtectedRoute>
+                  <ProtectedRoute exact path="/graphs">
+                    <Graphs />
+                  </ProtectedRoute>
+                </Box>
               </Box>
+
               {/* If none of the other routes matched, we will show a 404. */}
               <Route>
                 <h1>404</h1>
