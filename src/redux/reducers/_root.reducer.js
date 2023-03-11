@@ -4,6 +4,7 @@ import user from "./user.reducer";
 import showTeamForm from "./teamForm.reducer";
 import showContactsForm from "./contactsForm.reducer";
 import inventory from "./inventory.reducer";
+import newUserSetup from "./newUserSetup.reducer";
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   showTeamForm, // will be able to toggle the team form
   showContactsForm, //will be able to toggle the contacts form
   inventory, //allows access to the inventory
+  newUserSetup,
 });
 
 export default rootReducer;

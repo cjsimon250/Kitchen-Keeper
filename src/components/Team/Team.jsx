@@ -6,7 +6,7 @@ import { tokens } from "../../theme";
 import { mockDataTeam } from "../../data/mockData";
 import { Button } from "@mui/material";
 import { useDispatch } from "react-redux";
-import AddTeamMemberForm from "./AddTeamMemberForm";
+import AddTeamMemberForm from "./AddTeamMemberForm/AddTeamMemberForm";
 const Team = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
