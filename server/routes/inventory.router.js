@@ -12,7 +12,7 @@ router.get("/", (req, res) => {
       const companyId = result.rows[0].id;
       const queryText2 = `SELECT * FROM inventory WHERE company_id = $1;`;
 
-      return pool.query(queryText2, [company_id]);
+      return pool.query(queryText2, [companyId]);
     })
     .then(() => res.sendStatus(200))
     .catch((err) => {

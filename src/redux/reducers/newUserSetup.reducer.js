@@ -1,6 +1,16 @@
 import { combineReducers } from "redux";
 
 // * Reducer for displaying form to populate Inventory
+const showInitialWelcome = (state = false, action) => {
+  switch (action.type) {
+    case "SET_SHOW_INITIAL_WELCOME":
+      return action.payload;
+    default:
+      return state;
+  }
+};
+
+// * Reducer for displaying form to populate Inventory
 const showInitialInventoryForm = (state = false, action) => {
   switch (action.type) {
     case "SET_SHOW_INITIAL_INVENTORY_FORM":
@@ -23,4 +33,5 @@ const showInitialMenuForm = (state = false, action) => {
 export default combineReducers({
   showInitialInventoryForm,
   showInitialMenuForm,
+  showInitialWelcome,
 });
