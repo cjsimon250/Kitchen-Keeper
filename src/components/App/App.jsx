@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from "react-redux";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 
 import AboutPage from "../AboutPage/AboutPage";
-import UserPage from "../UserPage/UserPage";
 import LandingPage from "../LandingPage/LandingPage";
 import LoginPage from "../LoginPage/LoginPage";
 import RegisterPage from "../RegisterPage/RegisterPage";
@@ -52,18 +51,18 @@ function App() {
           <Box className="app">
             <Switch>
               {/* Visiting localhost:3000 will redirect to localhost:3000/home */}
-              {/* <Redirect exact from="/" to="/dashboard" /> */}
+              <Redirect exact from="/" to="/dashboard" />
 
               {/* Visiting localhost:3000/about will show the about page. */}
-              {/* <Route
+              <Route
                 // shows AboutPage at all times (logged in or not)
                 exact
                 path="/about"
               >
                 <AboutPage />
-              </Route> */}
+              </Route>
 
-              {/* <Route exact path="/login">
+              <Route exact path="/login">
                 {user.id ? (
                   // If the user is already logged in,
                   // redirect to the /dashboard page
@@ -72,9 +71,9 @@ function App() {
                   // Otherwise, show the login page
                   <LoginPage />
                 )}
-              </Route> */}
+              </Route>
 
-              {/* <Route exact path="/registration">
+              <Route exact path="/registration">
                 {user.id ? (
                   // If the user is already logged in,
                   // redirect them to the /dashboard page
@@ -83,21 +82,21 @@ function App() {
                   // Otherwise, show the registration page
                   <RegisterPage />
                 )}
-              </Route> */}
+              </Route>
 
               {/* For protected routes, the view could show one of several things on the same route.
-            Visiting localhost:3000/user will show the UserPage if the user is logged in.
+            Visiting localhost:3000/user will show the Dashboard if the user is logged in.
             If the user is not logged in, the ProtectedRoute will show the LoginPage (component).
-            Even though it seems like they are different pages, the user is always on localhost:3000/user */}
-              {/* <ProtectedRoute
+            Even though it seems like they are different pages, the user is always on localhost:3000/dashboard */}
+              <ProtectedRoute
                 // logged in shows home else shows LoginPage
                 exact
                 path="/"
               >
                 <Dashboard />
-              </ProtectedRoute> */}
+              </ProtectedRoute>
 
-              {/* <Route exact path="/">
+              <Route exact path="/">
                 {user.id ? (
                   // If the user is already logged in,
                   // redirect them to the /dashboard page
@@ -106,15 +105,17 @@ function App() {
                   // Otherwise, show the Landing page
                   <LandingPage />
                 )}
-              </Route> */}
+              </Route>
               <Box className="app">
-                <Sidebar display="flex" height="100vh" />
+                {/* only show the sidebar if the user is logged in */}
+                {user.id && <Sidebar display="flex" height="100vh" />}
                 <Box
                   className="content"
                   width="95vw"
                   sx={{ m: "auto", pl: "80px" }}
                 >
-                  <Topbar />
+                  {/* only show the topbar if the user is logged in */}
+                  {user.id && <Topbar />}
 
                   <ProtectedRoute exact path="/dashboard">
                     <Dashboard />
