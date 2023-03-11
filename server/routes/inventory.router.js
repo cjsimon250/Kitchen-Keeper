@@ -2,17 +2,19 @@ const express = require("express");
 const pool = require("../modules/pool");
 const router = express.Router();
 
-/**
- * GET route template
- */
+//Get all of the inventory associated with the user who is logged in
 router.get("/", (req, res) => {
-  // GET route code here
-  const sqlText = `SELECT * FROM item`;
+  //get id of the company belonging to the user
+  const queryText = `SELECT * FROM company WHERE user_id = $1;`;
   pool
-    .query(sqlText)
+    .query(queryText, [req.user.id])
     .then((result) => {
-      res.send(result.rows);
+      const companyId = result.rows[0].id;
+      const queryText2 = `SELECT * FROM inventory WHERE company_id = $1;`;
+
+      return pool.query(queryText2, [company_id]);
     })
+    .then(() => res.sendStatus(200))
     .catch((err) => {
       console.log("Error executing SQL query", sqlText, " : ", err);
       res.sendStatus(500);

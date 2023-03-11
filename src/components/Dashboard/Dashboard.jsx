@@ -1,7 +1,14 @@
 import Header from "../Header/Header";
 import { Box } from "@mui/system";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 const Dashboard = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch({ type: "FETCH_INVENTORY" });
+  }, [dispatch]);
   return (
     // HEADER
     <Box m="20px">

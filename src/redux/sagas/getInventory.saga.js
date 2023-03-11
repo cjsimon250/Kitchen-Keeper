@@ -9,6 +9,7 @@ function* getInventorySaga() {
 function* fetchInventory() {
   try {
     const response = yield axios.get("/api/inventory");
+    yield console.log(response.data);
     yield put({ type: "SET_INVENTORY", payload: response.data });
   } catch (error) {
     console.log("error in fetchInventory", error);
