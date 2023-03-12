@@ -10,14 +10,20 @@ const Dashboard = () => {
 
   //Fetching inventory on page load to check if user is new or not
   useEffect(() => {
+    console.log("Inventory:", inventory);
     dispatch({ type: "FETCH_INVENTORY" });
   }, [dispatch]);
 
   //If the current inventory is empty (user is new) then display
   //the add item to inventory form
   useEffect(() => {
-    dispatch({ type: "SET_SHOW_INITIAL_WELCOME", payload: true });
-  }, [inventory === []]);
+    if (inventory.length === 0) {
+      console.log("showInitialWelcome:", inventory.showInitialWelcome);
+      dispatch({ type: "SET_SHOW_INITIAL_WELCOME", payload: true });
+    } else {
+      dispatch({ type: "SET_SHOW_INITIAL_WELCOME", payload: false });
+    }
+  }, [inventory, dispatch]);
 
   return (
     // HEADER

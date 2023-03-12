@@ -52,6 +52,10 @@ function NewUserInventoryForm() {
   //Function to close the add to inventory form and open the menu form via redux
   const handleNext = () => {
     dispatch({
+      type: "SET_SHOW_INITIAL_WELCOME",
+      payload: false,
+    });
+    dispatch({
       type: "SET_SHOW_INITIAL_MENU_FORM",
       payload: true,
     });

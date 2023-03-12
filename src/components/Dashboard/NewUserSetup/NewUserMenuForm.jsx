@@ -9,7 +9,6 @@ import RadioGroup from "@mui/material/RadioGroup/RadioGroup";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import NativeSelect from "@mui/material/NativeSelect";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { FormControl, FormControlLabel, FormLabel, Radio } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -42,7 +41,6 @@ function NewUserMenuForm() {
     <Box>
       <Dialog
         open={showMenuForm}
-        onClose={handleClose}
         sx={{
           "& .MuiPaper-root": {
             backgroundColor: colors.khakiAccent[800],
