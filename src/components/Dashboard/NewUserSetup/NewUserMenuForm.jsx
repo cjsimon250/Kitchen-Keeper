@@ -8,8 +8,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import RadioGroup from "@mui/material/RadioGroup/RadioGroup";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import NativeSelect from "@mui/material/NativeSelect";
-import SelectInput from "@mui/material/Select/SelectInput";
 import Select from "@mui/material/Select";
 import { FormControl, FormControlLabel, FormLabel, Radio } from "@mui/material";
 import { useSelector } from "react-redux";
@@ -34,7 +32,7 @@ function NewUserMenuForm() {
   //menuItemToSend.ingredientInformation array
   const [ingredientObject, setIngredientObject] = useState({
     ingredientName: "",
-    quantity: 0,
+    quantity: 1,
     unit: "Lb",
   });
 
@@ -81,9 +79,36 @@ function NewUserMenuForm() {
     });
   }
 
+  //Function to display previously added ingredients to the user
+
+  function displayAddedIngredients() {
+    return menuItemToSend.ingredients.map((ingredient) => {
+      return (
+        <Box key={ingredient.ingredientName}>
+          <li>
+            Ingredient: {ingredient.ingredientName} Quantity:{" "}
+            {ingredient.quantity} {ingredient.unit}
+          </li>
+        </Box>
+      );
+    });
+  }
+
   //Function to add the dish to the data base
-  function handleAddMenuItem() {
-    console.log(`menuItemToSend:`, menuItemToSend);
+  function handlePostMenuItem() {
+    //Posting to the database
+    dispatch({
+      type: "POST_MENU",
+      payload: menuItemToSend,
+    });
+
+    //Clearing all inputs and ingredients list
+    setMenuItemToSend({
+      dish: "",
+      image: "",
+      price: 0,
+      ingredients: [],
+    });
   }
 
   return (
@@ -174,7 +199,7 @@ function NewUserMenuForm() {
                   })
                 }
               >
-                {/* Mappng through all previously added ingredients */}
+                {/* Mappng through all previously added ingredients to show options*/}
                 {showAllIngredients()}
               </Select>
               <TextField
@@ -224,12 +249,17 @@ function NewUserMenuForm() {
               </Box>
             </FormControl>
           </Box>
+          {/* Displaying a list of previously added ingredients */}
+          <DialogTitle variant="h5" color={colors.greenAccent[400]}>
+            Added Ingredients:
+          </DialogTitle>
+          <ul>{displayAddedIngredients()}</ul>
         </DialogContent>
         <DialogActions>
           <Button id="add-btn" onClick={handleAddIngredient}>
-            Add Another Ingredient
+            Add Ingredient
           </Button>
-          <Button id="cancel-btn" onClick={handleAddMenuItem}>
+          <Button id="cancel-btn" onClick={handlePostMenuItem}>
             Add Dish
           </Button>
           <Button id="done-btn" onClick={handleClose}>
