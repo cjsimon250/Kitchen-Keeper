@@ -9,6 +9,8 @@ import RadioGroup from "@mui/material/RadioGroup/RadioGroup";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import NativeSelect from "@mui/material/NativeSelect";
+import SelectInput from "@mui/material/Select/SelectInput";
+import Select from "@mui/material/Select";
 import { FormControl, FormControlLabel, FormLabel, Radio } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -20,21 +22,69 @@ function NewUserMenuForm() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  //variable to show whether the add contact form is showing
+  //Variable to show whether the add contact form is showing
   const showMenuForm = useSelector(
     (store) => store.newUserSetup.showInitialMenuForm
   );
 
-  //variable for storing ingredients previously added by user
-  const [ingredients, setIngredients] = useState([]);
+  //Variable for storing ingredients previously added by user
+  const ingredients = useSelector((store) => store.inventory);
 
-  //function to close the add contact form via redux
+  //Variable for storing the single ingredient object that will then be added to
+  //menuItemToSend.ingredientInformation array
+  const [ingredientObject, setIngredientObject] = useState({
+    ingredientName: "",
+    quantity: 0,
+    unit: "Lb",
+  });
+
+  //Variable for storing dish to send to database
+  // **These to values are set so that on first render they are considered controlled**
+  const [menuItemToSend, setMenuItemToSend] = useState({
+    dish: "",
+    image: "",
+    price: 0,
+    ingredients: [],
+  });
+
+  //Function to close the add contact form via redux
   const handleClose = () => {
     dispatch({
       type: "SET_SHOW_INITIAL_MENU_FORM",
       payload: false,
     });
   };
+
+  //Function for returning a MenuItem of all previously added ingredients
+  //for the user to select from
+  function showAllIngredients() {
+    return ingredients.map((ingredient) => (
+      <MenuItem key={ingredient.id} value={ingredient.item}>
+        {ingredient.item}
+      </MenuItem>
+    ));
+  }
+
+  //Function to handle the adding new ingredient
+  function handleAddIngredient() {
+    //Adding the current ingredientObject to the ingredients array
+    setMenuItemToSend({
+      ...menuItemToSend,
+      ingredients: [...menuItemToSend.ingredients, ingredientObject],
+    });
+
+    //Clearing the ingredient object
+    setIngredientObject({
+      ingredientName: "",
+      quantity: 0,
+      unit: "Lb",
+    });
+  }
+
+  //Function to add the dish to the data base
+  function handleAddMenuItem() {
+    console.log(`menuItemToSend:`, menuItemToSend);
+  }
 
   return (
     //Form to add information about menu items
@@ -49,7 +99,7 @@ function NewUserMenuForm() {
             backgroundColor: colors.orangeAccent[500],
           },
           "& #done-btn": {
-            backgroundColor: colors.greenAccent[400],
+            backgroundColor: colors.greenAccent[500],
           },
           "& .MuiButton-textPrimary": {
             color: `e0e0e0`,
@@ -68,6 +118,13 @@ function NewUserMenuForm() {
             type="text"
             fullWidth
             variant="standard"
+            value={menuItemToSend.dish}
+            onChange={(event) =>
+              setMenuItemToSend({
+                ...menuItemToSend,
+                dish: event.target.value,
+              })
+            }
           />
           <TextField
             autoFocus
@@ -77,16 +134,49 @@ function NewUserMenuForm() {
             type="text"
             fullWidth
             variant="standard"
+            value={menuItemToSend.image}
+            onChange={(event) =>
+              setMenuItemToSend({
+                ...menuItemToSend,
+                image: event.target.value,
+              })
+            }
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="price"
+            label="Price of Dish"
+            type="number"
+            variant="standard"
+            inputProps={{ min: 0 }}
+            value={menuItemToSend.price}
+            onChange={(event) =>
+              setMenuItemToSend({
+                ...menuItemToSend,
+                price: event.target.value,
+              })
+            }
           />
           <Box display="inline-flex">
             {/* Selecting from list of previously added ingredients */}
             <FormControl sx={{ mt: "10px" }}>
               <InputLabel>Ingredient</InputLabel>
-              <NativeSelect
+              <Select
                 margin="dense"
                 id="quantity"
                 label="Ingredient Name"
-              ></NativeSelect>
+                value={ingredientObject.ingredientName}
+                onChange={(event) =>
+                  setIngredientObject({
+                    ...ingredientObject,
+                    ingredientName: event.target.value,
+                  })
+                }
+              >
+                {/* Mappng through all previously added ingredients */}
+                {showAllIngredients()}
+              </Select>
               <TextField
                 autoFocus
                 margin="dense"
@@ -94,12 +184,30 @@ function NewUserMenuForm() {
                 label="Quantity In Dish"
                 type="number"
                 variant="standard"
+                inputProps={{ min: 1 }}
+                value={ingredientObject.quantity}
+                onChange={(event) =>
+                  setIngredientObject({
+                    ...ingredientObject,
+                    quantity: event.target.value,
+                  })
+                }
               />
-              {/* </FormControl> */}
+
               <Box sx={{ mt: "10px", ml: "30px" }}>
-                {/* <FormControl> */}
                 <FormLabel id="access">Unit of Measurement</FormLabel>
-                <RadioGroup row defaultValue="Lb" name="access-radio-btn-group">
+                <RadioGroup
+                  row
+                  defaultValue="Lb"
+                  name="access-radio-btn-group"
+                  value={ingredientObject.unit}
+                  onChange={(event) =>
+                    setIngredientObject({
+                      ...ingredientObject,
+                      unit: event.target.value,
+                    })
+                  }
+                >
                   <FormControlLabel value="Lb" control={<Radio />} label="Lb" />
                   <FormControlLabel value="Oz" control={<Radio />} label="Oz" />
                   <FormControlLabel
@@ -113,21 +221,15 @@ function NewUserMenuForm() {
                     label="Fl. Oz"
                   />
                 </RadioGroup>
-                {/* </FormControl> */}
               </Box>
             </FormControl>
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button id="add-btn" onClick={handleClose}>
+          <Button id="add-btn" onClick={handleAddIngredient}>
             Add Another Ingredient
           </Button>
-          <Button
-            id="cancel-btn"
-            onClick={() => {
-              handleClose();
-            }}
-          >
+          <Button id="cancel-btn" onClick={handleAddMenuItem}>
             Add Dish
           </Button>
           <Button id="done-btn" onClick={handleClose}>

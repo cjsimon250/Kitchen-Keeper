@@ -13,12 +13,12 @@ function NewUserWelcome() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  //variable to show whether the welcome is showing
+  //Variable to show whether the welcome is showing
   const showInitialWelcome = useSelector(
     (store) => store.newUserSetup.showInitialWelcome
   );
 
-  //function to close the welcome dialog and open inventory form via redux
+  //Function to close the welcome dialog and open inventory form via redux
   const handleNext = () => {
     dispatch({
       type: "SET_SHOW_INITIAL_WELCOME",
@@ -48,7 +48,7 @@ function NewUserWelcome() {
           },
         }}
       >
-        <DialogTitle variant="h3" color={colors.greenAccent[500]}>
+        <DialogTitle variant="h3" color={colors.greenAccent[400]}>
           Welcome to Kitchen Keeper!
         </DialogTitle>
         <DialogContent>
@@ -63,6 +63,10 @@ function NewUserWelcome() {
             <li>
               You will also need your menu and the amount of each individual
               ingredient that is in every dish on your menu
+            </li>
+            <li>
+              Don't worry if you forget something or enter in the wrong
+              information. You will be able to come back and change it later
             </li>
           </ul>
         </DialogContent>

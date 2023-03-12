@@ -78,6 +78,9 @@ function NewUserInventoryForm() {
           "& #next-btn, #cancel-btn": {
             backgroundColor: colors.orangeAccent[500],
           },
+          "& #next-btn": {
+            backgroundColor: colors.greenAccent[500],
+          },
           "& .MuiButton-textPrimary": {
             color: `e0e0e0`,
           },
