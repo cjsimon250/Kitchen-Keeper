@@ -18,16 +18,20 @@ function NewUserWelcome() {
     (store) => store.newUserSetup.showInitialWelcome
   );
 
-  //function to close the add to inventory form via redux
-  const handleClose = () => {
+  //function to close the welcome dialog and open inventory form via redux
+  const handleNext = () => {
+    dispatch({
+      type: "SET_SHOW_INITIAL_WELCOME",
+      payload: false,
+    });
     dispatch({
       type: "SET_SHOW_INITIAL_INVENTORY_FORM",
-      payload: false,
+      payload: true,
     });
   };
 
   return (
-    //Form to add information of contacts
+    //Welcome Dialog
     <Box>
       <Dialog
         fullWidth
@@ -44,16 +48,26 @@ function NewUserWelcome() {
           },
         }}
       >
-        <DialogTitle>Welcome to Kitchen Keeper!</DialogTitle>
+        <DialogTitle variant="h3" color={colors.greenAccent[500]}>
+          Welcome to Kitchen Keeper!
+        </DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            A few things before we begin, -Please have a list of all of your
-            current inventory ready -You will also need your menu and the amount
-            of each individual ingredient that is in every dish on your menu
+          <DialogContentText variant="h6">
+            A few things before we begin,
           </DialogContentText>
+          <ul>
+            <li>
+              Please have a list with all of your current inventory ready. This
+              includes item names and the quantity you currently have in stock
+            </li>
+            <li>
+              You will also need your menu and the amount of each individual
+              ingredient that is in every dish on your menu
+            </li>
+          </ul>
         </DialogContent>
         <DialogActions>
-          <Button id="add-btn" variant="text" onClick={handleClose}>
+          <Button id="add-btn" variant="text" onClick={handleNext}>
             Next
           </Button>
         </DialogActions>

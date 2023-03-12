@@ -3,6 +3,7 @@ import { useTheme } from "@mui/system";
 import { tokens } from "../../../theme";
 import NewUserWelcome from "./NewUserWelcome";
 import NewUserInventoryForm from "./NewUserInventoryForm";
+import NewUserMenuForm from "./NewUserMenuForm";
 
 function NewUserSetup() {
   const dispatch = useDispatch();
@@ -16,14 +17,18 @@ function NewUserSetup() {
   const showInitialInventoryForm = useSelector(
     (store) => store.newUserSetup.showInitialInventoryForm
   );
+  const showMenuForm = useSelector(
+    (store) => store.newUserSetup.showInitialMenuForm
+  );
 
   function handleDialogContents() {
-    console.log("showInitialWelcome value:", showInitialWelcome);
     switch (true) {
       case showInitialWelcome:
         return <NewUserWelcome />;
       case showInitialInventoryForm:
         return <NewUserInventoryForm />;
+      case showMenuForm:
+        return <NewUserMenuForm />;
       default:
         return null;
     }
