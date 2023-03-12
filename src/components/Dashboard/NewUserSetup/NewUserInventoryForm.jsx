@@ -16,7 +16,7 @@ function NewUserInventoryForm() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  //variable to show whether the form is showing
+  //Variable to show whether the form is showing
   const showInitialInventoryForm = useSelector(
     (store) => store.newUserSetup.showInitialInventoryForm
   );
@@ -24,14 +24,32 @@ function NewUserInventoryForm() {
   //Variable to hold inventory item information to send
   // **These to values are set so that on first render they are considered controlled**
   const [inventoryItemToSend, setInventoryItemToSend] = useState({
-    inStockUnit: "",
-    minimumStockUnit: "",
+    item: "",
+    quantity: 0,
+    inStockUnit: "Lb",
+    minimumStock: 0,
+    minimumStockUnit: "Lb",
   });
 
-  //function to handle posting the new item to database
-  function handlePostInventoryItem() {}
-  //function to close the add to inventory form and
-  //open the menu form via redux
+  //Function to handle posting the new item to database
+  function handlePostInventoryItem() {
+    console.log(inventoryItemToSend);
+    dispatch({
+      type: "POST_INVENTORY",
+      payload: inventoryItemToSend,
+    });
+
+    //Clear inputs
+    setInventoryItemToSend({
+      item: "",
+      quantity: 0,
+      inStockUnit: "Lb",
+      minimumStock: 0,
+      minimumStockUnit: "Lb",
+    });
+  }
+
+  //Function to close the add to inventory form and open the menu form via redux
   const handleNext = () => {
     dispatch({
       type: "SET_SHOW_INITIAL_MENU_FORM",
@@ -73,6 +91,7 @@ function NewUserInventoryForm() {
             type="text"
             fullWidth
             variant="standard"
+            value={inventoryItemToSend.item}
             onChange={(event) =>
               setInventoryItemToSend({
                 ...inventoryItemToSend,
@@ -88,6 +107,8 @@ function NewUserInventoryForm() {
               label="Quantity In Stock"
               type="number"
               variant="standard"
+              inputProps={{ min: 0 }}
+              value={inventoryItemToSend.quantity}
               onChange={(event) =>
                 setInventoryItemToSend({
                   ...inventoryItemToSend,
@@ -100,7 +121,6 @@ function NewUserInventoryForm() {
                 <FormLabel id="measurement-unit">Unit of Measurement</FormLabel>
                 <RadioGroup
                   row
-                  defaultValue="Lb"
                   name="in-stock-radio-btn-group"
                   value={inventoryItemToSend.inStockUnit}
                   onChange={(event) =>
@@ -135,6 +155,8 @@ function NewUserInventoryForm() {
               label="Minimum Quantity"
               type="number"
               variant="standard"
+              inputProps={{ min: 0 }}
+              value={inventoryItemToSend.minimumStock}
               onChange={(event) =>
                 setInventoryItemToSend({
                   ...inventoryItemToSend,
@@ -147,7 +169,6 @@ function NewUserInventoryForm() {
                 <FormLabel id="measurement-unit">Unit of Measurement</FormLabel>
                 <RadioGroup
                   row
-                  defaultValue="Lb"
                   value={inventoryItemToSend.minimumStockUnit}
                   name="min-stock-radio-btn-group"
                   onChange={(event) =>

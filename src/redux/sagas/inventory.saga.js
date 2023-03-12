@@ -2,7 +2,7 @@ import { put, takeEvery } from "redux-saga/effects";
 import axios from "axios";
 
 //WATCHER FUNCTION
-function* getInventorySaga() {
+function* inventorySaga() {
   yield takeEvery("FETCH_INVENTORY", fetchInventory);
   yield takeEvery("POST_INVENTORY", postInventory);
 }
@@ -19,11 +19,13 @@ function* fetchInventory() {
 }
 
 //POST to inventory
-function* postShelf(action) {
+function* postInventory(action) {
   try {
-    yield axios.post("/api/shelf", action.payload);
-    yield put({ type: "FETCH_SHELF" });
+    yield axios.post("/api/inventory", action.payload);
+    yield put({ type: "FETCH_INVENTORY" });
   } catch (error) {
-    console.log("User post request failed", error);
+    console.log("Error in postInventory", error);
   }
 }
+
+export default inventorySaga;

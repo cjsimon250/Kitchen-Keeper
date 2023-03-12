@@ -26,7 +26,7 @@ CREATE TABLE "company" (
 CREATE TABLE "inventory" (
 	"id" serial NOT NULL,
 	"company_id" int NOT NULL,
-	"item" varchar(255) NOT NULL UNIQUE,
+	"item" varchar(255) NOT NULL,
 	"quantity" int NOT NULL,
 	"minimumStock" int NOT NULL,
 	"unit" varchar(255) NOT NULL,
@@ -102,7 +102,7 @@ CREATE TABLE "contacts" (
 
 
 
-ALTER TABLE "company" ADD CONSTRAINT "company_fk0" FOREIGN KEY ("user_id") REFERENCES "users"("id");
+ALTER TABLE "company" ADD CONSTRAINT "company_fk0" FOREIGN KEY ("user_id") REFERENCES "user"("id");
 
 ALTER TABLE "inventory" ADD CONSTRAINT "inventory_fk0" FOREIGN KEY ("company_id") REFERENCES "company"("id");
 
