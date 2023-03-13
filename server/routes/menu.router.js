@@ -9,10 +9,10 @@ const {
 router.get("/", rejectUnauthenticated, (req, res) => {
   //Holding all inventory id's that match the user's company id
   let inventoryIds = [];
-  //Holding all objects returned from menu_inventory (ingredients information)
-  let ingredients = [];
-  //Holding all Menu items and the ingredient data
+  //Holding all Menu items and the ingredient data from menu_inventory, menu, iventory
   let ingredientsData = [];
+  //Variable to send back to the client
+  let menuDataToSend = [];
 
   //Get id of the company belonging to the user
   const queryText = `SELECT * FROM company WHERE user_id = $1;`;
@@ -32,7 +32,7 @@ router.get("/", rejectUnauthenticated, (req, res) => {
           //all the different dishes the user has plus the ingredient information about that dish
           return Promise.all(
             inventoryIds.map((inventoryId) => {
-              let queryText4 = `
+              let queryText3 = `
               SELECT "menu_inventory".id, "menu_inventory".quantity, "menu_inventory".unit,
                "inventory".item, "menu".dish, "menu".price, "menu".image 
               FROM "menu"
@@ -41,15 +41,52 @@ router.get("/", rejectUnauthenticated, (req, res) => {
               WHERE "menu_inventory".inventory_id = $1
               `;
 
-              return pool.query(queryText4, [inventoryId.id]).then((result) => {
+              return pool.query(queryText3, [inventoryId.id]).then((result) => {
                 ingredientsData = [...ingredientsData, result.rows[0]];
               });
             })
           );
         })
         .then((result) => {
-          console.log(` IngredientsData :`, ingredientsData);
-        });
+          //Filtering the data so that all of the ingredient information is
+          //easier to access by item on the client side
+          menuDataToSend = ingredientsData.reduce((accumulator, current) => {
+            //Checking if there is already an object for current dish
+            const existingDish = accumulator.find(
+              (item) => item.dish === current.dish
+            );
+
+            //If there is an object for current dish, push the current ingredient
+            //information to the ingredient array of that object
+            if (existingDish) {
+              existingDish.ingredients.push({
+                id: current.id,
+                quantity: current.quantity,
+                unit: current.unit,
+                item: current.item,
+              });
+              //If there isn't an object for the current dish,
+              //create new object and push to the array
+            } else {
+              accumulator.push({
+                dish: current.dish,
+                price: current.price,
+                image: current.image,
+                ingredients: [
+                  {
+                    id: current.id,
+                    quantity: current.quantity,
+                    unit: current.unit,
+                    item: current.item,
+                  },
+                ],
+              });
+            }
+
+            return accumulator;
+          }, []);
+        })
+        .then((result) => res.send(menuDataToSend));
     })
     .catch((error) => {
       console.log("Error executing SQL query", ":", error);
@@ -63,12 +100,12 @@ router.post("/", rejectUnauthenticated, (req, res) => {
   const price = req.body.price;
   const image = req.body.image;
   const ingredients = req.body.ingredients;
-  const companyId = null;
+  let companyId = null;
   //Holding the returned menu id from first query
   let menuId = null;
   //Holding the returned id's from the inventory
   let inventoryIds = [];
-  //Variable to increase everytime ingredients is mapped through
+  //Counter variable to increase everytime ingredients is mapped through
   let ingredientsIndex = -1;
 
   //Get id of the company belonging to the user
@@ -142,7 +179,7 @@ router.post("/", rejectUnauthenticated, (req, res) => {
         );
       })
       .then((result) => {
-        //Resetting ingredientsIndex
+        //Resetting ingredientsIndex counter
         ingredientsIndex = -1;
       })
       .catch((error) => {

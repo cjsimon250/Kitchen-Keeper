@@ -2,7 +2,7 @@ import Header from "../Header/Header";
 import { Box } from "@mui/system";
 import MenuCard from "./MenuCard";
 import Grid from "@mui/material/Grid";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 //MOCK DATA
 
@@ -13,9 +13,7 @@ let i = 0;
 const Menu = () => {
   const dispatch = useDispatch();
 
-  const menuItems = dispatch({
-    type: "FETCH_MENU",
-  });
+  const menuData = useSelector((store) => store.menu);
 
   //Fetch inventory on page load
   useEffect(() => {

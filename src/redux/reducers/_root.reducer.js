@@ -6,6 +6,7 @@ import showContactsForm from "./contactsForm.reducer";
 import inventory from "./inventory.reducer";
 import newUserSetup from "./newUserSetup.reducer";
 import company from "./company.reducer";
+import menu from "./menu.reducer";
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
   showTeamForm, // Will be able to toggle the team form
   showContactsForm, //Will be able to toggle the contacts form
   inventory, //Allows access to the inventory
+  menu, //Allows access to the user's menu
   newUserSetup, //Storing the state of the new user dialogs (open or not)
 });
 
