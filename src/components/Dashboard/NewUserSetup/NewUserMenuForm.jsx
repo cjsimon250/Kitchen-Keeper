@@ -28,6 +28,9 @@ function NewUserMenuForm() {
   //Variable for storing ingredients previously added by user
   const ingredients = useSelector((store) => store.inventory);
 
+  //Variable to store the user's company id
+  const companyId = useSelector((store) => store.company.id);
+
   //Variable for storing the single ingredient object that will then be added to
   //menuItemToSend.ingredientInformation array
   const [ingredientObject, setIngredientObject] = useState({
@@ -42,6 +45,7 @@ function NewUserMenuForm() {
     dish: "",
     image: "",
     price: 0,
+    companyId: companyId,
     ingredients: [],
   });
 
@@ -74,7 +78,7 @@ function NewUserMenuForm() {
     //Clearing the ingredient object
     setIngredientObject({
       ingredientName: "",
-      quantity: 0,
+      quantity: 1,
       unit: "Lb",
     });
   }
@@ -107,6 +111,7 @@ function NewUserMenuForm() {
       dish: "",
       image: "",
       price: 0,
+      companyId: companyId,
       ingredients: [],
     });
   }
