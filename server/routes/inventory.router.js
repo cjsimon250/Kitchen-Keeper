@@ -7,7 +7,7 @@ const {
 
 //Get all of the inventory associated with the user who is logged in
 router.get("/", rejectUnauthenticated, (req, res) => {
-  //get id of the company belonging to the user
+  //Get id of the company belonging to the user
   const queryText = `SELECT * FROM company WHERE user_id = $1;`;
   pool
     .query(queryText, [req.user.id])

@@ -10,7 +10,6 @@ const Dashboard = () => {
 
   //Fetching inventory on page load to check if user is new or not
   useEffect(() => {
-    console.log("Inventory:", inventory);
     dispatch({ type: "FETCH_INVENTORY" });
   }, [dispatch]);
 

@@ -38,13 +38,8 @@ function App() {
 
   const user = useSelector((store) => store.user);
 
-  //function to fetch user and user company
-  async function fetchUserData(dispatch) {
-    await dispatch({ type: "FETCH_USER" });
-    await dispatch({ type: "FETCH_COMPANY" });
-  }
   useEffect(() => {
-    fetchUserData(dispatch);
+    dispatch({ type: "FETCH_USER" });
   }, [dispatch]);
 
   return (

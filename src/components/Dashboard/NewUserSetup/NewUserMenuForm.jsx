@@ -106,6 +106,11 @@ function NewUserMenuForm() {
       payload: menuItemToSend,
     });
 
+    dispatch({
+      type: "FETCH_COMPANY",
+      payload: menuItemToSend,
+    });
+
     //Clearing all inputs and ingredients list
     setMenuItemToSend({
       dish: "",
