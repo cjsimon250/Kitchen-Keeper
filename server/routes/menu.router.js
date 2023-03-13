@@ -5,14 +5,52 @@ const {
   rejectUnauthenticated,
 } = require("../modules/authentication-middleware");
 
-//Get Menu Items
+//GET Menu Items
 router.get("/", rejectUnauthenticated, (req, res) => {
-  // GET route code here
+  //Holding all inventory id's that match the user's company id
+  let inventoryIds = [];
+  //Holding all objects returned from menu_inventoryy in each menu item
+  let ingredients = [];
+
+  //Get id of the company belonging to the user
+  const queryText = `SELECT * FROM company WHERE user_id = $1;`;
+  pool
+    .query(queryText, [req.user.id])
+    .then((result) => {
+      const companyId = result.rows[0].id;
+      const queryText2 = `SELECT id from inventory WHERE company_id = $1;`;
+
+      pool
+        .query(queryText2, [companyId])
+        .then((result) => {
+          //Setting variable to be looped through later
+          inventoryIds = result.rows;
+
+          //Looping through the inventory id's to return everything from
+          //menu_inventory matching the company's id
+          return Promise.all(
+            inventoryIds.map((inventoryId) => {
+              let queryText3 = `
+              SELECT * FROM menu_inventory WHERE inventory_id = $1
+            `;
+              return pool.query(queryText3, [inventoryId.id]).then((result) => {
+                ingredients = [...ingredients, result.rows[0]];
+              });
+            })
+          );
+        })
+        .then((result) => {
+          console.log(`ingredients:`, ingredients);
+        });
+    })
+    .catch((error) => {
+      console.log("Error executing SQL query", ":", error);
+      res.sendStatus(500);
+    });
 });
 
-//Post new dish to the data base
+//POST new dish to the data base
 router.post("/", rejectUnauthenticated, (req, res) => {
-  console.log("req.body:", req.body);
   const dish = req.body.dish;
   const price = req.body.price;
   const image = req.body.image;
@@ -28,7 +66,7 @@ router.post("/", rejectUnauthenticated, (req, res) => {
   //Get id of the company belonging to the user
   const queryText = `SELECT * FROM company WHERE user_id = $1;`;
   pool.query(queryText, [req.user.id]).then((result) => {
-    const companyId = result.rows[0].id;
+    companyId = result.rows[0].id;
     //Insert data into the menu table and return the id of the menu item
     const queryText = `INSERT INTO menu (dish, price, image)
   VALUES ($1, $2, $3) RETURNING id;

@@ -9,7 +9,6 @@ import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 
 function MenuCard({ menuItem }) {
-  console.log(menuItem);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   return (
