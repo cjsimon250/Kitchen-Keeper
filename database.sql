@@ -54,6 +54,7 @@ CREATE TABLE "menu_inventory" (
 	"menu_id" int NOT NULL,
 	"inventory_id" int NOT NULL,
 	"quanity" int NOT NULL,
+	"unit" varchar(255) NOT NULL,
 	CONSTRAINT "menu_inventory_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE

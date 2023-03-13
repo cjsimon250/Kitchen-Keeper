@@ -1,9 +1,12 @@
 const express = require("express");
 const pool = require("../modules/pool");
 const router = express.Router();
+const {
+  rejectUnauthenticated,
+} = require("../modules/authentication-middleware");
 
 //Get all of the inventory associated with the user who is logged in
-router.get("/", (req, res) => {
+router.get("/", rejectUnauthenticated, (req, res) => {
   //get id of the company belonging to the user
   const queryText = `SELECT * FROM company WHERE user_id = $1;`;
   pool
@@ -22,15 +25,15 @@ router.get("/", (req, res) => {
 });
 
 // Post new item to the inventory
-router.post("/", (req, res) => {
-  //get id of the company belonging to the user
+router.post("/", rejectUnauthenticated, (req, res) => {
+  //Get id of the company belonging to the user
   const queryText = `SELECT * FROM company WHERE user_id = $1;`;
   pool
     .query(queryText, [req.user.id])
     .then((result) => {
       const companyId = result.rows[0].id;
       const queryText2 = `INSERT INTO inventory (company_id, item, quantity, "minimumStock", unit)
-    VALUES ($1, $2, $3, $4, $5)
+    VALUES ($1, $2, $3, $4, $5);
     `;
 
       const item = req.body.item;
@@ -38,7 +41,7 @@ router.post("/", (req, res) => {
       let minimumStock = req.body.minimumStock;
       let unit;
 
-      //converting quantity of item in stock to oz or fluid oz for database
+      //Converting quantity of item in stock to oz or fluid oz for database
       switch (req.body.inStockUnit) {
         case "Lb":
           quantity *= 16;
@@ -56,7 +59,7 @@ router.post("/", (req, res) => {
           break;
       }
 
-      //converting quantity of minimum stock to oz or fluid oz for database
+      //Converting quantity of minimum stock to oz or fluid oz for database
       switch (req.body.minimumStockUnit) {
         case "Lb":
           minimumStock *= 16;
