@@ -5,6 +5,7 @@ import showTeamForm from "./teamForm.reducer";
 import showContactsForm from "./contactsForm.reducer";
 import inventory from "./inventory.reducer";
 import newUserSetup from "./newUserSetup.reducer";
+import company from "./company.reducer";
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -15,6 +16,7 @@ import newUserSetup from "./newUserSetup.reducer";
 const rootReducer = combineReducers({
   errors, // Contains registrationMessage and loginMessage
   user, // Will have an id and username if someone is logged in
+  company, //Allows access to the user's company information
   showTeamForm, // Will be able to toggle the team form
   showContactsForm, //Will be able to toggle the contacts form
   inventory, //Allows access to the inventory

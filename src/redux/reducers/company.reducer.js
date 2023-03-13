@@ -1,5 +1,5 @@
 // * Reducer for holding the company of the user
-const showTeamForm = (state = false, action) => {
+const company = (state = {}, action) => {
   switch (action.type) {
     case "SET_COMPANY":
       return action.payload;
@@ -8,4 +8,4 @@ const showTeamForm = (state = false, action) => {
   }
 };
 
-export default showTeamForm;
+export default company;
