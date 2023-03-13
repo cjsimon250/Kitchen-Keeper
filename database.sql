@@ -3,6 +3,8 @@
 -- You must use double quotes in every query that user is in:
 -- ex. SELECT * FROM "user";
 -- Otherwise you will have errors!
+
+-- CREATE TABLE kitchen-keeper
 CREATE TABLE "user" (
     "id" SERIAL PRIMARY KEY,
     "username" VARCHAR (80) UNIQUE NOT NULL,
@@ -26,7 +28,7 @@ CREATE TABLE "company" (
 CREATE TABLE "inventory" (
 	"id" serial NOT NULL,
 	"company_id" int NOT NULL,
-	"item" varchar(255) NOT NULL UNIQUE,
+	"item" varchar(255) NOT NULL,
 	"quantity" int NOT NULL,
 	"minimumStock" int NOT NULL,
 	"unit" varchar(255) NOT NULL,
@@ -53,7 +55,8 @@ CREATE TABLE "menu_inventory" (
 	"id" serial NOT NULL,
 	"menu_id" int NOT NULL,
 	"inventory_id" int NOT NULL,
-	"quanity" int NOT NULL,
+	"quantity" int NOT NULL,
+	"unit" varchar(255) NOT NULL,
 	CONSTRAINT "menu_inventory_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
@@ -102,7 +105,7 @@ CREATE TABLE "contacts" (
 
 
 
-ALTER TABLE "company" ADD CONSTRAINT "company_fk0" FOREIGN KEY ("user_id") REFERENCES "users"("id");
+ALTER TABLE "company" ADD CONSTRAINT "company_fk0" FOREIGN KEY ("user_id") REFERENCES "user"("id");
 
 ALTER TABLE "inventory" ADD CONSTRAINT "inventory_fk0" FOREIGN KEY ("company_id") REFERENCES "company"("id");
 

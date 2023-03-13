@@ -1,5 +1,3 @@
-import { combineReducers } from "redux";
-
 // * Reducer for displaying Team form
 const showTeamForm = (state = false, action) => {
   switch (action.type) {

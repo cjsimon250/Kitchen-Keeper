@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 function RegisterForm() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [company, setCompany] = useState("");
+
   const errors = useSelector((store) => store.errors);
   const dispatch = useDispatch();
 
@@ -11,10 +13,11 @@ function RegisterForm() {
     event.preventDefault();
 
     dispatch({
-      type: 'REGISTER',
+      type: "REGISTER",
       payload: {
         username: username,
         password: password,
+        company: company,
       },
     });
   }; // end registerUser
@@ -48,6 +51,16 @@ function RegisterForm() {
             value={password}
             required
             onChange={(event) => setPassword(event.target.value)}
+          />
+        </label>
+        <label htmlFor="company">
+          Company Name:
+          <input
+            type="text"
+            name="company"
+            value={company}
+            required
+            onChange={(event) => setCompany(event.target.value)}
           />
         </label>
       </div>
