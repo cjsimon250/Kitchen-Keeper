@@ -9,8 +9,10 @@ const {
 router.get("/", rejectUnauthenticated, (req, res) => {
   //Holding all inventory id's that match the user's company id
   let inventoryIds = [];
-  //Holding all objects returned from menu_inventoryy in each menu item
+  //Holding all objects returned from menu_inventory (ingredients information)
   let ingredients = [];
+  //Holding all Menu items and the ingredient data
+  let ingredientsData = [];
 
   //Get id of the company belonging to the user
   const queryText = `SELECT * FROM company WHERE user_id = $1;`;
@@ -18,29 +20,35 @@ router.get("/", rejectUnauthenticated, (req, res) => {
     .query(queryText, [req.user.id])
     .then((result) => {
       const companyId = result.rows[0].id;
+      //Getting id's from inventory that belong to the user's company
       const queryText2 = `SELECT id from inventory WHERE company_id = $1;`;
 
       pool
         .query(queryText2, [companyId])
         .then((result) => {
-          //Setting variable to be looped through later
+          //Setting variable to be looped through
           inventoryIds = result.rows;
-
-          //Looping through the inventory id's to return everything from
-          //menu_inventory matching the company's id
+          //Mapping through the array of inventory id's belonging to user in order to return
+          //all the different dishes the user has plus the ingredient information about that dish
           return Promise.all(
             inventoryIds.map((inventoryId) => {
-              let queryText3 = `
-              SELECT * FROM menu_inventory WHERE inventory_id = $1
-            `;
-              return pool.query(queryText3, [inventoryId.id]).then((result) => {
-                ingredients = [...ingredients, result.rows[0]];
+              let queryText4 = `
+              SELECT "menu_inventory".id, "menu_inventory".quantity, "menu_inventory".unit,
+               "inventory".item, "menu".dish, "menu".price, "menu".image 
+              FROM "menu"
+              JOIN "menu_inventory" ON "menu".id = "menu_inventory".menu_id
+              JOIN "inventory" ON "inventory".id = "menu_inventory".inventory_id
+              WHERE "menu_inventory".inventory_id = $1
+              `;
+
+              return pool.query(queryText4, [inventoryId.id]).then((result) => {
+                ingredientsData = [...ingredientsData, result.rows[0]];
               });
             })
           );
         })
         .then((result) => {
-          console.log(`ingredients:`, ingredients);
+          console.log(` IngredientsData :`, ingredientsData);
         });
     })
     .catch((error) => {
