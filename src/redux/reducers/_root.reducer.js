@@ -21,7 +21,7 @@ const rootReducer = combineReducers({
   showTeamForm, // Will be able to toggle the team form
   showContactsForm, //Will be able to toggle the contacts form
   inventory, //Allows access to the inventory
-  menu, //Allows access to the user's menu
+  menu, //Storing data for Menu component
   newUserSetup, //Storing the state of the new user dialogs (open or not)
 });
 

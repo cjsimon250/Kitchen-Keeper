@@ -1,3 +1,5 @@
+import { combineReducers } from "redux";
+
 const menu = (state = [], action) => {
   switch (action.type) {
     case "SET_MENU":
@@ -7,6 +9,17 @@ const menu = (state = [], action) => {
   }
 };
 
-// user will be on the redux state at:
-// state.user
-export default menu;
+// * Reducer for displaying Menu form
+const showEditMenuItemForm = (state = false, action) => {
+  switch (action.type) {
+    case "SHOW_MENU_FORM":
+      return action.payload;
+    default:
+      return state;
+  }
+};
+
+export default combineReducers({
+  menu,
+  showEditMenuItemForm,
+});

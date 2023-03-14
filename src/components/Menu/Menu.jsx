@@ -9,7 +9,7 @@ import { useEffect } from "react";
 const Menu = () => {
   const dispatch = useDispatch();
   let index;
-  const menuData = useSelector((store) => store.menu);
+  const menuData = useSelector((store) => store.menu.menu);
 
   //Fetch inventory on page load
   useEffect(() => {
@@ -24,7 +24,6 @@ const Menu = () => {
       <ImageList margin="auto" variant="masonry" cols={3} gap={8}>
         {menuData.map((menuItem) => {
           index = menuData.indexOf(menuItem);
-          console.log(index);
           return <MenuList key={index} menuItem={menuItem} />;
         })}
       </ImageList>

@@ -1,4 +1,6 @@
 import { tokens } from "../../theme";
+import { useDispatch } from "react-redux";
+import EditMenuItemForm from "./EditMenuItemForm";
 //MUI
 import { Box, useTheme, IconButton } from "@mui/material";
 import ImageListItem from "@mui/material/ImageListItem";
@@ -9,9 +11,18 @@ import ViewHeadlineIcon from "@mui/icons-material/ViewHeadline";
 function MenuItem({ menuItem }) {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const dispatch = useDispatch();
   console.log("menuItem:", menuItem);
+
+  //Function to show edit menu item form
+  function handleShowEditMenuItemForm() {
+    dispatch({
+      type: "SHOW_MENU_FORM",
+      payload: true,
+    });
+  }
+
   return (
-    //
     <Box>
       <ImageListItem>
         <img
@@ -38,6 +49,9 @@ function MenuItem({ menuItem }) {
               <IconButton
                 sx={{ color: "white" }}
                 aria-label={`Edit ${menuItem.dish}`}
+                onClick={() => {
+                  handleShowEditMenuItemForm();
+                }}
               >
                 <EditIcon />
               </IconButton>
@@ -46,6 +60,7 @@ function MenuItem({ menuItem }) {
           actionPosition="left"
         />
       </ImageListItem>
+      <EditMenuItemForm />
     </Box>
   );
 }
