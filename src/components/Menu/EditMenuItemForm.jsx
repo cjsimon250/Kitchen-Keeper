@@ -1,32 +1,31 @@
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import RadioGroup from "@mui/material/RadioGroup/RadioGroup";
-import { FormControl, FormControlLabel, FormLabel, Radio } from "@mui/material";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
 import { Box, useTheme } from "@mui/system";
 import { tokens } from "../../theme";
 
-function EditMenuItemForm() {
+function EditMenuItemForm({}) {
   const dispatch = useDispatch();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  //variable to show whether the add contact form is showing
-  const showEditMenuItemForm = useSelector(
-    (store) => store.menu.showEditMenuItemForm
+  //Variable to show whether the add contact form is showing
+  const showForm = useSelector((store) => store.menu.editMenuItemForm.showForm);
+  const selectedItem = useSelector(
+    (store) => store.menu.editMenuItemForm.menuItem
   );
-  console.log(`showEditMenuItemForm`, showEditMenuItemForm);
 
-  //function to close the add contact form via redux
+  //Function to close the add contact form via redux
   const handleClose = () => {
     dispatch({
-      type: "SET_SHOW_TEAM_FORM",
-      payload: false,
+      type: "SHOW_MENU_FORM",
+      payload: { showForm: false, menuItem: {} },
     });
   };
 
@@ -34,7 +33,7 @@ function EditMenuItemForm() {
     //Form to add information of contacts
     <Box>
       <Dialog
-        open={showEditMenuItemForm}
+        open={showForm}
         onClose={handleClose}
         sx={{
           "& .MuiPaper-root": {
@@ -48,7 +47,7 @@ function EditMenuItemForm() {
           },
         }}
       >
-        <DialogTitle>Add New Team Member</DialogTitle>
+        <DialogTitle>Edit {selectedItem.dish}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -77,28 +76,6 @@ function EditMenuItemForm() {
             fullWidth
             variant="standard"
           />
-          <Box sx={{ mt: "10px" }}>
-            <FormControl>
-              <FormLabel id="access">Access</FormLabel>
-              <RadioGroup
-                row
-                defaultValue="employee"
-                name="access-radio-btn-group"
-              >
-                <FormControlLabel
-                  value="employee"
-                  control={<Radio />}
-                  label="Employee"
-                />
-
-                <FormControlLabel
-                  value="admin"
-                  control={<Radio />}
-                  label="Admin"
-                />
-              </RadioGroup>
-            </FormControl>
-          </Box>
         </DialogContent>
         <DialogActions>
           <Button

@@ -12,13 +12,12 @@ function MenuItem({ menuItem }) {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const dispatch = useDispatch();
-  console.log("menuItem:", menuItem);
 
   //Function to show edit menu item form
   function handleShowEditMenuItemForm() {
     dispatch({
       type: "SHOW_MENU_FORM",
-      payload: true,
+      payload: { showForm: true, menuItem: menuItem },
     });
   }
 
@@ -35,19 +34,20 @@ function MenuItem({ menuItem }) {
           sx={{
             background:
               "linear-gradient(to bottom, rgba(0,0,0,5), rgba(0,0,0,0))",
+            color: `${colors.primary[100]}`,
           }}
           title={menuItem.dish}
           position="top"
           actionIcon={
             <>
               <IconButton
-                sx={{ color: "white" }}
+                sx={{ color: `${colors.primary[100]}` }}
                 aria-label={`View ${menuItem.dish}`}
               >
                 <ViewHeadlineIcon />
               </IconButton>
               <IconButton
-                sx={{ color: "white" }}
+                sx={{ color: `${colors.primary[100]}` }}
                 aria-label={`Edit ${menuItem.dish}`}
                 onClick={() => {
                   handleShowEditMenuItemForm();

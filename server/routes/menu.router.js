@@ -16,32 +16,34 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
 
     // Get id of the company belonging to the user
     const queryText = `SELECT * FROM company WHERE user_id = $1;`;
-    const result = await pool.query(queryText, [req.user.id]);
-    const companyId = result.rows[0].id;
+    const companyResult = await pool.query(queryText, [req.user.id]);
+    const companyId = companyResult.rows[0].id;
 
     // Getting id's from inventory that belong to the user's company
     const queryText2 = `SELECT id from inventory WHERE company_id = $1;`;
-    const result2 = await pool.query(queryText2, [companyId]);
+    const inventoryResult = await pool.query(queryText2, [companyId]);
 
     // Setting variable to be looped through
-    inventoryIds = result2.rows;
+    inventoryIds = inventoryResult.rows;
 
     // Mapping through the array of inventory id's belonging to user in order to return
     // all the different dishes the user has plus the ingredient information about that dish
     await Promise.all(
       inventoryIds.map(async (inventoryId) => {
         let queryText3 = `
-          SELECT "menu_inventory".id, "menu_inventory".quantity, "menu_inventory".unit,
-          "inventory".item, "menu".dish, "menu".price, "menu".image 
+          SELECT "menu_inventory".id as "menuInventoryId", "menu_inventory".quantity, "menu_inventory".unit,
+          "inventory".item, "menu".id AS "menuId", "menu".dish, "menu".price, "menu".image 
           FROM "menu"
           JOIN "menu_inventory" ON "menu".id = "menu_inventory".menu_id
           JOIN "inventory" ON "inventory".id = "menu_inventory".inventory_id
           WHERE "menu_inventory".inventory_id = $1
         `;
 
-        const result3 = await pool.query(queryText3, [inventoryId.id]);
-        if (result3.rows.length > 0) {
-          ingredientsData = [...ingredientsData, result3.rows[0]];
+        const menuInventoryResult = await pool.query(queryText3, [
+          inventoryId.id,
+        ]);
+        if (menuInventoryResult.rows.length > 0) {
+          ingredientsData = [...ingredientsData, menuInventoryResult.rows[0]];
         }
       })
     );
@@ -58,7 +60,7 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
       // information to the ingredient array of that object
       if (existingDish) {
         existingDish.ingredients.push({
-          id: current.id,
+          MenuInventoryid: current.menuInventoryId,
           quantity: current.quantity,
           unit: current.unit,
           item: current.item,
@@ -67,12 +69,14 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
         // create new object and push to the array
       } else {
         accumulator.push({
+          inventoryId: current.inventoryId,
+          menuId: current.menuId,
           dish: current.dish,
           price: current.price,
           image: current.image,
           ingredients: [
             {
-              id: current.id,
+              menuInventoryId: current.menuInventoryId,
               quantity: current.quantity,
               unit: current.unit,
               item: current.item,
@@ -83,6 +87,8 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
 
       return accumulator;
     }, []);
+
+    console.log(`menuDataToSend :`, menuDataToSend);
 
     res.send(menuDataToSend);
   } catch (error) {
