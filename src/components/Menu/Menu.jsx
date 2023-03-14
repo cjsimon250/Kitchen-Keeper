@@ -1,18 +1,14 @@
 import Header from "../Header/Header";
 import { Box } from "@mui/system";
-import MenuCard from "./MenuCard";
+import MenuList from "./MenuItem";
+import { ImageList } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-//MOCK DATA
-
-import { mockDataMenu } from "../../data/mockData.js";
-
-let i = 0;
 
 const Menu = () => {
   const dispatch = useDispatch();
-
+  let index;
   const menuData = useSelector((store) => store.menu);
 
   //Fetch inventory on page load
@@ -23,17 +19,15 @@ const Menu = () => {
   }, [dispatch]);
 
   return (
-    <Box m="20px">
+    <Box m="20px" sx={{ w: "80%", h: "100%" }}>
       <Header title="MENU" subtitle="What's on the menu?" />
-      <Grid key={i} container spacing={5} margin="auto">
-        {mockDataMenu.map((menuItem) => {
-          return (
-            <Grid item xs="auto">
-              <MenuCard menuItem={menuItem} />
-            </Grid>
-          );
+      <ImageList margin="auto" variant="masonry" cols={3} gap={8}>
+        {menuData.map((menuItem) => {
+          index = menuData.indexOf(menuItem);
+          console.log(index);
+          return <MenuList key={index} menuItem={menuItem} />;
         })}
-      </Grid>
+      </ImageList>
     </Box>
   );
 };
