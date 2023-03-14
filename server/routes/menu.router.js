@@ -50,7 +50,6 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
     // easier to access by item on the client side
     menuDataToSend = ingredientsData.reduce((accumulator, current) => {
       // Checking if there is already an object for current dish
-      console.log(`current dish:`, current.dish);
       const existingDish = accumulator.find(
         (item) => item && item.dish === current.dish
       );
