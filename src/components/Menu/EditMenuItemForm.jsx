@@ -26,8 +26,6 @@ function EditMenuItemForm() {
     (store) => store.menu.editMenuItemForm.menuItem
   );
 
-  const [selectedId, setSelectedId] = useState(0);
-
   //All of the user's inventory
   const inventory = useSelector((store) => store.inventory);
 
@@ -48,7 +46,7 @@ function EditMenuItemForm() {
       price: selectedItem?.price || "",
       ingredients: selectedItem?.ingredients || [],
     });
-  }, [selectedItem]);
+  }, [selectedItem.ingredients]);
 
   //Function to close the add contact form via redux
   const handleClose = () => {
@@ -59,8 +57,16 @@ function EditMenuItemForm() {
   };
 
   //Function to handle deleteing an ingredient
-  const handleDeleteIngredient = (selectedId) => {
-    axios.delete("/api/menu", selectedId);
+  const handleDeleteIngredient = async (selectedId) => {
+    await axios.delete(`/api/menu/${selectedId}`);
+
+    // Update the state of updatedItemToSend by removing the deleted ingredient
+    setUpdatedItemToSend((updatedItemToSend) => ({
+      ...updatedItemToSend,
+      ingredients: updatedItemToSend.ingredients.filter(
+        (item) => item.menuInventoryId !== selectedId
+      ),
+    }));
   };
 
   //Function to handle displaying all current ingredients with delete
@@ -68,8 +74,13 @@ function EditMenuItemForm() {
   function displayAllCurrentIngredients() {
     return updatedItemToSend.ingredients.map((item) => {
       return (
-        <Box display="flex" justifyContent="space-between" marginTop="10px">
-          <li key={item.menuInventoryId}>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          marginTop="10px"
+          key={item.menuInventoryId}
+        >
+          <li>
             {item.item}: {item.quantity} {item.unit}
           </li>
           <Button
