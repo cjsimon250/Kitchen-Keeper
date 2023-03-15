@@ -1,11 +1,12 @@
 import Header from "../Header/Header";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box, useTheme } from "@mui/system";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import { mockDataTeam } from "../../data/mockData";
 import { Button } from "@mui/material";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import AddInventoryForm from "./AddInventoryForm";
 
 const Inventory = () => {
@@ -13,17 +14,27 @@ const Inventory = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  //variables for toggling the delete column and button text
+  //Fetch user's inventory on page load
+  useEffect(() => {
+    dispatch({
+      type: "FETCH_INVENTORY",
+    });
+  }, [inventory]);
+
+  //User's inventory
+  const inventory = useSelector((store) => store.inventory);
+
+  //Variables for toggling the delete column and button text
   const [deleteIsVisbile, setDeleteIsVisible] = useState(true);
   const [deleteButtonText, setDeleteButtonText] = useState(
-    "Delete InventoryItem"
+    "Delete Inventory Item"
   );
 
-  //function to handle toggling the delete column
+  //Function to handle toggling the delete column
   const handleToggleDeleteColumn = () => {
     setDeleteIsVisible(!deleteIsVisbile);
     setDeleteButtonText(
-      deleteIsVisbile ? "Hide Delete Column" : "Delete InventoryItem"
+      deleteIsVisbile ? "Hide Delete Column" : "Delete Inventory Item"
     );
   };
 
@@ -45,24 +56,24 @@ const Inventory = () => {
   //for every row this grabs the value from the key to put into the "headerName" column
   const columns = [
     {
-      field: "name",
-      headerName: "Name",
+      field: "item",
+      headerName: "Item",
       // flex is allowing the cells to grow
       flex: 1,
-      cellClassName: "name-column-cell",
+      cellClassName: "item-column-cell",
       editable: true,
     },
     {
-      field: "email",
-      headerName: "E-Mail",
+      field: "quantitiy",
+      headerName: "Quantity In Stock",
       flex: 1,
-      cellClassName: "email-column-cell",
+      cellClassName: "quantity-column-cell",
       editable: true,
     },
     {
-      field: "phone",
-      headerName: "Phone Number",
-      flex: 1,
+      field: "unit",
+      headerName: "Unit",
+      flex: 0.1,
       cellClassName: "phone-column-cell",
       editable: true,
     },
@@ -145,15 +156,15 @@ const Inventory = () => {
         />
         <Box display="flex" justifyContent="space-between">
           <Button
-            sx={{ mt: "2.5px" }}
+            sx={{ mt: "10px" }}
             onClick={() => {
               handleShowAddTeamMemberForm();
             }}
           >
-            Add InventoryItem
+            Add Inventory Item
           </Button>
           <Button
-            sx={{ mt: "2.5px" }}
+            sx={{ mt: "10px" }}
             onClick={() => {
               handleToggleDeleteColumn();
             }}

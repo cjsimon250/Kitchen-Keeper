@@ -10,6 +10,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import axios from "axios";
 import { Box, useTheme } from "@mui/system";
 import { tokens } from "../../theme";
 
@@ -59,18 +60,16 @@ function EditMenuItemForm() {
 
   //Function to handle deleteing an ingredient
   const handleDeleteIngredient = (selectedId) => {
-    console.log("inHandle delete ID :", selectedId);
+    axios.delete("/api/menu", selectedId);
   };
 
   //Function to handle displaying all current ingredients with delete
   //buttons for each
   function displayAllCurrentIngredients() {
-    console.log(updatedItemToSend.ingredients);
     return updatedItemToSend.ingredients.map((item) => {
-      console.log(item.menuInventoryId);
       return (
         <Box display="flex" justifyContent="space-between" marginTop="10px">
-          <li>
+          <li key={item.menuInventoryId}>
             {item.item}: {item.quantity} {item.unit}
           </li>
           <Button
