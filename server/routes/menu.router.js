@@ -60,7 +60,7 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
       // information to the ingredient array of that object
       if (existingDish) {
         existingDish.ingredients.push({
-          MenuInventoryid: current.menuInventoryId,
+          menuInventoryId: current.menuInventoryId,
           quantity: current.quantity,
           unit: current.unit,
           item: current.item,

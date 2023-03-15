@@ -3,6 +3,7 @@ import errors from "./errors.reducer";
 import user from "./user.reducer";
 import showTeamForm from "./teamForm.reducer";
 import showContactsForm from "./contactsForm.reducer";
+import showInventoryForm from "./inventoryForm.reducer";
 import inventory from "./inventory.reducer";
 import newUserSetup from "./newUserSetup.reducer";
 import company from "./company.reducer";
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
   company, //Allows access to the user's company information
   showTeamForm, // Will be able to toggle the team form
   showContactsForm, //Will be able to toggle the contacts form
+  showInventoryForm, //Will be able to toggle the inventory form
   inventory, //Allows access to the inventory
   menu, //Storing data for Menu component
   newUserSetup, //Storing the state of the new user dialogs (open or not)
