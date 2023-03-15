@@ -166,7 +166,7 @@ function NewUserMenuForm() {
             margin="dense"
             id="url"
             label="Image URL"
-            type="text"
+            type="url"
             fullWidth
             variant="standard"
             value={menuItemToSend.image}

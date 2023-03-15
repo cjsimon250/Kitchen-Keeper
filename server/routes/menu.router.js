@@ -87,9 +87,6 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
 
       return accumulator;
     }, []);
-
-    console.log(`menuDataToSend :`, menuDataToSend);
-
     res.send(menuDataToSend);
   } catch (error) {
     console.log("Error executing SQL query", ":", error);

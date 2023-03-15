@@ -33,21 +33,21 @@ function MenuItem({ menuItem }) {
         <ImageListItemBar
           sx={{
             background:
-              "linear-gradient(to bottom, rgba(0,0,0,5), rgba(0,0,0,0))",
-            color: `${colors.primary[100]}`,
+              "linear-gradient(to bottom, rgba(0,0,0,15), rgba(0,0,0,0))",
+            color: "#090808",
           }}
           title={menuItem.dish}
           position="top"
           actionIcon={
             <>
               <IconButton
-                sx={{ color: `${colors.primary[100]}` }}
+                sx={{ color: "#d5d4d4" }}
                 aria-label={`View ${menuItem.dish}`}
               >
                 <ViewHeadlineIcon />
               </IconButton>
               <IconButton
-                sx={{ color: `${colors.primary[100]}` }}
+                sx={{ color: "#d5d4d4" }}
                 aria-label={`Edit ${menuItem.dish}`}
                 onClick={() => {
                   handleShowEditMenuItemForm();
