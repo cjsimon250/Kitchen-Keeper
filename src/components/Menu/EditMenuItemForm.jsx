@@ -75,7 +75,7 @@ function EditMenuItemForm() {
           </li>
           <Button
             className="delete-btns"
-            onClick={() => handleDelete(item.menuInventoryId)}
+            onClick={() => handleDeleteIngredient(item.menuInventoryId)}
           >
             Delete
           </Button>
