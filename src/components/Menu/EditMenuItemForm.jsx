@@ -26,7 +26,7 @@ function EditMenuItemForm() {
 
   //Object that holds new ingredients to add and whether the inputs to add
   //a new ingredient are showing
-  const newIngredient = useSelector((store) => store.menu.newIngredientsInput);
+  const newIngredients = useSelector((store) => store.menu.newIngredientsInput);
 
   //Variable holding the data about item to send
   const [updatedItemToSend, setUpdatedItemToSend] = useState({

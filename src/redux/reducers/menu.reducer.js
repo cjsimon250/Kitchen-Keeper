@@ -26,19 +26,19 @@ const editMenuItemForm = (
 //  * Reducer for holding whether the new ingredient inputs
 // are open in the form or not and what the updated ingrdients to add to the data base are
 const newIngredientInputs = (
-  state = { showForm: false, newIngredient: [] },
+  state = { showForm: false, newIngredients: [] },
   action
 ) => {
   switch (action.type) {
     case "SHOW_INGREDIENT_INPUTS":
       return {
         showForm: action.payload,
-        newIngredient: state.newIngredient,
+        newIngredients: state.newIngredients,
       };
     case "UPDATE_INGREDIENT":
       return {
         showForm: state.showForm,
-        newIngredient: [...state.newIngredient, action.payload],
+        newIngredients: [...state.newIngredients, action.payload],
       };
     default:
       return state;
