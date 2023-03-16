@@ -7,12 +7,9 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import axios from "axios";
 import { Box, useTheme } from "@mui/system";
-import { tokens } from "../../theme";
+import { tokens } from "../../../theme";
+import IngredientsList from "./IngredientsList";
 
 function EditMenuItemForm() {
   const dispatch = useDispatch();
@@ -26,73 +23,35 @@ function EditMenuItemForm() {
     (store) => store.menu.editMenuItemForm.menuItem
   );
 
-  //All of the user's inventory
+  //Whether the add ingredient input fields are showing or not
+  // const [showNewIngredientFields, setShowNewIngredientFields] = useState(false);
+
+  //All of the user's inventory to show if they want to add a new ingredient
   const inventory = useSelector((store) => store.inventory);
 
-  //Variable holding the data about item to send
+  //Variable holding the data to send to menu database
   const [updatedItemToSend, setUpdatedItemToSend] = useState({
     dish: selectedItem?.dish || "",
     image: selectedItem?.image || "",
     price: selectedItem?.price || "",
-    ingredients: selectedItem?.ingredients || [],
   });
 
   //On page load set updatedItemtoSend's initial values to the current values
-  //Fetch all of the user's inventory
   useEffect(() => {
     setUpdatedItemToSend({
       dish: selectedItem?.dish || "",
       image: selectedItem?.image || "",
       price: selectedItem?.price || "",
-      ingredients: selectedItem?.ingredients || [],
     });
-  }, [selectedItem.ingredients]);
+  }, [selectedItem]);
 
-  //Function to close the add contact form via redux
+  //Function to close the update menu item form via redux
   const handleClose = () => {
     dispatch({
       type: "SHOW_MENU_FORM",
       payload: { showForm: false, menuItem: {} },
     });
   };
-
-  //Function to handle deleteing an ingredient
-  const handleDeleteIngredient = async (selectedId) => {
-    await axios.delete(`/api/menu/${selectedId}`);
-
-    // Update the state of updatedItemToSend by removing the deleted ingredient
-    setUpdatedItemToSend((updatedItemToSend) => ({
-      ...updatedItemToSend,
-      ingredients: updatedItemToSend.ingredients.filter(
-        (item) => item.menuInventoryId !== selectedId
-      ),
-    }));
-  };
-
-  //Function to handle displaying all current ingredients with delete
-  //buttons for each
-  function displayAllCurrentIngredients() {
-    return updatedItemToSend.ingredients.map((item) => {
-      return (
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          marginTop="10px"
-          key={item.menuInventoryId}
-        >
-          <li>
-            {item.item}: {item.quantity} {item.unit}
-          </li>
-          <Button
-            className="delete-btns"
-            onClick={() => handleDeleteIngredient(item.menuInventoryId)}
-          >
-            Delete
-          </Button>
-        </Box>
-      );
-    });
-  }
 
   return (
     //Form to edit a menu item
@@ -104,7 +63,7 @@ function EditMenuItemForm() {
           "& .MuiPaper-root": {
             backgroundColor: colors.khakiAccent[800],
           },
-          "#cancel-btn": {
+          "#cancel-btn, #ingredient-btn": {
             backgroundColor: colors.orangeAccent[500],
           },
           "& #confirm-btn": {
@@ -198,7 +157,9 @@ function EditMenuItemForm() {
           the user to add more if necessary
           */}
           <Box width="100%" margin="auto">
-            <ul sx={{ w: "100%" }}>{displayAllCurrentIngredients()}</ul>
+            <ul sx={{ w: "100%" }}>
+              <IngredientsList updatedItemToSend={updatedItemToSend} />
+            </ul>
           </Box>
         </DialogContent>
         <DialogActions>
@@ -209,6 +170,12 @@ function EditMenuItemForm() {
             }}
           >
             Cancel
+          </Button>
+          <Button
+            id="ingredient-btn"
+            onClick={() => setShowNewIngredientFields(true)}
+          >
+            Add Ingredient
           </Button>
           <Button id="confirm-btn" onClick={handleClose}>
             Confirm Edit

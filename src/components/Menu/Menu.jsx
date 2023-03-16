@@ -4,6 +4,7 @@ import MenuList from "./MenuItem";
 import { ImageList } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import EditMenuItemForm from "./EditMenuItemForm/EditMenuItemForm";
 
 const Menu = () => {
   const dispatch = useDispatch();
@@ -30,6 +31,7 @@ const Menu = () => {
           );
         })}
       </ImageList>
+      <EditMenuItemForm />
     </Box>
   );
 };

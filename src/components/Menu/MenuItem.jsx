@@ -1,6 +1,5 @@
 import { tokens } from "../../theme";
 import { useDispatch } from "react-redux";
-import EditMenuItemForm from "./EditMenuItemForm";
 //MUI
 import { Box, useTheme, IconButton } from "@mui/material";
 import ImageListItem from "@mui/material/ImageListItem";
@@ -60,7 +59,6 @@ function MenuItem({ menuItem }) {
           actionPosition="left"
         />
       </ImageListItem>
-      <EditMenuItemForm />
     </Box>
   );
 }

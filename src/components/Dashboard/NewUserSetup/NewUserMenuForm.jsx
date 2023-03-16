@@ -230,11 +230,11 @@ function NewUserMenuForm() {
               />
 
               <Box sx={{ mt: "10px", ml: "30px" }}>
-                <FormLabel id="access">Unit of Measurement</FormLabel>
+                <FormLabel id="unit-form">Unit of Measurement</FormLabel>
                 <RadioGroup
                   row
                   defaultValue="Lb"
-                  name="access-radio-btn-group"
+                  name="unit-radio-btn-group"
                   value={ingredientObject.unit}
                   onChange={(event) =>
                     setIngredientObject({
