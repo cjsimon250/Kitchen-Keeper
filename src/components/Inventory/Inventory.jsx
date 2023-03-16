@@ -13,14 +13,6 @@ const Inventory = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
-  //Fetch user's inventory on page load
-  useEffect(() => {
-    dispatch({
-      type: "FETCH_INVENTORY",
-    });
-  }, [inventory]);
-
   //User's inventory
   const inventory = useSelector((store) => store.inventory);
 
@@ -30,6 +22,33 @@ const Inventory = () => {
     "Delete Inventory Item"
   );
 
+  //Fetch user's inventory on page load
+  useEffect(() => {
+    dispatch({
+      type: "FETCH_INVENTORY",
+    });
+  }, [inventory]);
+
+  //Filtering the inventory to convert quantities and units so that they
+  //are more readable
+  useEffect(() => {
+    console.log("INIT");
+    inventory.forEach((item) => {
+      if (item.unit === "Oz" && (item.quantity || item.minimumStock) > 48) {
+        item.quantity /= 16;
+        item.minimumStock /= 16;
+        item.unit = "Lb";
+      } else if (
+        item.unit === "Fl. Oz" &&
+        (item.quantity || item.minimumStock) > 63
+      ) {
+        item.quantity /= 128;
+        item.minimumStock /= 128;
+        item.unit = "Gal.";
+      }
+    });
+  }, [inventory]);
+
   //Function to handle toggling the delete column
   const handleToggleDeleteColumn = () => {
     setDeleteIsVisible(!deleteIsVisbile);
@@ -38,7 +57,7 @@ const Inventory = () => {
     );
   };
 
-  //function to show the add contact form via redux
+  //Function to show the add contact form via redux
   const handleShowAddTeamMemberForm = () => {
     dispatch({
       type: "SET_SHOW_INVENTORY_FORM",
@@ -46,14 +65,14 @@ const Inventory = () => {
     });
   };
 
-  //function for handling deleting a row
+  //Function for handling deleting a row
   function handleDelete(event, cellValues) {
     let rowToDelete = cellValues.row;
 
     console.log(rowToDelete);
   }
 
-  //for every row this grabs the value from the key to put into the "headerName" column
+  //For every row this grabs the value from the key to put into the "headerName" column
   const columns = [
     {
       field: "item",
@@ -64,24 +83,24 @@ const Inventory = () => {
       editable: true,
     },
     {
-      field: "quantitiy",
+      field: "quantity",
       headerName: "Quantity In Stock",
       flex: 1,
       cellClassName: "quantity-column-cell",
       editable: true,
     },
     {
-      field: "unit",
-      headerName: "Unit",
-      flex: 0.1,
-      cellClassName: "phone-column-cell",
+      field: "minimumStock",
+      headerName: "Minimum Desired Stock",
+      flex: 1,
+      cellClassName: "minStock-column-cell",
       editable: true,
     },
     {
-      field: "access",
-      headerName: "Access",
-      flex: 1,
-      cellClassName: "access-column-cell",
+      field: "unit",
+      headerName: "Unit",
+      flex: 0.2,
+      cellClassName: "unit-column-cell",
       editable: true,
     },
     {
@@ -151,7 +170,7 @@ const Inventory = () => {
         <DataGrid
           //mui api to allow editing on each cell
           experimentalFeatures={{ newEditingApi: true }}
-          rows={mockDataTeam}
+          rows={inventory}
           columns={columns}
         />
         <Box display="flex" justifyContent="space-between">
