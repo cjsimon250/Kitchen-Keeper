@@ -7,12 +7,10 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 import axios from "axios";
 import { Box, useTheme } from "@mui/system";
 import { tokens } from "../../theme";
+import MenuFormNewIngredient from "./MenuFormNewIngredient";
 
 function EditMenuItemForm() {
   const dispatch = useDispatch();
@@ -26,8 +24,9 @@ function EditMenuItemForm() {
     (store) => store.menu.editMenuItemForm.menuItem
   );
 
-  //All of the user's inventory
-  const inventory = useSelector((store) => store.inventory);
+  //Object that holds new ingredients to add and whether the inputs to add
+  //a new ingredient are showing
+  const newIngredient = useSelector((store) => store.menu.newIngredientsInput);
 
   //Variable holding the data about item to send
   const [updatedItemToSend, setUpdatedItemToSend] = useState({
@@ -104,7 +103,7 @@ function EditMenuItemForm() {
           "& .MuiPaper-root": {
             backgroundColor: colors.khakiAccent[800],
           },
-          "#cancel-btn": {
+          "#cancel-btn, #ingredient-btn": {
             backgroundColor: colors.orangeAccent[500],
           },
           "& #confirm-btn": {
@@ -200,6 +199,9 @@ function EditMenuItemForm() {
           <Box width="100%" margin="auto">
             <ul sx={{ w: "100%" }}>{displayAllCurrentIngredients()}</ul>
           </Box>
+          <Box>
+            <MenuFormNewIngredient />
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button
@@ -210,7 +212,23 @@ function EditMenuItemForm() {
           >
             Cancel
           </Button>
-          <Button id="confirm-btn" onClick={handleClose}>
+          <Button
+            id="ingredient-btn"
+            onClick={() => {
+              dispatch({
+                type: "SHOW_INGREDIENT_INPUTS",
+                payload: true,
+              });
+            }}
+          >
+            Add Ingredient
+          </Button>
+          <Button
+            id="confirm-btn"
+            onClick={() => {
+              handleClose();
+            }}
+          >
             Confirm Edit
           </Button>
         </DialogActions>
