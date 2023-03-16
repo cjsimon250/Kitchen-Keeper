@@ -38,6 +38,29 @@ function MenuFormNewIngredient() {
     });
   }, []);
 
+  //Funtion to handle canceling the new ingredient to be added
+  function handleCancelAddIngredient() {
+    //Hiding the input fields
+    dispatch({
+      type: "SHOW_INGREDIENT_INPUTS",
+      payload: false,
+    });
+    //Resetting updatedIngredient
+    setUpdatedIngredient({
+      item: "",
+      unit: "",
+      quantity: 1,
+    });
+  }
+
+  //Function to handle adding new ingredient
+  function handleAddIngredient() {
+    dispatch({
+      type: "UPDATE_INGREDIENT",
+      payload: updatedIngredient,
+    });
+  }
+
   return (
     <>
       {newIngredients.showForm ? (
@@ -104,10 +127,10 @@ function MenuFormNewIngredient() {
           </FormControl>
 
           <Box marginLeft="5%">
-            <IconButton>
+            <IconButton onClick={() => handleAddIngredient()}>
               <CheckIcon />
             </IconButton>
-            <IconButton>
+            <IconButton onClick={() => handleCancelAddIngredient()}>
               <CloseIcon />
             </IconButton>
           </Box>
