@@ -40,21 +40,18 @@ const conditionalForms = (
   switch (action.type) {
     case "SET_SHOW_INITIAL_WELCOME":
       return {
+        ...state,
         showInitialWelcome: action.payload,
-        showAddToInventoryForm: false,
-        showAddToMenuForm: false,
       };
     case "SET_SHOW_ADD_TO_MENU_FORM":
       return {
-        showInitialWelcome: false,
-        showAddToInventoryForm: false,
+        ...state,
         showAddToMenuForm: action.payload,
       };
     case "SET_SHOW_ADD_TO_INVENTORY_FORM":
       return {
-        showInitialWelcome: false,
+        ...state,
         showAddToInventoryForm: action.payload,
-        showAddToMenuForm: false,
       };
 
     default:

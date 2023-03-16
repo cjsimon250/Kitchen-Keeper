@@ -17,7 +17,6 @@ const Dashboard = () => {
   //the add item to inventory form
   useEffect(() => {
     if (inventory.length === 0) {
-      console.log("showInitialWelcome:", inventory.showInitialWelcome);
       dispatch({ type: "SET_SHOW_INITIAL_WELCOME", payload: true });
     } else {
       dispatch({ type: "SET_SHOW_INITIAL_WELCOME", payload: false });
