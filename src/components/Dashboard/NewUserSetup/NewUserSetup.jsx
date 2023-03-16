@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import NewUserWelcome from "./NewUserWelcome";
-import NewUserInventoryForm from "./NewUserInventoryForm";
-import NewUserMenuForm from "./NewUserMenuForm";
+import AddToInventoryForm from "../../Forms/AddToInventoryForm";
+import AddToMenuForm from "../../Forms/AddToMenuForm";
 
 function NewUserSetup() {
   //variables for which scene is showing in the dialog box
@@ -20,9 +20,9 @@ function NewUserSetup() {
       case showInitialWelcome:
         return <NewUserWelcome />;
       case showInitialInventoryForm:
-        return <NewUserInventoryForm />;
+        return <AddToInventoryForm />;
       case showMenuForm:
-        return <NewUserMenuForm />;
+        return <AddToMenuForm />;
       default:
         return null;
     }

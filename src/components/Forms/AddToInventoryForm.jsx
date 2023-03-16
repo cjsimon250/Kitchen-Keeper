@@ -9,15 +9,15 @@ import { FormControl, FormControlLabel, FormLabel, Radio } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { Box, useTheme } from "@mui/system";
-import { tokens } from "../../../theme";
+import { tokens } from "../../theme";
 
-function NewUserInventoryForm() {
+function AddToInventoryForm() {
   const dispatch = useDispatch();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   //Variable to show whether the form is showing
-  const showInitialInventoryForm = useSelector(
+  const showAddToInventoryForm = useSelector(
     (store) => store.newUserSetup.showInitialInventoryForm
   );
 
@@ -69,7 +69,7 @@ function NewUserInventoryForm() {
     <Box>
       <Dialog
         fullWidth
-        open={showInitialInventoryForm}
+        open={showAddToInventoryForm}
         sx={{
           "& .MuiPaper-root": {
             backgroundColor: colors.khakiAccent[800],
@@ -220,4 +220,4 @@ function NewUserInventoryForm() {
   );
 }
 
-export default NewUserInventoryForm;
+export default AddToInventoryForm;

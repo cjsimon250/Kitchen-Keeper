@@ -1,13 +1,13 @@
 import Header from "../Header/Header";
+import axios from "axios";
 import { useState, useEffect } from "react";
 import { Box, useTheme } from "@mui/system";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
-import { mockDataTeam } from "../../data/mockData";
 import { Button } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import AddInventoryForm from "./AddInventoryForm";
+import AddToInventoryForm from "../Forms/AddToInventoryForm";
 
 const Inventory = () => {
   const dispatch = useDispatch();
@@ -27,12 +27,11 @@ const Inventory = () => {
     dispatch({
       type: "FETCH_INVENTORY",
     });
-  }, [inventory]);
+  }, []);
 
   //Filtering the inventory to convert quantities and units so that they
   //are more readable
   useEffect(() => {
-    console.log("INIT");
     inventory.forEach((item) => {
       if (item.unit === "Oz" && (item.quantity || item.minimumStock) > 48) {
         item.quantity /= 16;
@@ -69,7 +68,11 @@ const Inventory = () => {
   function handleDelete(event, cellValues) {
     let rowToDelete = cellValues.row;
 
-    console.log(rowToDelete);
+    axios.delete(`/api/inventory/${rowToDelete.id}`).then((response) => {
+      dispatch({
+        type: "FETCH_INVENTORY",
+      });
+    });
   }
 
   //For every row this grabs the value from the key to put into the "headerName" column
@@ -177,7 +180,10 @@ const Inventory = () => {
           <Button
             sx={{ mt: "10px" }}
             onClick={() => {
-              handleShowAddTeamMemberForm();
+              dispatch({
+                type: "SET_SHOW_INVENTORY_FORM",
+                payload: true,
+              });
             }}
           >
             Add Inventory Item
@@ -191,7 +197,7 @@ const Inventory = () => {
             {deleteButtonText}
           </Button>
         </Box>
-        <AddInventoryForm />
+        <AddToInventoryForm />
       </Box>
     </Box>
   );

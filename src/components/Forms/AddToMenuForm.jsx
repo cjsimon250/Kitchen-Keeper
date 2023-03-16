@@ -13,9 +13,9 @@ import { FormControl, FormControlLabel, FormLabel, Radio } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { Box, useTheme } from "@mui/system";
-import { tokens } from "../../../theme";
+import { tokens } from "../../theme";
 
-function NewUserMenuForm() {
+function AddToMenuForm() {
   const dispatch = useDispatch();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -281,4 +281,4 @@ function NewUserMenuForm() {
   );
 }
 
-export default NewUserMenuForm;
+export default AddToMenuForm;
