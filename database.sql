@@ -54,7 +54,7 @@ CREATE TABLE "menu" (
 CREATE TABLE "menu_inventory" (
 	"id" serial NOT NULL,
 	"menu_id" int NOT NULL,
-	"inventory_id" int NOT NULL,
+	"inventory_id" int NOT NULL ON DELETE CASCADE,
 	"quantity" int NOT NULL,
 	"unit" varchar(255) NOT NULL,
 	CONSTRAINT "menu_inventory_pk" PRIMARY KEY ("id")

@@ -15,18 +15,18 @@ function NewUserWelcome() {
 
   //Variable to show whether the welcome is showing
   const showInitialWelcome = useSelector(
-    (store) => store.newUserSetup.showInitialWelcome
+    (store) => store.conditionalForms.showInitialWelcome
   );
 
   //Function to close the welcome dialog and open inventory form via redux
   const handleNext = () => {
     dispatch({
-      type: "SET_SHOW_INITIAL_WELCOME",
-      payload: false,
+      type: "SET_SHOW_ADD_TO_INVENTORY_FORM",
+      payload: true,
     });
     dispatch({
-      type: "SET_SHOW_INITIAL_INVENTORY_FORM",
-      payload: true,
+      type: "SET_SHOW_INITIAL_WELCOME",
+      payload: false,
     });
   };
 
@@ -71,7 +71,7 @@ function NewUserWelcome() {
           </ul>
         </DialogContent>
         <DialogActions>
-          <Button id="add-btn" variant="text" onClick={handleNext}>
+          <Button id="add-btn" variant="text" onClick={() => handleNext()}>
             Next
           </Button>
         </DialogActions>

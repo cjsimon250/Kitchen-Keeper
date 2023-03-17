@@ -1,28 +1,28 @@
 import { useSelector } from "react-redux";
 import NewUserWelcome from "./NewUserWelcome";
-import NewUserInventoryForm from "./NewUserInventoryForm";
-import NewUserMenuForm from "./NewUserMenuForm";
+import AddToInventoryForm from "../../Forms/AddToInventoryForm";
+import AddToMenuForm from "../../Forms/AddToMenuForm";
 
 function NewUserSetup() {
   //variables for which scene is showing in the dialog box
   const showInitialWelcome = useSelector(
-    (store) => store.newUserSetup.showInitialWelcome
+    (store) => store.conditionalForms.showInitialWelcome
   );
-  const showInitialInventoryForm = useSelector(
-    (store) => store.newUserSetup.showInitialInventoryForm
+  const showAddToInventoryForm = useSelector(
+    (store) => store.conditionalForms.showAddToInventoryForm
   );
-  const showMenuForm = useSelector(
-    (store) => store.newUserSetup.showInitialMenuForm
+  const showAddToMenuForm = useSelector(
+    (store) => store.conditionalForms.showAddToMenuForm
   );
 
   function handleDialogContents() {
     switch (true) {
       case showInitialWelcome:
         return <NewUserWelcome />;
-      case showInitialInventoryForm:
-        return <NewUserInventoryForm />;
-      case showMenuForm:
-        return <NewUserMenuForm />;
+      case showAddToInventoryForm:
+        return <AddToInventoryForm />;
+      case showAddToMenuForm:
+        return <AddToMenuForm />;
       default:
         return null;
     }

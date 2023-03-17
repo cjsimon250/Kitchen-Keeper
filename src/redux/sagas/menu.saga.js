@@ -7,7 +7,7 @@ function* menuSaga() {
   yield takeEvery("POST_MENU", postMenu);
 }
 
-//GET inventory
+//GET menu
 function* fetchMenu() {
   try {
     const response = yield axios.get("/api/menu");
@@ -17,7 +17,7 @@ function* fetchMenu() {
   }
 }
 
-//POST to inventory
+//POST to menu
 function* postMenu(action) {
   try {
     yield axios.post("/api/menu", action.payload);
