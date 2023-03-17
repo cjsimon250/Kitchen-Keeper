@@ -16,7 +16,6 @@ function MenuFormNewIngredient() {
   const dispatch = useDispatch();
   //All of the user's inventory to choose from
   const inventory = useSelector((store) => store.inventory);
-  //Initial values for new ingredient options
 
   //Variable for whether the form to edit a menu item is showing
   const showEditMenuItemForm = useSelector(
@@ -29,15 +28,8 @@ function MenuFormNewIngredient() {
     unit: "",
     quantity: 1,
   });
-
   //Array of available units of mesurement to map through
   const units = ["Lb", "Oz", "Gal", "Fl. Oz"];
-  //Fetching all of the users inventory on page load for user to select from
-  useEffect(() => {
-    dispatch({
-      type: "FETCH_INVENTORY",
-    });
-  }, []);
 
   //Funtion to handle canceling the new ingredient to be added
   function handleCancelAddIngredient() {
@@ -57,8 +49,15 @@ function MenuFormNewIngredient() {
   //Function to handle adding new ingredient
   function handleAddIngredient() {
     dispatch({
-      type: "UPDATE_INGREDIENT",
+      type: "UPDATE_INGREDIENTS",
       payload: updatedIngredient,
+    });
+
+    //Resetting updatedIngredient
+    setUpdatedIngredient({
+      item: "",
+      unit: "",
+      quantity: 1,
     });
   }
 

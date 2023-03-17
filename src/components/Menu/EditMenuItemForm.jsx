@@ -7,6 +7,8 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import IconButton from "@mui/material/IconButton";
 import axios from "axios";
 import { Box, useTheme } from "@mui/system";
 import { tokens } from "../../theme";
@@ -35,8 +37,6 @@ function EditMenuItemForm() {
   //On page load set updatedItemtoSend's initial values to the current values
   //Fetch all of the user's inventory
   useEffect(() => {
-    console.log("SELECTED ITEM", selectedItem);
-
     setUpdatedItemToSend({
       dish: selectedItem?.dish || "",
       image: selectedItem?.image || "",
@@ -45,7 +45,7 @@ function EditMenuItemForm() {
     });
 
     displayAllCurrentIngredients();
-  }, [selectedItem]);
+  }, [selectedItem.ingredients]);
 
   //Function to close the add contact form via redux
   const handleClose = () => {
@@ -56,41 +56,41 @@ function EditMenuItemForm() {
   };
 
   //Function to handle deleteing an ingredient
-  const handleDeleteIngredient = async (selectedId) => {
-    await axios.delete(`/api/menu/${selectedId}`);
-
-    // Update the state of updatedItemToSend by removing the deleted ingredient
-    setUpdatedItemToSend((updatedItemToSend) => ({
-      ...updatedItemToSend,
-      ingredients: updatedItemToSend.ingredients.filter(
-        (item) => item.menuInventoryId !== selectedId
-      ),
-    }));
-  };
+  const handleDeleteIngredient = (item) => {};
 
   //Function to handle displaying all current ingredients with delete
   //buttons for each
   function displayAllCurrentIngredients() {
-    return updatedItemToSend.ingredients.map((item) => {
+    return updatedItemToSend.ingredients.map((item, index) => {
       return (
         <Box
           display="flex"
           justifyContent="space-between"
           marginTop="10px"
-          key={item.menuInventoryId}
+          key={index}
         >
           <li>
             {item.item}: {item.quantity} {item.unit}
           </li>
-          <Button
+          <IconButton
             className="delete-btns"
-            onClick={() => handleDeleteIngredient(item.menuInventoryId)}
+            onClick={() => {
+              dispatch({
+                type: "DELETE_INGREDIENT",
+                payload: item.item,
+              });
+            }}
           >
-            Delete
-          </Button>
+            <DeleteForeverIcon />
+          </IconButton>
         </Box>
       );
     });
+  }
+
+  //Function to confirm all edits and send to database
+  function handleConfirmEdits() {
+    console.log("UPDATED ITEM TO SEND : ", updatedItemToSend);
   }
 
   return (
@@ -109,9 +109,11 @@ function EditMenuItemForm() {
           "& #confirm-btn": {
             backgroundColor: colors.greenAccent[500],
           },
-          ".delete-btns": {
-            backgroundColor: colors.orangeAccent[500],
-            padding: "4px",
+          "& .delete-btns": {
+            color: colors.orangeAccent[500],
+          },
+          "& .delete-btns:hover": {
+            color: colors.primary[100],
           },
         }}
       >
@@ -219,6 +221,9 @@ function EditMenuItemForm() {
                 type: "SHOW_INGREDIENT_INPUTS",
                 payload: true,
               });
+              dispatch({
+                type: "FETCH_INVENTORY",
+              });
             }}
           >
             Add New Ingredient
@@ -226,7 +231,7 @@ function EditMenuItemForm() {
           <Button
             id="confirm-btn"
             onClick={() => {
-              handleClose();
+              handleConfirmEdits();
             }}
           >
             Confirm Edit

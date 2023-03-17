@@ -38,7 +38,22 @@ const editMenuItemForm = (
     case "UPDATE_INGREDIENTS":
       return {
         ...state,
-        ingredients: [...state.ingredients, action.payload],
+        menuItem: {
+          ...state.menuItem,
+          ingredients: [...state.menuItem.ingredients, action.payload],
+        },
+      };
+    case "DELETE_INGREDIENT":
+      return {
+        ...state,
+        menuItem: {
+          ...state.menuItem,
+          ingredients: [
+            ...state.menuItem.ingredients.filter(
+              (ingredient) => ingredient.item !== action.payload
+            ),
+          ],
+        },
       };
     default:
       return state;
