@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -8,7 +10,6 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import IconButton from "@mui/material/IconButton";
 import axios from "axios";
 import { Box, useTheme } from "@mui/system";
 import { tokens } from "../../theme";
@@ -28,6 +29,7 @@ function EditMenuItemForm() {
 
   //Variable holding the data about item to send
   const [updatedItemToSend, setUpdatedItemToSend] = useState({
+    menuId: selectedItem?.menuId || null,
     dish: selectedItem?.dish || "",
     image: selectedItem?.image || "",
     price: selectedItem?.price || "",
@@ -38,6 +40,7 @@ function EditMenuItemForm() {
   //Fetch all of the user's inventory
   useEffect(() => {
     setUpdatedItemToSend({
+      menuId: selectedItem?.menuId || null,
       dish: selectedItem?.dish || "",
       image: selectedItem?.image || "",
       price: selectedItem?.price || "",
@@ -54,9 +57,6 @@ function EditMenuItemForm() {
       payload: false,
     });
   };
-
-  //Function to handle deleteing an ingredient
-  const handleDeleteIngredient = (item) => {};
 
   //Function to handle displaying all current ingredients with delete
   //buttons for each
@@ -91,6 +91,9 @@ function EditMenuItemForm() {
   //Function to confirm all edits and send to database
   function handleConfirmEdits() {
     console.log("UPDATED ITEM TO SEND : ", updatedItemToSend);
+    axios.put(`/api/menu/${updatedItemToSend.menuId}`, {
+      payload: updatedItemToSend,
+    });
   }
 
   return (
@@ -103,11 +106,11 @@ function EditMenuItemForm() {
           "& .MuiPaper-root": {
             backgroundColor: colors.khakiAccent[800],
           },
-          "#cancel-btn, #ingredient-btn": {
+          "& #ingredient-btn": {
             backgroundColor: colors.orangeAccent[500],
           },
           "& #confirm-btn": {
-            backgroundColor: colors.greenAccent[500],
+            backgroundColor: colors.greenAccent[400],
           },
           "& .delete-btns": {
             color: colors.orangeAccent[500],
@@ -115,10 +118,26 @@ function EditMenuItemForm() {
           "& .delete-btns:hover": {
             color: colors.primary[100],
           },
+          "& #close-btn:hover": {
+            color: colors.orangeAccent[500],
+          },
         }}
       >
-        <DialogTitle variant="h4" sx={{ color: colors.greenAccent[500] }}>
+        <DialogTitle
+          display="flex"
+          justifyContent="space-between"
+          sx={{ color: colors.greenAccent[400] }}
+          variant="h3"
+        >
           Edit "{selectedItem.dish}"
+          <IconButton
+            id="close-btn"
+            onClick={() => {
+              handleClose();
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
         </DialogTitle>
         <DialogContent>
           <Box
@@ -192,7 +211,7 @@ function EditMenuItemForm() {
               });
             }}
           />
-          <DialogTitle variant="h5" sx={{ color: colors.greenAccent[500] }}>
+          <DialogTitle variant="h5" sx={{ color: colors.greenAccent[400] }}>
             Ingredients
           </DialogTitle>
           {/* Displaying all ingredients already in the database and allowing
@@ -206,14 +225,6 @@ function EditMenuItemForm() {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button
-            id="cancel-btn"
-            onClick={() => {
-              handleClose();
-            }}
-          >
-            Cancel
-          </Button>
           <Button
             id="ingredient-btn"
             onClick={() => {

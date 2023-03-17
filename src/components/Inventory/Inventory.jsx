@@ -137,7 +137,7 @@ const Inventory = () => {
         );
       },
     },
-    { field: "id", headerName: "ID", hide: false },
+    { field: "id", headerName: "ID", hide: true },
   ];
   return (
     // HEADER

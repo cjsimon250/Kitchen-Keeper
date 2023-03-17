@@ -7,87 +7,22 @@ const {
 
 router.get("/", rejectUnauthenticated, async (req, res) => {
   try {
-    // Holding all inventory id's that match the user's company id
-    let inventoryIds = [];
-    // Holding all Menu items and the ingredient data from menu_inventory, menu, inventory
-    let ingredientsData = [];
-    // Variable to send back to the client
-    let menuDataToSend = [];
-
     // Get id of the company belonging to the user
     const queryText = `SELECT * FROM company WHERE user_id = $1;`;
     const companyResult = await pool.query(queryText, [req.user.id]);
     const companyId = companyResult.rows[0].id;
 
-    // Getting id's from inventory that belong to the user's company
-    const queryText2 = `SELECT id from inventory WHERE company_id = $1;`;
-    const inventoryResult = await pool.query(queryText2, [companyId]);
-
-    // Setting variable to be looped through
-    inventoryIds = inventoryResult.rows;
-
-    // Mapping through the array of inventory id's belonging to user in order to return
-    // all the different dishes the user has plus the ingredient information about that dish
-    await Promise.all(
-      inventoryIds.map(async (inventoryId) => {
-        let queryText3 = `
-          SELECT "menu_inventory".id as "menuInventoryId", "menu_inventory".quantity, "menu_inventory".unit,
-          "inventory".item, "menu".id AS "menuId", "menu".dish, "menu".price, "menu".image 
-          FROM "menu"
-          JOIN "menu_inventory" ON "menu".id = "menu_inventory".menu_id
-          JOIN "inventory" ON "inventory".id = "menu_inventory".inventory_id
-          WHERE "menu_inventory".inventory_id = $1
+    const queryText3 = `
+        SELECT "menu".dish, "menu".id, json_agg("inventory") AS "ingredients" FROM "menu"
+        JOIN "menu_inventory" ON "menu".id = "menu_inventory".menu_id
+        JOIN "inventory" ON "inventory".id = "menu_inventory".inventory_id
+        WHERE "menu".company_id = $1
+        GROUP BY "menu".id
         `;
 
-        const menuInventoryResult = await pool.query(queryText3, [
-          inventoryId.id,
-        ]);
-        if (menuInventoryResult.rows.length > 0) {
-          ingredientsData = [...ingredientsData, menuInventoryResult.rows[0]];
-        }
-      })
-    );
+    const menuDataToSend = await pool.query(queryText3, [companyId]);
 
-    // Filtering the data so that all of the ingredient information is
-    // easier to access by item on the client side
-    menuDataToSend = ingredientsData.reduce((accumulator, current) => {
-      // Checking if there is already an object for current dish
-      const existingDish = accumulator.find(
-        (item) => item && item.dish === current.dish
-      );
-
-      // If there is an object for current dish, push the current ingredient
-      // information to the ingredient array of that object
-      if (existingDish) {
-        existingDish.ingredients.push({
-          menuInventoryId: current.menuInventoryId,
-          quantity: current.quantity,
-          unit: current.unit,
-          item: current.item,
-        });
-        // If there isn't an object for the current dish,
-        // create new object and push to the array
-      } else {
-        accumulator.push({
-          inventoryId: current.inventoryId,
-          menuId: current.menuId,
-          dish: current.dish,
-          price: current.price,
-          image: current.image,
-          ingredients: [
-            {
-              menuInventoryId: current.menuInventoryId,
-              quantity: current.quantity,
-              unit: current.unit,
-              item: current.item,
-            },
-          ],
-        });
-      }
-
-      return accumulator;
-    }, []);
-    res.send(menuDataToSend);
+    res.send(menuDataToSend.rows);
   } catch (error) {
     console.log("Error executing SQL query", ":", error);
     res.sendStatus(500);
@@ -115,9 +50,14 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
     companyId = companyResult.rows[0].id;
 
     //Insert data into the menu table and return the id of the menu item
-    const insertQueryText = `INSERT INTO menu (dish, price, image)
-      VALUES ($1, $2, $3) RETURNING id;`;
-    const menuResult = await pool.query(insertQueryText, [dish, price, image]);
+    const insertQueryText = `INSERT INTO menu (dish, price, image, company_id)
+      VALUES ($1, $2, $3, $4) RETURNING id;`;
+    const menuResult = await pool.query(insertQueryText, [
+      dish,
+      price,
+      image,
+      companyId,
+    ]);
     //Setting the returned id of new menu item to be used later
     menuId = menuResult.rows[0].id;
 
@@ -184,15 +124,18 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
   }
 });
 
-//DELETE a menu item
-router.delete("/:id", rejectUnauthenticated, async (req, res) => {
+//UPDATE a menu item
+router.put("/:id", rejectUnauthenticated, async (req, res) => {
+  const updatedMenuItem = req.body.payload;
+  const dish = updatedMenuItem.dish;
+  const price = updatedMenuItem.price;
+  const image = updatedMenuItem.image;
+
   try {
     const queryText = `
-  DELETE FROM "menu_inventory" WHERE id = $1
+  UPDATE menu SET "dish" = $1, price = $2, image = $3  WHERE id = $4
   `;
-    await pool.query(queryText, [req.params.id]);
-
-    res.sendStatus(200);
+    await pool.query(queryText, [dish, price, image, req.params.id]);
   } catch (error) {
     console.log("Error executing SQL query", ":", error);
   }
