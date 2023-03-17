@@ -71,7 +71,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
         minimumStock *= 128;
         unit = "Fl. Oz";
         break;
-      case "Fl. Oz.":
+      case "Fl. Oz":
         unit = "Fl. Oz";
         break;
     }
@@ -90,18 +90,40 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+//DELETE from inventory
+router.delete("/:id", rejectUnauthenticated, async (req, res) => {
   try {
     const queryText = `
     DELETE FROM "inventory" WHERE id = $1
     `;
     await pool.query(queryText, [req.params.id]);
 
-    res.sendStatus(200);
+    res.sendStatus(204);
   } catch (error) {
     console.log("Error executing SQL query", ":", error);
     res.sendStatus(500);
   }
+});
+
+//UPDATE inventory
+router.put("/:id", rejectUnauthenticated, (req, res) => {
+  const id = req.params.id;
+  const value = req.body.payload.value;
+  const field = req.body.payload.field;
+
+  const queryText = `
+  UPDATE "inventory" SET "${field}" = $1 WHERE id = $2
+  `;
+
+  pool
+    .query(queryText, [value, id])
+    .then(() => {
+      res.sendStatus(204);
+    })
+    .catch((error) => {
+      console.log("Error executing SQL query", ":", error);
+      res.sendStatus(500);
+    });
 });
 
 module.exports = router;

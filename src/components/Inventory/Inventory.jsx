@@ -5,6 +5,7 @@ import { Box, useTheme } from "@mui/system";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import { Button } from "@mui/material";
+import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import AddToInventoryForm from "../Forms/AddToInventoryForm";
@@ -13,6 +14,7 @@ const Inventory = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
   //User's inventory
   const inventory = useSelector((store) => store.inventory);
 
@@ -56,24 +58,33 @@ const Inventory = () => {
     );
   };
 
-  //Function to show the add contact form via redux
-  const handleShowAddTeamMemberForm = () => {
-    dispatch({
-      type: "SET_SHOW_INVENTORY_FORM",
-      payload: true,
-    });
-  };
-
   //Function for handling deleting a row
   function handleDelete(event, cellValues) {
     let rowToDelete = cellValues.row;
 
-    axios.delete(`/api/inventory/${rowToDelete.id}`).then((response) => {
+    axios.delete(`/api/inventory/${rowToDelete.id}`).then(() => {
       dispatch({
         type: "FETCH_INVENTORY",
       });
     });
   }
+
+  // Function to handle updating an edited row
+  const handleEditCell = useCallback(
+    (params) => {
+      // Get the corresponding database id from the hidden "id" column
+      const id = params.id;
+      //field is the field name in SQL
+      const field = params.field;
+      //Value of updated cell
+      const value = params.value;
+
+      axios.put(`/api/inventory/${id}`, {
+        payload: { value: value, field: field },
+      });
+    },
+    [inventory]
+  );
 
   //For every row this grabs the value from the key to put into the "headerName" column
   const columns = [
@@ -126,6 +137,7 @@ const Inventory = () => {
         );
       },
     },
+    { field: "id", headerName: "ID", hide: false },
   ];
   return (
     // HEADER
@@ -155,14 +167,13 @@ const Inventory = () => {
             borderTop: "none",
             backgroundColor: colors.khakiAccent[800],
           },
-          "& .phone-column-cell": {
+          "& .unit-column-cell": {
             color: colors.orangeAccent[400],
           },
-          "& .name-column-cell": {
-            color: colors.greenAccent[300],
+          "& .item-column-cell": {
+            color: colors.greenAccent[400],
           },
           "& .MuiButton-sizeMedium": {
-            p: "3px",
             backgroundColor: colors.orangeAccent[500],
           },
           "& .MuiButton-sizeMedium:hover": {
@@ -171,22 +182,22 @@ const Inventory = () => {
         }}
       >
         <DataGrid
-          //mui api to allow editing on each cell
-          experimentalFeatures={{ newEditingApi: true }}
           rows={inventory}
           columns={columns}
+          //After edit by pressing enter user updates database
+          onCellEditCommit={handleEditCell}
         />
         <Box display="flex" justifyContent="space-between">
           <Button
             sx={{ mt: "10px" }}
             onClick={() => {
               dispatch({
-                type: "SET_SHOW_INVENTORY_FORM",
+                type: "SET_SHOW_ADD_TO_INVENTORY_FORM",
                 payload: true,
               });
             }}
           >
-            Add Inventory Item
+            Add Inventory Items
           </Button>
           <Button
             sx={{ mt: "10px" }}
