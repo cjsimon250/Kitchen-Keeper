@@ -16,30 +16,25 @@ function MenuFormNewIngredient() {
   const dispatch = useDispatch();
   //All of the user's inventory to choose from
   const inventory = useSelector((store) => store.inventory);
-  //Initial values for new ingredient options
 
-  //Object that holds new ingredients to add and whether the inputs to add
-  //a new ingredient are showing
-  const newIngredients = useSelector((store) => store.menu.newIngredientInputs);
+  //Variable for whether the form to edit a menu item is showing
+  const showEditMenuItemForm = useSelector(
+    (store) => store.menu.editMenuItemForm.showIngredientInputs
+  );
 
   //New ingredient object to send to database
   const [updatedIngredient, setUpdatedIngredient] = useState({
     item: "",
     unit: "",
     quantity: 1,
+    id: null,
   });
-
   //Array of available units of mesurement to map through
   const units = ["Lb", "Oz", "Gal", "Fl. Oz"];
-  //Fetching all of the users inventory on page load for user to select from
-  useEffect(() => {
-    dispatch({
-      type: "FETCH_INVENTORY",
-    });
-  }, []);
 
   //Funtion to handle canceling the new ingredient to be added
   function handleCancelAddIngredient() {
+    console.log(updatedIngredient);
     //Hiding the input fields
     dispatch({
       type: "SHOW_INGREDIENT_INPUTS",
@@ -50,20 +45,29 @@ function MenuFormNewIngredient() {
       item: "",
       unit: "",
       quantity: 1,
+      inventoryId: null,
     });
   }
 
   //Function to handle adding new ingredient
   function handleAddIngredient() {
     dispatch({
-      type: "UPDATE_INGREDIENT",
+      type: "UPDATE_INGREDIENTS",
       payload: updatedIngredient,
+    });
+
+    //Resetting updatedIngredient
+    setUpdatedIngredient({
+      item: "",
+      unit: "",
+      quantity: 1,
+      id: null,
     });
   }
 
   return (
     <>
-      {newIngredients.showForm ? (
+      {showEditMenuItemForm ? (
         <Box display="flex" width="100%">
           <FormControl sx={{ width: "25%" }}>
             {/* Allowing user to select an ingredient from their inventory */}
@@ -72,9 +76,15 @@ function MenuFormNewIngredient() {
               value={updatedIngredient.item}
               variant="standard"
               onChange={(event) => {
+                const selectedValue = event.target.value;
+                //Find the id of the inventory item
+                const selectedIngredient = inventory.find(
+                  (ingredient) => ingredient.item === selectedValue
+                );
                 setUpdatedIngredient({
                   ...updatedIngredient,
-                  item: event.target.value,
+                  item: selectedValue,
+                  id: selectedIngredient.id,
                 });
               }}
             >

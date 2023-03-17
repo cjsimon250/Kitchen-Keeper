@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import axios from "axios";
 import { Box, useTheme } from "@mui/system";
 import { tokens } from "../../theme";
@@ -24,98 +27,81 @@ function EditMenuItemForm() {
     (store) => store.menu.editMenuItemForm.menuItem
   );
 
-  //Object that holds new ingredients to add and whether the inputs to add
-  //a new ingredient are showing
-  const newIngredients = useSelector(
-    (store) => store.menu.newIngredientInputs.newIngredients
-  );
-
   //Variable holding the data about item to send
   const [updatedItemToSend, setUpdatedItemToSend] = useState({
+    menuId: selectedItem?.id || null,
     dish: selectedItem?.dish || "",
     image: selectedItem?.image || "",
     price: selectedItem?.price || "",
     ingredients: selectedItem?.ingredients || [],
-    newIngredients: newIngredients,
   });
 
   //On page load set updatedItemtoSend's initial values to the current values
   //Fetch all of the user's inventory
   useEffect(() => {
     setUpdatedItemToSend({
+      menuId: selectedItem?.id || null,
       dish: selectedItem?.dish || "",
       image: selectedItem?.image || "",
       price: selectedItem?.price || "",
       ingredients: selectedItem?.ingredients || [],
-      newIngredients: newIngredients,
     });
 
     displayAllCurrentIngredients();
-  }, [selectedItem.ingredients, newIngredients]);
+  }, [selectedItem.ingredients]);
 
   //Function to close the add contact form via redux
   const handleClose = () => {
     dispatch({
       type: "SHOW_MENU_FORM",
-      payload: { showForm: false, menuItem: {} },
+      payload: false,
     });
-  };
-
-  //Function to handle deleteing an ingredient
-  const handleDeleteIngredient = async (selectedId) => {
-    await axios.delete(`/api/menu/${selectedId}`);
-
-    // Update the state of updatedItemToSend by removing the deleted ingredient
-    setUpdatedItemToSend((updatedItemToSend) => ({
-      ...updatedItemToSend,
-      ingredients: updatedItemToSend.ingredients.filter(
-        (item) => item.menuInventoryId !== selectedId
-      ),
-    }));
   };
 
   //Function to handle displaying all current ingredients with delete
   //buttons for each
   function displayAllCurrentIngredients() {
-    return updatedItemToSend.ingredients.map((item) => {
+    return updatedItemToSend.ingredients.map((item, index) => {
       return (
         <Box
           display="flex"
           justifyContent="space-between"
           marginTop="10px"
-          key={item.menuInventoryId}
+          key={index}
         >
           <li>
             {item.item}: {item.quantity} {item.unit}
           </li>
-          <Button
+          <IconButton
             className="delete-btns"
-            onClick={() => handleDeleteIngredient(item.menuInventoryId)}
+            onClick={() => {
+              dispatch({
+                type: "DELETE_INGREDIENT",
+                payload: item.item,
+              });
+            }}
           >
-            Delete
-          </Button>
-          {updatedItemToSend.newIngredients.length > 0
-            ? updatedItemToSend.newIngredients.map((ingredient, index) => {
-                <Box
-                  display="flex"
-                  justifyContent="space-between"
-                  marginTop="10px"
-                  key={index}
-                >
-                  <li>
-                    {ingredient.item}: {ingredient.quantity} {ingredient.unit}
-                  </li>
-                  <Button
-                    className="delete-btns"
-                    onClick={() => handleDeleteIngredient(item.menuInventoryId)}
-                  >
-                    Delete
-                  </Button>
-                </Box>;
-              })
-            : null}
+            <DeleteForeverIcon />
+          </IconButton>
         </Box>
       );
+    });
+  }
+
+  //Function to confirm all edits and send to database
+  function handleConfirmEdits() {
+    axios.put(`/api/menu/${updatedItemToSend.menuId}`, {
+      payload: updatedItemToSend,
+    });
+
+    //Fetch updated menu
+    dispatch({
+      type: "FETCH_MENU",
+    });
+    //Close form
+    dispatch({
+      type: "SHOW_MENU_FORM",
+      payload: false,
     });
   }
 
@@ -129,20 +115,38 @@ function EditMenuItemForm() {
           "& .MuiPaper-root": {
             backgroundColor: colors.khakiAccent[800],
           },
-          "#cancel-btn, #ingredient-btn": {
+          "& #ingredient-btn": {
             backgroundColor: colors.orangeAccent[500],
           },
           "& #confirm-btn": {
-            backgroundColor: colors.greenAccent[500],
+            backgroundColor: colors.greenAccent[400],
           },
-          ".delete-btns": {
-            backgroundColor: colors.orangeAccent[500],
-            padding: "4px",
+          "& .delete-btns": {
+            color: colors.orangeAccent[500],
+          },
+          "& .delete-btns:hover": {
+            color: colors.primary[100],
+          },
+          "& #close-btn:hover": {
+            color: colors.orangeAccent[500],
           },
         }}
       >
-        <DialogTitle variant="h4" sx={{ color: colors.greenAccent[500] }}>
+        <DialogTitle
+          display="flex"
+          justifyContent="space-between"
+          sx={{ color: colors.greenAccent[400] }}
+          variant="h3"
+        >
           Edit "{selectedItem.dish}"
+          <IconButton
+            id="close-btn"
+            onClick={() => {
+              handleClose();
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
         </DialogTitle>
         <DialogContent>
           <Box
@@ -216,7 +220,7 @@ function EditMenuItemForm() {
               });
             }}
           />
-          <DialogTitle variant="h5" sx={{ color: colors.greenAccent[500] }}>
+          <DialogTitle variant="h5" sx={{ color: colors.greenAccent[400] }}>
             Ingredients
           </DialogTitle>
           {/* Displaying all ingredients already in the database and allowing
@@ -231,19 +235,14 @@ function EditMenuItemForm() {
         </DialogContent>
         <DialogActions>
           <Button
-            id="cancel-btn"
-            onClick={() => {
-              handleClose();
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
             id="ingredient-btn"
             onClick={() => {
               dispatch({
                 type: "SHOW_INGREDIENT_INPUTS",
                 payload: true,
+              });
+              dispatch({
+                type: "FETCH_INVENTORY",
               });
             }}
           >
@@ -252,7 +251,7 @@ function EditMenuItemForm() {
           <Button
             id="confirm-btn"
             onClick={() => {
-              handleClose();
+              handleConfirmEdits();
             }}
           >
             Confirm Edit

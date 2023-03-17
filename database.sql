@@ -44,6 +44,7 @@ CREATE TABLE "menu" (
 	"dish" varchar(255) NOT NULL,
 	"price" int NOT NULL,
 	"image" varchar NOT NULL,
+	"company_id" int NOT NULL,
 	CONSTRAINT "menu_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
@@ -54,7 +55,7 @@ CREATE TABLE "menu" (
 CREATE TABLE "menu_inventory" (
 	"id" serial NOT NULL,
 	"menu_id" int NOT NULL,
-	"inventory_id" int NOT NULL ON DELETE CASCADE,
+	"inventory_id" int NOT NULL,
 	"quantity" int NOT NULL,
 	"unit" varchar(255) NOT NULL,
 	CONSTRAINT "menu_inventory_pk" PRIMARY KEY ("id")
@@ -116,3 +117,5 @@ ALTER TABLE "menu_inventory" ADD CONSTRAINT "menu_inventory_fk1" FOREIGN KEY ("i
 ALTER TABLE "sales" ADD CONSTRAINT "sales_fk0" FOREIGN KEY ("menu_id") REFERENCES "menu"("id");
 
 ALTER TABLE "team" ADD CONSTRAINT "team_fk0" FOREIGN KEY ("company_id") REFERENCES "company"("id");
+
+--MOCK DATA
