@@ -23,7 +23,7 @@ const Menu = () => {
         {menuData.map((menuItem) => {
           return (
             <MenuList
-              key={menuItem.menuId}
+              key={menuItem.id}
               menuItem={menuItem}
               menuData={menuData}
             />

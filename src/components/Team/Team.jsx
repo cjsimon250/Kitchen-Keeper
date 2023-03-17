@@ -127,7 +127,7 @@ const Team = () => {
             color: colors.orangeAccent[400],
           },
           "& .name-column-cell": {
-            color: colors.greenAccent[300],
+            color: colors.greenAccent[400],
           },
           "& .MuiButton-sizeMedium": {
             p: "3px",
@@ -169,16 +169,3 @@ const Team = () => {
 };
 
 export default Team;
-
-// ** THIS IS NEEDED TO SAVE DATA AFTER TABLE EDIT **
-// const processRowUpdate = (newRow) => {
-//   const updatedRow = { ...newRow, isNew: false };
-//   ...
-//   return updatedRow;
-// };
-
-// <DataGrid
-//   editMode="row"
-//   processRowUpdate={processRowUpdate}
-//   experimentalFeatures={{ newEditingApi: true }}
-//   ...

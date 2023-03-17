@@ -17,7 +17,12 @@ function MenuItem({ menuItem }) {
   function handleShowEditMenuItemForm() {
     dispatch({
       type: "SHOW_MENU_FORM",
-      payload: { showForm: true, menuItem: menuItem },
+      payload: true,
+    });
+
+    dispatch({
+      type: "SET_SELECTED_DISH",
+      payload: menuItem,
     });
   }
 

@@ -4,9 +4,9 @@ import user from "./user.reducer";
 import showTeamForm from "./teamForm.reducer";
 import showContactsForm from "./contactsForm.reducer";
 import inventory from "./inventory.reducer";
-import newUserSetup from "./newUserSetup.reducer";
 import company from "./company.reducer";
 import menu from "./menu.reducer";
+import conditionalForms from "./conditionalForms.reducer";
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -22,7 +22,7 @@ const rootReducer = combineReducers({
   showContactsForm, //Will be able to toggle the contacts form
   inventory, //Allows access to the inventory
   menu, //Storing data for Menu component
-  newUserSetup, //Storing the state of the new user dialogs (open or not)
+  conditionalForms, // All conditionally rendered forms
 });
 
 export default rootReducer;
