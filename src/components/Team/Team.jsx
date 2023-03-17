@@ -127,7 +127,7 @@ const Team = () => {
             color: colors.orangeAccent[400],
           },
           "& .name-column-cell": {
-            color: colors.greenAccent[300],
+            color: colors.greenAccent[400],
           },
           "& .MuiButton-sizeMedium": {
             p: "3px",

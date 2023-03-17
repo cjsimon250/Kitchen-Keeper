@@ -9,16 +9,16 @@ import { FormControl, FormControlLabel, FormLabel, Radio } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { Box, useTheme } from "@mui/system";
-import { tokens } from "../../../theme";
+import { tokens } from "../../theme";
 
-function NewUserInventoryForm() {
+function AddToInventoryForm() {
   const dispatch = useDispatch();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   //Variable to show whether the form is showing
-  const showInitialInventoryForm = useSelector(
-    (store) => store.newUserSetup.showInitialInventoryForm
+  const showAddToInventoryForm = useSelector(
+    (store) => store.conditionalForms.showAddToInventoryForm
   );
 
   //Variable to hold inventory item information to send
@@ -33,6 +33,8 @@ function NewUserInventoryForm() {
 
   //Function to handle posting the new item to database
   function handlePostInventoryItem() {
+    console.log("INVENTORY ITEM :", inventoryItemToSend);
+
     dispatch({
       type: "POST_INVENTORY",
       payload: inventoryItemToSend,
@@ -49,17 +51,18 @@ function NewUserInventoryForm() {
   }
 
   //Function to close the add to inventory form and open the menu form via redux
-  const handleNext = () => {
+  const handleDone = () => {
     dispatch({
       type: "SET_SHOW_INITIAL_WELCOME",
       payload: false,
     });
+
     dispatch({
-      type: "SET_SHOW_INITIAL_MENU_FORM",
+      type: "SET_SHOW_ADD_TO_MENU_FORM",
       payload: true,
     });
     dispatch({
-      type: "SET_SHOW_INITIAL_INVENTORY_FORM",
+      type: "SET_SHOW_ADD_TO_INVENTORY_FORM",
       payload: false,
     });
   };
@@ -69,15 +72,15 @@ function NewUserInventoryForm() {
     <Box>
       <Dialog
         fullWidth
-        open={showInitialInventoryForm}
+        open={showAddToInventoryForm}
         sx={{
           "& .MuiPaper-root": {
             backgroundColor: colors.khakiAccent[800],
           },
-          "& #next-btn, #cancel-btn": {
+          "& #cancel-btn": {
             backgroundColor: colors.orangeAccent[500],
           },
-          "& #next-btn": {
+          "& #done-btn": {
             backgroundColor: colors.greenAccent[500],
           },
           "& .MuiButton-textPrimary": {
@@ -211,8 +214,8 @@ function NewUserInventoryForm() {
           >
             Add Item
           </Button>
-          <Button id="next-btn" variant="text" onClick={handleNext}>
-            Next
+          <Button id="done-btn" variant="text" onClick={handleDone}>
+            Done
           </Button>
         </DialogActions>
       </Dialog>
@@ -220,4 +223,4 @@ function NewUserInventoryForm() {
   );
 }
 
-export default NewUserInventoryForm;
+export default AddToInventoryForm;

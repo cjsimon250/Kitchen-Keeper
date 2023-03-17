@@ -13,16 +13,16 @@ import { FormControl, FormControlLabel, FormLabel, Radio } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { Box, useTheme } from "@mui/system";
-import { tokens } from "../../../theme";
+import { tokens } from "../../theme";
 
-function NewUserMenuForm() {
+function AddToMenuForm() {
   const dispatch = useDispatch();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   //Variable to show whether the add contact form is showing
   const showMenuForm = useSelector(
-    (store) => store.newUserSetup.showInitialMenuForm
+    (store) => store.conditionalForms.showAddToMenuForm
   );
 
   //Variable for storing ingredients previously added by user
@@ -52,7 +52,7 @@ function NewUserMenuForm() {
   //Function to close the add contact form via redux
   const handleClose = () => {
     dispatch({
-      type: "SET_SHOW_INITIAL_MENU_FORM",
+      type: "SET_SHOW_ADD_TO_MENU_FORM",
       payload: false,
     });
   };
@@ -281,4 +281,4 @@ function NewUserMenuForm() {
   );
 }
 
-export default NewUserMenuForm;
+export default AddToMenuForm;
