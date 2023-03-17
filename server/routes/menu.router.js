@@ -13,11 +13,11 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
     const companyId = companyResult.rows[0].id;
 
     const queryText3 = `
-        SELECT "menu".dish, "menu".id, json_agg("inventory") AS "ingredients" FROM "menu"
-        JOIN "menu_inventory" ON "menu".id = "menu_inventory".menu_id
-        JOIN "inventory" ON "inventory".id = "menu_inventory".inventory_id
-        WHERE "menu".company_id = $1
-        GROUP BY "menu".id
+    SELECT "menu".dish, "menu".id, "menu".image, "menu".price, json_agg("inventory") AS "ingredients" FROM "menu"
+    JOIN "menu_inventory" ON "menu".id = "menu_inventory".menu_id
+    JOIN "inventory" ON "inventory".id = "menu_inventory".inventory_id
+    WHERE "menu".company_id = $1
+    GROUP BY "menu".id
         `;
 
     const menuDataToSend = await pool.query(queryText3, [companyId]);
@@ -126,6 +126,11 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
 
 //UPDATE a menu item
 router.put("/:id", rejectUnauthenticated, async (req, res) => {
+  //Get id of the company belonging to the user
+  const queryText = `SELECT * FROM company WHERE user_id = $1;`;
+  const companyResult = await pool.query(queryText, [req.user.id]);
+  const companyId = companyResult.rows[0].id;
+
   const updatedMenuItem = req.body.payload;
   const dish = updatedMenuItem.dish;
   const price = updatedMenuItem.price;
@@ -133,9 +138,9 @@ router.put("/:id", rejectUnauthenticated, async (req, res) => {
 
   try {
     const queryText = `
-  UPDATE menu SET "dish" = $1, price = $2, image = $3  WHERE id = $4
+  UPDATE menu SET "dish" = $1, price = $2, image = $3, company_id = $4 WHERE id = $5
   `;
-    await pool.query(queryText, [dish, price, image, req.params.id]);
+    await pool.query(queryText, [dish, price, image, companyId, req.params.id]);
   } catch (error) {
     console.log("Error executing SQL query", ":", error);
   }

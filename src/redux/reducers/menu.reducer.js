@@ -15,7 +15,7 @@ const editMenuItemForm = (
     showForm: false,
     showIngredientInputs: false,
     menuItem: {
-      menuId: null,
+      id: null,
       dish: "",
       price: null,
       image: "",
@@ -27,7 +27,6 @@ const editMenuItemForm = (
   switch (action.type) {
     case "SHOW_MENU_FORM":
       return { ...state, showForm: action.payload };
-
     case "SET_SELECTED_DISH":
       return { ...state, menuItem: action.payload };
     case "SHOW_INGREDIENT_INPUTS":

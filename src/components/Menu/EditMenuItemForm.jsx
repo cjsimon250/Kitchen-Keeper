@@ -29,7 +29,7 @@ function EditMenuItemForm() {
 
   //Variable holding the data about item to send
   const [updatedItemToSend, setUpdatedItemToSend] = useState({
-    menuId: selectedItem?.menuId || null,
+    menuId: selectedItem?.id || null,
     dish: selectedItem?.dish || "",
     image: selectedItem?.image || "",
     price: selectedItem?.price || "",
@@ -39,8 +39,10 @@ function EditMenuItemForm() {
   //On page load set updatedItemtoSend's initial values to the current values
   //Fetch all of the user's inventory
   useEffect(() => {
+    console.log("SELECTED ITEM", selectedItem);
+
     setUpdatedItemToSend({
-      menuId: selectedItem?.menuId || null,
+      menuId: selectedItem?.id || null,
       dish: selectedItem?.dish || "",
       image: selectedItem?.image || "",
       price: selectedItem?.price || "",
