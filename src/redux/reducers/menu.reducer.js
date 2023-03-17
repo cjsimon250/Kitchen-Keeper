@@ -10,43 +10,41 @@ const menu = (state = [], action) => {
   }
 };
 
-// * Reducer for displaying Menu form and holding selected item data
 const editMenuItemForm = (
-  state = { showForm: false, menuItem: {} },
+  state = {
+    showForm: false,
+    showIngredientInputs: false,
+    menuItem: {
+      menuId: null,
+      dish: "",
+      price: null,
+      image: "",
+      ingredients: [],
+    },
+  },
   action
 ) => {
   switch (action.type) {
     case "SHOW_MENU_FORM":
-      return action.payload;
-    default:
-      return state;
-  }
-};
+      return { ...state, showForm: action.payload };
 
-//  * Reducer for holding whether the new ingredient inputs
-// are open in the form or not and what the updated ingrdients to add to the data base are
-const newIngredientInputs = (
-  state = { showForm: false, newIngredients: [] },
-  action
-) => {
-  switch (action.type) {
+    case "SET_SELECTED_DISH":
+      return { ...state, menuItem: action.payload };
     case "SHOW_INGREDIENT_INPUTS":
       return {
-        showForm: action.payload,
-        newIngredients: state.newIngredients,
+        ...state,
+        showIngredientInputs: action.payload,
       };
-    case "UPDATE_INGREDIENT":
+    case "UPDATE_INGREDIENTS":
       return {
-        showForm: state.showForm,
-        newIngredients: [...state.newIngredients, action.payload],
+        ...state,
+        ingredients: [...state.ingredients, action.payload],
       };
     default:
       return state;
   }
 };
-
 export default combineReducers({
   menu,
   editMenuItemForm,
-  newIngredientInputs,
 });

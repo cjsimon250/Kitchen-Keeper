@@ -24,40 +24,34 @@ function EditMenuItemForm() {
     (store) => store.menu.editMenuItemForm.menuItem
   );
 
-  //Object that holds new ingredients to add and whether the inputs to add
-  //a new ingredient are showing
-  const newIngredients = useSelector(
-    (store) => store.menu.newIngredientInputs.newIngredients
-  );
-
   //Variable holding the data about item to send
   const [updatedItemToSend, setUpdatedItemToSend] = useState({
     dish: selectedItem?.dish || "",
     image: selectedItem?.image || "",
     price: selectedItem?.price || "",
     ingredients: selectedItem?.ingredients || [],
-    newIngredients: newIngredients,
   });
 
   //On page load set updatedItemtoSend's initial values to the current values
   //Fetch all of the user's inventory
   useEffect(() => {
+    console.log("SELECTED ITEM", selectedItem);
+
     setUpdatedItemToSend({
       dish: selectedItem?.dish || "",
       image: selectedItem?.image || "",
       price: selectedItem?.price || "",
       ingredients: selectedItem?.ingredients || [],
-      newIngredients: newIngredients,
     });
 
     displayAllCurrentIngredients();
-  }, [selectedItem.ingredients, newIngredients]);
+  }, [selectedItem]);
 
   //Function to close the add contact form via redux
   const handleClose = () => {
     dispatch({
       type: "SHOW_MENU_FORM",
-      payload: { showForm: false, menuItem: {} },
+      payload: false,
     });
   };
 
@@ -94,26 +88,6 @@ function EditMenuItemForm() {
           >
             Delete
           </Button>
-          {updatedItemToSend.newIngredients.length > 0
-            ? updatedItemToSend.newIngredients.map((ingredient, index) => {
-                <Box
-                  display="flex"
-                  justifyContent="space-between"
-                  marginTop="10px"
-                  key={index}
-                >
-                  <li>
-                    {ingredient.item}: {ingredient.quantity} {ingredient.unit}
-                  </li>
-                  <Button
-                    className="delete-btns"
-                    onClick={() => handleDeleteIngredient(item.menuInventoryId)}
-                  >
-                    Delete
-                  </Button>
-                </Box>;
-              })
-            : null}
         </Box>
       );
     });

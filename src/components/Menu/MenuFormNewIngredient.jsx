@@ -18,9 +18,10 @@ function MenuFormNewIngredient() {
   const inventory = useSelector((store) => store.inventory);
   //Initial values for new ingredient options
 
-  //Object that holds new ingredients to add and whether the inputs to add
-  //a new ingredient are showing
-  const newIngredients = useSelector((store) => store.menu.newIngredientInputs);
+  //Variable for whether the form to edit a menu item is showing
+  const showEditMenuItemForm = useSelector(
+    (store) => store.menu.editMenuItemForm.showIngredientInputs
+  );
 
   //New ingredient object to send to database
   const [updatedIngredient, setUpdatedIngredient] = useState({
@@ -63,7 +64,7 @@ function MenuFormNewIngredient() {
 
   return (
     <>
-      {newIngredients.showForm ? (
+      {showEditMenuItemForm ? (
         <Box display="flex" width="100%">
           <FormControl sx={{ width: "25%" }}>
             {/* Allowing user to select an ingredient from their inventory */}
