@@ -27,12 +27,14 @@ function MenuFormNewIngredient() {
     item: "",
     unit: "",
     quantity: 1,
+    id: null,
   });
   //Array of available units of mesurement to map through
   const units = ["Lb", "Oz", "Gal", "Fl. Oz"];
 
   //Funtion to handle canceling the new ingredient to be added
   function handleCancelAddIngredient() {
+    console.log(updatedIngredient);
     //Hiding the input fields
     dispatch({
       type: "SHOW_INGREDIENT_INPUTS",
@@ -43,6 +45,7 @@ function MenuFormNewIngredient() {
       item: "",
       unit: "",
       quantity: 1,
+      inventoryId: null,
     });
   }
 
@@ -58,6 +61,7 @@ function MenuFormNewIngredient() {
       item: "",
       unit: "",
       quantity: 1,
+      id: null,
     });
   }
 
@@ -72,9 +76,15 @@ function MenuFormNewIngredient() {
               value={updatedIngredient.item}
               variant="standard"
               onChange={(event) => {
+                const selectedValue = event.target.value;
+                //Find the id of the inventory item
+                const selectedIngredient = inventory.find(
+                  (ingredient) => ingredient.item === selectedValue
+                );
                 setUpdatedIngredient({
                   ...updatedIngredient,
-                  item: event.target.value,
+                  item: selectedValue,
+                  id: selectedIngredient.id,
                 });
               }}
             >

@@ -21,7 +21,6 @@ const Menu = () => {
       <Header title="MENU" subtitle="What's on the menu?" />
       <ImageList margin="auto" variant="masonry" cols={3} gap={8}>
         {menuData.map((menuItem) => {
-          console.log(menuItem);
           return (
             <MenuList
               key={menuItem.id}

@@ -39,8 +39,6 @@ function EditMenuItemForm() {
   //On page load set updatedItemtoSend's initial values to the current values
   //Fetch all of the user's inventory
   useEffect(() => {
-    console.log("SELECTED ITEM", selectedItem);
-
     setUpdatedItemToSend({
       menuId: selectedItem?.id || null,
       dish: selectedItem?.dish || "",
@@ -92,9 +90,18 @@ function EditMenuItemForm() {
 
   //Function to confirm all edits and send to database
   function handleConfirmEdits() {
-    console.log("UPDATED ITEM TO SEND : ", updatedItemToSend);
     axios.put(`/api/menu/${updatedItemToSend.menuId}`, {
       payload: updatedItemToSend,
+    });
+
+    //Fetch updated menu
+    dispatch({
+      type: "FETCH_MENU",
+    });
+    //Close form
+    dispatch({
+      type: "SHOW_MENU_FORM",
+      payload: false,
     });
   }
 

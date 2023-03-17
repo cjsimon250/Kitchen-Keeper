@@ -12,7 +12,7 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
     const companyResult = await pool.query(queryText, [req.user.id]);
     const companyId = companyResult.rows[0].id;
 
-    const queryText3 = `
+    const selectMenuQuery = `
     SELECT "menu".dish, "menu".id, "menu".image, "menu".price, json_agg("inventory") AS "ingredients" FROM "menu"
     JOIN "menu_inventory" ON "menu".id = "menu_inventory".menu_id
     JOIN "inventory" ON "inventory".id = "menu_inventory".inventory_id
@@ -20,7 +20,7 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
     GROUP BY "menu".id
         `;
 
-    const menuDataToSend = await pool.query(queryText3, [companyId]);
+    const menuDataToSend = await pool.query(selectMenuQuery, [companyId]);
 
     res.send(menuDataToSend.rows);
   } catch (error) {
@@ -126,23 +126,53 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
 
 //UPDATE a menu item
 router.put("/:id", rejectUnauthenticated, async (req, res) => {
-  //Get id of the company belonging to the user
-  const queryText = `SELECT * FROM company WHERE user_id = $1;`;
-  const companyResult = await pool.query(queryText, [req.user.id]);
-  const companyId = companyResult.rows[0].id;
-
-  const updatedMenuItem = req.body.payload;
-  const dish = updatedMenuItem.dish;
-  const price = updatedMenuItem.price;
-  const image = updatedMenuItem.image;
-
   try {
-    const queryText = `
+    //Get id of the company belonging to the user
+    const queryText = `SELECT * FROM company WHERE user_id = $1;`;
+    const companyResult = await pool.query(queryText, [req.user.id]);
+    const companyId = companyResult.rows[0].id;
+
+    //New menu item data
+    const updatedMenuItem = req.body.payload;
+    const dish = updatedMenuItem.dish;
+    const price = updatedMenuItem.price;
+    const image = updatedMenuItem.image;
+    //Array of new information
+    const ingredients = updatedMenuItem.ingredients;
+
+    const updateMenuQuery = `
   UPDATE menu SET "dish" = $1, price = $2, image = $3, company_id = $4 WHERE id = $5
   `;
-    await pool.query(queryText, [dish, price, image, companyId, req.params.id]);
+    await pool.query(updateMenuQuery, [
+      dish,
+      price,
+      image,
+      companyId,
+      req.params.id,
+    ]);
+
+    const clearMenuInventoryQuery = `
+    DELETE FROM "menu_inventory" WHERE "menu_id" = $1
+    `;
+    await pool.query(clearMenuInventoryQuery, [req.params.id]);
+
+    const updateMenuInventory = ingredients.map(async (ingredient) => {
+      const updateMenuInventoryQuery = `
+    INSERT INTO menu_inventory (menu_id, inventory_id, quantity, unit)
+    VALUES ($1, $2, $3, $4);
+    `;
+      await pool.query(updateMenuInventoryQuery, [
+        req.params.id,
+        ingredient.id,
+        ingredient.quantity,
+        ingredient.unit,
+      ]);
+    });
+    Promise.all(updateMenuInventory);
+    res.sendStatus(200);
   } catch (error) {
     console.log("Error executing SQL query", ":", error);
+    res.sendStatus(500);
   }
 });
 module.exports = router;
