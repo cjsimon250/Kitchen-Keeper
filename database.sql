@@ -103,6 +103,19 @@ CREATE TABLE "contacts" (
   OIDS=FALSE
 );
 
+CREATE TABLE "orders"(
+	"id" serial NOT NULL,
+	"supplier" varchar(200) NOT NULL,
+	"date" date NOT NULL
+	CONSTRAINT "orders_pk" PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+-- CREATE TABLE "orders_inventory"(
+-- 	"id" se
+-- )
+
 
 
 

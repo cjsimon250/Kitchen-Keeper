@@ -13,15 +13,17 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
     const companyId = companyResult.rows[0].id;
 
     const selectMenuQuery = `
-    SELECT "menu".dish, "menu".id, "menu".image, "menu".price, json_agg("inventory") AS "ingredients" FROM "menu"
+    SELECT "menu".dish, "menu".id, "menu".image, "menu".price, 
+    json_agg(json_build_object('inventoryId', "inventory".id,'item', "inventory".item, 'quantity', "menu_inventory".quantity, 'unit', "menu_inventory".unit)) AS "ingredients" 
+    FROM "menu"
     JOIN "menu_inventory" ON "menu".id = "menu_inventory".menu_id
     JOIN "inventory" ON "inventory".id = "menu_inventory".inventory_id
     WHERE "menu".company_id = $1
     GROUP BY "menu".id
+    
         `;
 
     const menuDataToSend = await pool.query(selectMenuQuery, [companyId]);
-
     res.send(menuDataToSend.rows);
   } catch (error) {
     console.log("Error executing SQL query", ":", error);
@@ -161,14 +163,14 @@ router.put("/:id", rejectUnauthenticated, async (req, res) => {
     INSERT INTO menu_inventory (menu_id, inventory_id, quantity, unit)
     VALUES ($1, $2, $3, $4);
     `;
-      await pool.query(updateMenuInventoryQuery, [
+      return pool.query(updateMenuInventoryQuery, [
         req.params.id,
-        ingredient.id,
+        ingredient.inventoryId,
         ingredient.quantity,
         ingredient.unit,
       ]);
     });
-    Promise.all(updateMenuInventory);
+    await Promise.all(updateMenuInventory);
     res.sendStatus(200);
   } catch (error) {
     console.log("Error executing SQL query", ":", error);

@@ -89,8 +89,8 @@ function EditMenuItemForm() {
   }
 
   //Function to confirm all edits and send to database
-  function handleConfirmEdits() {
-    axios.put(`/api/menu/${updatedItemToSend.menuId}`, {
+  async function handleConfirmEdits() {
+    await axios.put(`/api/menu/${updatedItemToSend.menuId}`, {
       payload: updatedItemToSend,
     });
 
