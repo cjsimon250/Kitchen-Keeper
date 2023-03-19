@@ -33,7 +33,6 @@ function MenuFormNewIngredient() {
 
   //Funtion to handle canceling the new ingredient to be added
   function handleCancelAddIngredient() {
-    console.log(updatedIngredient);
     //Hiding the input fields
     dispatch({
       type: "SHOW_INGREDIENT_INPUTS",
