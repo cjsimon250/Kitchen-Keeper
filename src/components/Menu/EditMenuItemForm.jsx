@@ -88,6 +88,19 @@ function EditMenuItemForm() {
     });
   }
 
+  //Function to handle deleting a dish
+  async function handleDeleteDish() {
+    await axios.delete(`/api/menu/${updatedItemToSend.menuId}`);
+
+    dispatch({
+      type: "SHOW_MENU_FORM",
+      payload: false,
+    });
+    dispatch({
+      type: "FETCH_MENU",
+    });
+  }
+
   //Function to confirm all edits and send to database
   async function handleConfirmEdits() {
     await axios.put(`/api/menu/${updatedItemToSend.menuId}`, {
@@ -115,7 +128,7 @@ function EditMenuItemForm() {
           "& .MuiPaper-root": {
             backgroundColor: colors.khakiAccent[800],
           },
-          "& #ingredient-btn": {
+          "& #ingredient-btn, #delete-btn": {
             backgroundColor: colors.orangeAccent[500],
           },
           "& #confirm-btn": {
@@ -234,6 +247,14 @@ function EditMenuItemForm() {
           </Box>
         </DialogContent>
         <DialogActions>
+          <Button
+            id="delete-btn"
+            onClick={() => {
+              handleDeleteDish();
+            }}
+          >
+            Delete {selectedItem.dish}
+          </Button>
           <Button
             id="ingredient-btn"
             onClick={() => {

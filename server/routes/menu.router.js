@@ -177,4 +177,16 @@ router.put("/:id", rejectUnauthenticated, async (req, res) => {
     res.sendStatus(500);
   }
 });
+
+router.delete("/:id", rejectUnauthenticated, async (req, res) => {
+  try {
+    const queryText = `DELETE FROM "menu" WHERE "id" = $1`;
+
+    await pool.query(queryText, [req.params.id]);
+    res.sendStatus(200);
+  } catch (error) {
+    console.log("Error executing SQL query", ":", error);
+    res.sendStatus(500);
+  }
+});
 module.exports = router;
