@@ -7,7 +7,7 @@ import inventory from "./inventory.reducer";
 import company from "./company.reducer";
 import menu from "./menu.reducer";
 import conditionalForms from "./conditionalForms.reducer";
-
+import orders from "./orders.reducer";
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
 // This is imported in index.js as rootSaga
@@ -23,6 +23,7 @@ const rootReducer = combineReducers({
   inventory, //Allows access to the inventory
   menu, //Storing data for Menu component
   conditionalForms, // All conditionally rendered forms
+  orders, //All of the user's past orders
 });
 
 export default rootReducer;

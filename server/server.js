@@ -12,6 +12,7 @@ const userRouter = require("./routes/user.router");
 const inventoryRouter = require("./routes/inventory.router");
 const menuRouter = require("./routes/menu.router");
 const companyRouter = require("./routes/company.router");
+const orderRouter = require("./routes/orders.router");
 
 // Body parser middleware
 app.use(bodyParser.json());
@@ -20,7 +21,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Passport Session Configuration //
 app.use(sessionMiddleware);
 
-// start up passport sessions
+// Start up passport sessions
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -29,6 +30,7 @@ app.use("/api/user", userRouter);
 app.use("/api/company", companyRouter);
 app.use("/api/inventory", inventoryRouter);
 app.use("/api/menu", menuRouter);
+app.use("/api/orders", orderRouter);
 
 // Serve static files
 app.use(express.static("build"));

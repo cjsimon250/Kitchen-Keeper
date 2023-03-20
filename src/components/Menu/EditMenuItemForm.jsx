@@ -50,7 +50,7 @@ function EditMenuItemForm() {
     displayAllCurrentIngredients();
   }, [selectedItem.ingredients]);
 
-  //Function to close the add contact form via redux
+  //Function to close the form via redux
   const handleClose = () => {
     dispatch({
       type: "SHOW_MENU_FORM",
@@ -88,9 +88,22 @@ function EditMenuItemForm() {
     });
   }
 
+  //Function to handle deleting a dish
+  async function handleDeleteDish() {
+    await axios.delete(`/api/menu/${updatedItemToSend.menuId}`);
+
+    dispatch({
+      type: "SHOW_MENU_FORM",
+      payload: false,
+    });
+    dispatch({
+      type: "FETCH_MENU",
+    });
+  }
+
   //Function to confirm all edits and send to database
-  function handleConfirmEdits() {
-    axios.put(`/api/menu/${updatedItemToSend.menuId}`, {
+  async function handleConfirmEdits() {
+    await axios.put(`/api/menu/${updatedItemToSend.menuId}`, {
       payload: updatedItemToSend,
     });
 
@@ -115,7 +128,7 @@ function EditMenuItemForm() {
           "& .MuiPaper-root": {
             backgroundColor: colors.khakiAccent[800],
           },
-          "& #ingredient-btn": {
+          "& #ingredient-btn, #delete-btn": {
             backgroundColor: colors.orangeAccent[500],
           },
           "& #confirm-btn": {
@@ -234,6 +247,14 @@ function EditMenuItemForm() {
           </Box>
         </DialogContent>
         <DialogActions>
+          <Button
+            id="delete-btn"
+            onClick={() => {
+              handleDeleteDish();
+            }}
+          >
+            Delete {selectedItem.dish}
+          </Button>
           <Button
             id="ingredient-btn"
             onClick={() => {

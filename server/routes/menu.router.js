@@ -13,7 +13,9 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
     const companyId = companyResult.rows[0].id;
 
     const selectMenuQuery = `
-    SELECT "menu".dish, "menu".id, "menu".image, "menu".price, json_agg("inventory") AS "ingredients" FROM "menu"
+    SELECT "menu".dish, "menu".id, "menu".image, "menu".price, 
+    json_agg(json_build_object('inventoryId', "inventory".id,'item', "inventory".item, 'quantity', "menu_inventory".quantity, 'unit', "menu_inventory".unit)) AS "ingredients" 
+    FROM "menu"
     JOIN "menu_inventory" ON "menu".id = "menu_inventory".menu_id
     JOIN "inventory" ON "inventory".id = "menu_inventory".inventory_id
     WHERE "menu".company_id = $1
@@ -21,7 +23,6 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
         `;
 
     const menuDataToSend = await pool.query(selectMenuQuery, [companyId]);
-
     res.send(menuDataToSend.rows);
   } catch (error) {
     console.log("Error executing SQL query", ":", error);
@@ -40,8 +41,6 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
   let menuId = null;
   //Holding the returned id's from the inventory
   let inventoryIds = [];
-  //Counter variable to increase everytime ingredients is mapped through
-  let ingredientsIndex = -1;
 
   try {
     //Get id of the company belonging to the user
@@ -50,9 +49,9 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
     companyId = companyResult.rows[0].id;
 
     //Insert data into the menu table and return the id of the menu item
-    const insertQueryText = `INSERT INTO menu (dish, price, image, company_id)
+    const insertMenuQueryText = `INSERT INTO menu (dish, price, image, company_id)
       VALUES ($1, $2, $3, $4) RETURNING id;`;
-    const menuResult = await pool.query(insertQueryText, [
+    const menuResult = await pool.query(insertMenuQueryText, [
       dish,
       price,
       image,
@@ -63,7 +62,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
 
     //Loop through the array of objects and get the inventory id of that item
     const getInventoryIds = ingredients.map(async (ingredient) => {
-      let queryText2 = `
+      const queryText2 = `
           SELECT id FROM inventory WHERE company_id = $1 AND item = $2;
           `;
       const inventoryResult = await pool.query(queryText2, [
@@ -76,8 +75,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
 
     //Loop through the array of ingredient object and post all ingredients
     //to menu_inventory with the inventory id's
-    const postIngredients = ingredients.map(async (ingredient) => {
-      ingredientsIndex++;
+    const postIngredients = ingredients.map(async (ingredient, index) => {
       //Variable to hold the the unit so it can be converted if neccessary
       let unit = ingredient.unit;
       //Variable to hold the the quantity so it can be converted if neccessary
@@ -107,15 +105,12 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
 
       await pool.query(queryText3, [
         menuId,
-        inventoryIds[ingredientsIndex],
+        inventoryIds[index],
         quantity,
         unit,
       ]);
     });
     await Promise.all(postIngredients);
-
-    //Resetting ingredientsIndex counter
-    ingredientsIndex = -1;
 
     res.sendStatus(200);
   } catch (error) {
@@ -161,14 +156,26 @@ router.put("/:id", rejectUnauthenticated, async (req, res) => {
     INSERT INTO menu_inventory (menu_id, inventory_id, quantity, unit)
     VALUES ($1, $2, $3, $4);
     `;
-      await pool.query(updateMenuInventoryQuery, [
+      return pool.query(updateMenuInventoryQuery, [
         req.params.id,
-        ingredient.id,
+        ingredient.inventoryId,
         ingredient.quantity,
         ingredient.unit,
       ]);
     });
-    Promise.all(updateMenuInventory);
+    await Promise.all(updateMenuInventory);
+    res.sendStatus(200);
+  } catch (error) {
+    console.log("Error executing SQL query", ":", error);
+    res.sendStatus(500);
+  }
+});
+
+router.delete("/:id", rejectUnauthenticated, async (req, res) => {
+  try {
+    const queryText = `DELETE FROM "menu" WHERE "id" = $1`;
+
+    await pool.query(queryText, [req.params.id]);
     res.sendStatus(200);
   } catch (error) {
     console.log("Error executing SQL query", ":", error);

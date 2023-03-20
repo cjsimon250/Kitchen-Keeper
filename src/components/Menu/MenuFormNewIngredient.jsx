@@ -1,6 +1,5 @@
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { useEffect } from "react";
 import { useState } from "react";
 import { Box } from "@mui/system";
 import FormControl from "@mui/material/FormControl";
@@ -27,14 +26,13 @@ function MenuFormNewIngredient() {
     item: "",
     unit: "",
     quantity: 1,
-    id: null,
+    inventoryId: null,
   });
   //Array of available units of mesurement to map through
   const units = ["Lb", "Oz", "Gal", "Fl. Oz"];
 
   //Funtion to handle canceling the new ingredient to be added
   function handleCancelAddIngredient() {
-    console.log(updatedIngredient);
     //Hiding the input fields
     dispatch({
       type: "SHOW_INGREDIENT_INPUTS",
@@ -61,7 +59,7 @@ function MenuFormNewIngredient() {
       item: "",
       unit: "",
       quantity: 1,
-      id: null,
+      inventoryId: null,
     });
   }
 
@@ -84,7 +82,7 @@ function MenuFormNewIngredient() {
                 setUpdatedIngredient({
                   ...updatedIngredient,
                   item: selectedValue,
-                  id: selectedIngredient.id,
+                  inventoryId: selectedIngredient.id,
                 });
               }}
             >

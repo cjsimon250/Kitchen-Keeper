@@ -1,12 +1,16 @@
 import Header from "../Header/Header";
 import { Box } from "@mui/system";
+import OrdersTable from "./OrdersTable/OrdersTable";
+import OrdersForm from "./OrdersForm/OrdersForm";
 
 const BarGraph = () => {
   return (
     // HEADER
     <Box m="20px">
-      <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title="ORDERS" subtitle="All of your orders" />
+      <Header title="ORDERS" subtitle="All of your orders" />
+      <Box display="flex" justifyContent="space-between">
+        <OrdersTable />
+        <OrdersForm />
       </Box>
     </Box>
   );

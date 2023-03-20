@@ -33,8 +33,6 @@ function AddToInventoryForm() {
 
   //Function to handle posting the new item to database
   function handlePostInventoryItem() {
-    console.log("INVENTORY ITEM :", inventoryItemToSend);
-
     dispatch({
       type: "POST_INVENTORY",
       payload: inventoryItemToSend,
