@@ -60,7 +60,7 @@ function OrdersTable() {
   }
   //Function to order to the database
   async function handleAddOrder() {
-    await axios.post("/api/orders", orderToSend);
+    dispatch({ type: "POST_ORDER", payload: orderToSend });
 
     //Clear inputs
     setOrderToSend({

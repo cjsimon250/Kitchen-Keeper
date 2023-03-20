@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Box, useTheme } from "@mui/system";
 import { DataGrid } from "@mui/x-data-grid";
-import { tokens } from "../../theme";
+import { tokens } from "../../../theme";
 import { Button } from "@mui/material";
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import IconButton from "@mui/material/IconButton";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import OrderDetailDialog from "./OrderDetailDialog";
 
 function OrdersTable() {
   const dispatch = useDispatch();
@@ -31,12 +32,12 @@ function OrdersTable() {
   }, []);
 
   //Filtering through the dates to make them more readable
-  useEffect(() => {
-    orders.forEach((order) => {
-      let dateArr = order.date.split(`T`);
-      order.date = dateArr[0];
-    });
-  }, [orders]);
+  // useEffect(() => {
+  //   orders.forEach((order) => {
+  //     let dateArr = order.date.split(`T`);
+  //     order.date = dateArr[0];
+  //   });
+  // }, []);
   //Filtering the inventory to convert quantities and units so that they
   //are more readable
   //   useEffect(() => {
@@ -67,12 +68,7 @@ function OrdersTable() {
   //Function for handling deleting a row
   function handleDelete(event, cellValues) {
     let rowToDelete = cellValues.row;
-
-    axios.delete(`/api/orders/${rowToDelete.id}`).then(() => {
-      dispatch({
-        type: "FETCH_ORDERS",
-      });
-    });
+    dispatch({ type: "DELETE_ORDER", payload: rowToDelete.id });
   }
 
   // Function to handle updating an edited row
@@ -100,7 +96,7 @@ function OrdersTable() {
       // flex is allowing the cells to grow
       flex: 1,
       cellClassName: "supplier-column-cell",
-      editable: true,
+      editable: false,
     },
     {
       field: "date",
@@ -108,16 +104,27 @@ function OrdersTable() {
       flex: 1,
       cellClassName: "date-column-cell",
       editable: false,
+      renderCell: () => {
+        return orders.forEach((order) => {
+          let dateArr = order.date.split(`T`);
+          order.date = dateArr[0];
+        });
+      },
     },
     {
       field: "View",
       headerName: "Unit",
       flex: 0.5,
       cellClassName: "unit-column-cell",
-      editable: true,
+      editable: false,
       renderCell: (cellValues) => {
         return (
-          <IconButton variant="contained">
+          <IconButton
+            variant="contained"
+            onClick={() => {
+              dispatch({ type: "SET_SHOW_ORDER_DETAILS", payload: true });
+            }}
+          >
             {" "}
             <ExpandMoreIcon />
           </IconButton>
@@ -202,6 +209,7 @@ function OrdersTable() {
           {deleteButtonText}
         </Button>
       </Box>
+      <OrderDetailDialog />
     </Box>
   );
 }

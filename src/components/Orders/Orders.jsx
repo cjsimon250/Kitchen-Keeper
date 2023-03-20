@@ -1,6 +1,6 @@
 import Header from "../Header/Header";
 import { Box } from "@mui/system";
-import OrdersTable from "./OrdersTable";
+import OrdersTable from "./OrdersTable/OrdersTable";
 import OrdersForm from "./OrdersForm/OrdersForm";
 
 const BarGraph = () => {
