@@ -59,7 +59,7 @@ function OrdersTable() {
     });
   }
   //Function to order to the database
-  async function handleAddOrder() {
+  function handleAddOrder() {
     dispatch({ type: "POST_ORDER", payload: orderToSend });
 
     //Clear inputs
@@ -73,13 +73,22 @@ function OrdersTable() {
     <Box
       width="30vw"
       height="60vh"
-      borderRadius="1%"
+      borderRadius="3%"
       sx={{
         backgroundColor: `${colors.khakiAccent[700]}`,
         boxShadow: "8px 8px 12px rgba(0,0,0,0.4)",
+        border: `5px solid ${colors.khakiAccent[800]}`,
+        "& #add-ingredient-btn:hover": {
+          color: colors.orangeAccent[500],
+        },
       }}
     >
-      <Typography variant="h3">Add New Order</Typography>
+      <Typography
+        variant="h3"
+        sx={{ color: colors.greenAccent[400], textAlign: "center", mt: "4%" }}
+      >
+        Add New Order
+      </Typography>
       <TextField
         autoFocus
         id="order-date"
@@ -87,6 +96,7 @@ function OrdersTable() {
         variant="outlined"
         fullWidth
         value={orderToSend.date}
+        sx={{ mt: "12%" }}
         onChange={(event) => {
           setOrderToSend({
             ...orderToSend,
@@ -101,6 +111,7 @@ function OrdersTable() {
         variant="outlined"
         fullWidth
         value={orderToSend.supplier}
+        sx={{ mt: "4%" }}
         onChange={(event) => {
           setOrderToSend({
             ...orderToSend,
@@ -173,6 +184,7 @@ function OrdersTable() {
         </Select>
       </FormControl>
       <IconButton
+        id="add-ingredient-btn"
         onClick={() => {
           handleAddInventoryItem();
         }}

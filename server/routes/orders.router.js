@@ -63,8 +63,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
       const ordersInventoryQuery = `INSERT INTO orders_inventory (inventory_id, orders_id, quantity, unit)
       VALUES ($1, $2, $3, $4)
       `;
-
-      //Converting quantity of item in stock to oz or fluid oz for database
+      //Converting quantity to oz or fluid oz for database
       switch (unit) {
         case "Lb":
           quantity *= 16;
@@ -91,6 +90,51 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
     });
     await Promise.all(postOrderItems);
 
+    // //Updating the amount of each inventory item from the order
+    const updateInventory = inventoryItems.map(async (item) => {
+      let orderQuantity = item.quantity;
+      let orderUnit = item.unit;
+
+      //Converting quantity to oz or fluid oz for database
+      switch (orderUnit) {
+        case "Lb":
+          orderQuantity *= 16;
+          orderUnit = "Oz";
+          break;
+        case "Oz":
+          orderUnit = "Oz";
+          break;
+        case "Gal.":
+          orderQuantity *= 128;
+          orderUnit = "Fl. Oz";
+          break;
+        case "Fl. Oz.":
+          orderUnit = "Fl. Oz";
+          break;
+      }
+      //Selecting quantity to add to
+      const getQuantityQuery = `
+      SELECT "inventory".quantity FROM "inventory" WHERE
+      id = $1
+      `;
+
+      let currentQuantity = await pool.query(getQuantityQuery, [
+        item.inventoryId,
+      ]);
+
+      let updatedQuantity = currentQuantity.rows[0].quantity + orderQuantity;
+
+      const updateInventoryQuery = `
+    UPDATE "inventory" SET "quantity" = $1 WHERE id = $2
+      `;
+
+      await pool.query(updateInventoryQuery, [
+        updatedQuantity,
+        item.inventoryId,
+      ]);
+    });
+
+    await Promise.all(updateInventory);
     res.sendStatus(200);
   } catch (error) {
     console.log("Error executing SQL query", ":", error);
