@@ -5,11 +5,29 @@ const {
   rejectUnauthenticated,
 } = require("../modules/authentication-middleware");
 
-/**
- * GET route template
- */
-router.get("/", (req, res) => {
-  // GET route code here
+router.get("/", rejectUnauthenticated, async (req, res) => {
+  try {
+    //Get id of the company belonging to the user
+    const companyQuery = `SELECT * FROM company WHERE user_id = $1;`;
+    const companyResult = await pool.query(companyQuery, [req.user.id]);
+
+    let companyId = companyResult.rows[0].id;
+    const ordersQuery = `
+SELECT "orders".id, "orders".supplier, "orders".date,
+json_agg(json_build_object('item', "inventory".item, 'ordersId', "orders".id, 'quantity', "orders_inventory".quantity, 'unit', "orders_inventory".unit))
+FROM "orders"
+JOIN "orders_inventory" ON "orders_inventory".orders_id = "orders".id
+JOIN "inventory" ON "orders_inventory".inventory_id = "inventory".id 
+WHERE "orders".company_id = 1
+GROUP BY "orders".id;
+    `;
+
+    const ordersResult = await pool.query(ordersQuery, [companyId]);
+    res.send(ordersResult.rows);
+  } catch (error) {
+    console.log("Error executing SQL query", ":", error);
+    res.sendStatus(500);
+  }
 });
 
 //POST to order table

@@ -11,7 +11,6 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
-import OrdersFormItemList from "./OrdersFormItemList";
 
 function OrdersTable() {
   const dispatch = useDispatch();
@@ -75,7 +74,10 @@ function OrdersTable() {
       width="30vw"
       height="60vh"
       borderRadius="1%"
-      sx={{ backgroundColor: `${colors.khakiAccent[600]}` }}
+      sx={{
+        backgroundColor: `${colors.khakiAccent[700]}`,
+        boxShadow: "8px 8px 12px rgba(0,0,0,0.4)",
+      }}
     >
       <Typography variant="h3">Add New Order</Typography>
       <TextField
