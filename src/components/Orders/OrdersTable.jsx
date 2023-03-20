@@ -8,53 +8,52 @@ import { Button } from "@mui/material";
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import AddToInventoryForm from "../Forms/AddToInventoryForm";
 
 function OrdersTable() {
   const dispatch = useDispatch();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  //User's inventory
-  const inventory = useSelector((store) => store.inventory);
+  //User's past orders
+  const orders = useSelector((store) => store.orders);
 
   //Variables for toggling the delete column and button text
   const [deleteIsVisbile, setDeleteIsVisible] = useState(true);
-  const [deleteButtonText, setDeleteButtonText] = useState(
-    "Delete Inventory Item"
-  );
+  const [deleteButtonText, setDeleteButtonText] = useState("Delete Orders");
 
-  //Fetch user's inventory on page load
+  //Fetch user's orders and inventory on page load for form
   useEffect(() => {
     dispatch({
-      type: "FETCH_INVENTORY",
+      type: "FETCH_ORDERS",
     });
+
+    console.log("ORDERS :", orders);
   }, []);
 
   //Filtering the inventory to convert quantities and units so that they
   //are more readable
-  useEffect(() => {
-    inventory.forEach((item) => {
-      if (item.unit === "Oz" && (item.quantity || item.minimumStock) > 48) {
-        item.quantity /= 16;
-        item.minimumStock /= 16;
-        item.unit = "Lb";
-      } else if (
-        item.unit === "Fl. Oz" &&
-        (item.quantity || item.minimumStock) > 63
-      ) {
-        item.quantity /= 128;
-        item.minimumStock /= 128;
-        item.unit = "Gal.";
-      }
-    });
-  }, [inventory]);
+  //   useEffect(() => {
+  //     inventory.forEach((item) => {
+  //       if (item.unit === "Oz" && (item.quantity || item.minimumStock) > 48) {
+  //         item.quantity /= 16;
+  //         item.minimumStock /= 16;
+  //         item.unit = "Lb";
+  //       } else if (
+  //         item.unit === "Fl. Oz" &&
+  //         (item.quantity || item.minimumStock) > 63
+  //       ) {
+  //         item.quantity /= 128;
+  //         item.minimumStock /= 128;
+  //         item.unit = "Gal.";
+  //       }
+  //     });
+  //   }, [inventory]);
 
   //Function to handle toggling the delete column
   const handleToggleDeleteColumn = () => {
     setDeleteIsVisible(!deleteIsVisbile);
     setDeleteButtonText(
-      deleteIsVisbile ? "Hide Delete Column" : "Delete Inventory Item"
+      deleteIsVisbile ? "Hide Delete Column" : "Delete Orders"
     );
   };
 
@@ -70,53 +69,50 @@ function OrdersTable() {
   }
 
   // Function to handle updating an edited row
-  const handleEditCell = useCallback(
-    (params) => {
-      // Get the corresponding database id from the hidden "id" column
-      const id = params.id;
-      //field is the field name in SQL
-      const field = params.field;
-      //Value of updated cell
-      const value = params.value;
+  //   const handleEditCell = useCallback(
+  //     (params) => {
+  //       // Get the corresponding database id from the hidden "id" column
+  //       const id = params.id;
+  //       //field is the field name in SQL
+  //       const field = params.field;
+  //       //Value of updated cell
+  //       const value = params.value;
 
-      axios.put(`/api/inventory/${id}`, {
-        payload: { value: value, field: field },
-      });
-    },
-    [inventory]
-  );
+  //       axios.put(`/api/inventory/${id}`, {
+  //         payload: { value: value, field: field },
+  //       });
+  //     },
+  //     [inventory]
+  //   );
 
   //For every row this grabs the value from the key to put into the "headerName" column
   const columns = [
     {
-      field: "item",
-      headerName: "Item",
+      field: "supplier",
+      headerName: "Supplier",
       // flex is allowing the cells to grow
       flex: 1,
-      cellClassName: "item-column-cell",
+      cellClassName: "supplier-column-cell",
       editable: true,
     },
     {
-      field: "quantity",
-      headerName: "Quantity In Stock",
+      field: "date",
+      headerName: "Date",
       flex: 1,
-      cellClassName: "quantity-column-cell",
+      cellClassName: "date-column-cell",
       editable: true,
     },
     {
-      field: "minimumStock",
-      headerName: "Minimum Desired Stock",
-      flex: 1,
-      cellClassName: "minStock-column-cell",
-      editable: true,
-    },
-    {
-      field: "unit",
+      field: "View",
       headerName: "Unit",
-      flex: 0.2,
+      flex: 0.5,
       cellClassName: "unit-column-cell",
       editable: true,
+      renderCell: (cellValues) => {
+        return <Button variant="contained">View Order</Button>;
+      },
     },
+
     {
       field: "delete",
       headerName: "Delete",
@@ -142,7 +138,6 @@ function OrdersTable() {
   return (
     <Box
       //All styling on the table and box holding it
-      //   m="40px 0 40px 0"
       paddingBottom="40px"
       height="75vh"
       width="52vw"
@@ -180,23 +175,12 @@ function OrdersTable() {
       }}
     >
       <DataGrid
-        rows={inventory}
+        rows={orders}
         columns={columns}
         //After edit by pressing enter user updates database
-        onCellEditCommit={handleEditCell}
+        // onCellEditCommit={handleEditCell}
       />
-      <Box display="flex" justifyContent="space-between">
-        <Button
-          sx={{ mt: "10px" }}
-          onClick={() => {
-            dispatch({
-              type: "SET_SHOW_ADD_TO_INVENTORY_FORM",
-              payload: true,
-            });
-          }}
-        >
-          Add Inventory Items
-        </Button>
+      <Box display="flex" alignItems="right">
         <Button
           sx={{ mt: "10px" }}
           onClick={() => {
@@ -206,7 +190,6 @@ function OrdersTable() {
           {deleteButtonText}
         </Button>
       </Box>
-      <AddToInventoryForm />
     </Box>
   );
 }

@@ -18,7 +18,7 @@ json_agg(json_build_object('item', "inventory".item, 'ordersId', "orders".id, 'q
 FROM "orders"
 JOIN "orders_inventory" ON "orders_inventory".orders_id = "orders".id
 JOIN "inventory" ON "orders_inventory".inventory_id = "inventory".id 
-WHERE "orders".company_id = 1
+WHERE "orders".company_id = $1
 GROUP BY "orders".id;
     `;
 
