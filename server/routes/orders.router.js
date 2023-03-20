@@ -15,6 +15,7 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
     const ordersQuery = `
     SELECT "orders".id, "orders".supplier, "orders".date,
     json_agg(json_build_object('item', "inventory".item, 'ordersId', "orders".id, 'quantity', "orders_inventory".quantity, 'unit', "orders_inventory".unit))
+    AS "orderDetails"
     FROM "orders"
     JOIN "orders_inventory" ON "orders_inventory".orders_id = "orders".id
     JOIN "inventory" ON "orders_inventory".inventory_id = "inventory".id 

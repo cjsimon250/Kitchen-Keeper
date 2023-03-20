@@ -50,7 +50,7 @@ function EditMenuItemForm() {
     displayAllCurrentIngredients();
   }, [selectedItem.ingredients]);
 
-  //Function to close the add contact form via redux
+  //Function to close the form via redux
   const handleClose = () => {
     dispatch({
       type: "SHOW_MENU_FORM",

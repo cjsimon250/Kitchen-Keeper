@@ -18,7 +18,7 @@ function OrdersTable() {
   const colors = tokens(theme.palette.mode);
 
   //User's past orders
-  const orders = useSelector((store) => store.orders);
+  const orders = useSelector((store) => store.orders.orders);
 
   //Variables for toggling the delete column and button text
   const [deleteIsVisbile, setDeleteIsVisible] = useState(true);
@@ -30,32 +30,6 @@ function OrdersTable() {
       type: "FETCH_ORDERS",
     });
   }, []);
-
-  //Filtering through the dates to make them more readable
-  // useEffect(() => {
-  //   orders.forEach((order) => {
-  //     let dateArr = order.date.split(`T`);
-  //     order.date = dateArr[0];
-  //   });
-  // }, []);
-  //Filtering the inventory to convert quantities and units so that they
-  //are more readable
-  //   useEffect(() => {
-  //     inventory.forEach((item) => {
-  //       if (item.unit === "Oz" && (item.quantity || item.minimumStock) > 48) {
-  //         item.quantity /= 16;
-  //         item.minimumStock /= 16;
-  //         item.unit = "Lb";
-  //       } else if (
-  //         item.unit === "Fl. Oz" &&
-  //         (item.quantity || item.minimumStock) > 63
-  //       ) {
-  //         item.quantity /= 128;
-  //         item.minimumStock /= 128;
-  //         item.unit = "Gal.";
-  //       }
-  //     });
-  //   }, [inventory]);
 
   //Function to handle toggling the delete column
   const handleToggleDeleteColumn = () => {
@@ -70,23 +44,6 @@ function OrdersTable() {
     let rowToDelete = cellValues.row;
     dispatch({ type: "DELETE_ORDER", payload: rowToDelete.id });
   }
-
-  // Function to handle updating an edited row
-  //   const handleEditCell = useCallback(
-  //     (params) => {
-  //       // Get the corresponding database id from the hidden "id" column
-  //       const id = params.id;
-  //       //field is the field name in SQL
-  //       const field = params.field;
-  //       //Value of updated cell
-  //       const value = params.value;
-
-  //       axios.put(`/api/inventory/${id}`, {
-  //         payload: { value: value, field: field },
-  //       });
-  //     },
-  //     [inventory]
-  //   );
 
   //For every row this grabs the value from the key to put into the "headerName" column
   const columns = [
@@ -123,6 +80,8 @@ function OrdersTable() {
             variant="contained"
             onClick={() => {
               dispatch({ type: "SET_SHOW_ORDER_DETAILS", payload: true });
+
+              dispatch({ type: "SET_SELECTED_ORDER", payload: cellValues.row });
             }}
           >
             {" "}
