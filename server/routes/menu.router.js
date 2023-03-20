@@ -20,7 +20,6 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
     JOIN "inventory" ON "inventory".id = "menu_inventory".inventory_id
     WHERE "menu".company_id = $1
     GROUP BY "menu".id
-    
         `;
 
     const menuDataToSend = await pool.query(selectMenuQuery, [companyId]);
@@ -42,8 +41,6 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
   let menuId = null;
   //Holding the returned id's from the inventory
   let inventoryIds = [];
-  //Counter variable to increase everytime ingredients is mapped through
-  let ingredientsIndex = -1;
 
   try {
     //Get id of the company belonging to the user
@@ -52,9 +49,9 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
     companyId = companyResult.rows[0].id;
 
     //Insert data into the menu table and return the id of the menu item
-    const insertQueryText = `INSERT INTO menu (dish, price, image, company_id)
+    const insertMenuQueryText = `INSERT INTO menu (dish, price, image, company_id)
       VALUES ($1, $2, $3, $4) RETURNING id;`;
-    const menuResult = await pool.query(insertQueryText, [
+    const menuResult = await pool.query(insertMenuQueryText, [
       dish,
       price,
       image,
@@ -65,7 +62,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
 
     //Loop through the array of objects and get the inventory id of that item
     const getInventoryIds = ingredients.map(async (ingredient) => {
-      let queryText2 = `
+      const queryText2 = `
           SELECT id FROM inventory WHERE company_id = $1 AND item = $2;
           `;
       const inventoryResult = await pool.query(queryText2, [
@@ -78,8 +75,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
 
     //Loop through the array of ingredient object and post all ingredients
     //to menu_inventory with the inventory id's
-    const postIngredients = ingredients.map(async (ingredient) => {
-      ingredientsIndex++;
+    const postIngredients = ingredients.map(async (ingredient, index) => {
       //Variable to hold the the unit so it can be converted if neccessary
       let unit = ingredient.unit;
       //Variable to hold the the quantity so it can be converted if neccessary
@@ -109,15 +105,12 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
 
       await pool.query(queryText3, [
         menuId,
-        inventoryIds[ingredientsIndex],
+        inventoryIds[index],
         quantity,
         unit,
       ]);
     });
     await Promise.all(postIngredients);
-
-    //Resetting ingredientsIndex counter
-    ingredientsIndex = -1;
 
     res.sendStatus(200);
   } catch (error) {

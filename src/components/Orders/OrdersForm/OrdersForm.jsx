@@ -32,6 +32,7 @@ function OrdersTable() {
 
   //Inventory item to add into orderToSend
   const [inventoryItem, setInventoryItem] = useState({
+    inventoryId: null,
     item: "",
     quantity: 1,
     unit: "",
@@ -52,14 +53,22 @@ function OrdersTable() {
     });
     //Resetting inventoryItem
     setInventoryItem({
+      inventoryId: null,
       item: "",
       quantity: 1,
       unit: "",
     });
   }
   //Function to order to the database
-  function handleAddOrder() {
-    axios.post("/api/inventory");
+  async function handleAddOrder() {
+    await axios.post("/api/orders", orderToSend);
+
+    //Clear inputs
+    setOrderToSend({
+      supplier: "",
+      date: "",
+      inventoryItems: [],
+    });
   }
   return (
     <Box
@@ -103,9 +112,15 @@ function OrdersTable() {
           variant="outlined"
           value={inventoryItem.item}
           onChange={(event) => {
+            const selectedValue = event.target.value;
+            //Find the id of the inventory item
+            const selectedIngredient = inventory.find(
+              (ingredient) => ingredient.item === selectedValue
+            );
             setInventoryItem({
               ...inventoryItem,
-              item: event.target.value,
+              item: selectedValue,
+              inventoryId: selectedIngredient.id,
             });
           }}
         >

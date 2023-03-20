@@ -106,7 +106,8 @@ CREATE TABLE "contacts" (
 CREATE TABLE "orders"(
 	"id" serial NOT NULL,
 	"supplier" varchar(200) NOT NULL,
-	"date" date NOT NULL
+	"date" date NOT NULL,
+	"company_id" int NOT NULL,
 	CONSTRAINT "orders_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
@@ -137,6 +138,8 @@ ALTER TABLE "menu_inventory" ADD CONSTRAINT "menu_inventory_fk1" FOREIGN KEY ("i
 ALTER TABLE "sales" ADD CONSTRAINT "sales_fk0" FOREIGN KEY ("menu_id") REFERENCES "menu"("id");
 
 ALTER TABLE "team" ADD CONSTRAINT "team_fk0" FOREIGN KEY ("company_id") REFERENCES "company"("id");
+
+ALTER TABLE "orders" ADD CONSTRAINT "orders_fk0" FOREIGN KEY ("company_id") REFERENCES "company"("id");
 
 ALTER TABLE "orders_inventory" ADD CONSTRAINT "orders_inventory_fk0" FOREIGN KEY ("inventory_id") REFERENCES "inventory"("id");
 ALTER TABLE "orders_inventory" ADD CONSTRAINT "orders_inventory_fk1" FOREIGN KEY ("orders_id") REFERENCES "orders"("id") ON DELETE CASCADE;
