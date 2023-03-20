@@ -1,4 +1,3 @@
-import Header from "../Header/Header";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Box, useTheme } from "@mui/system";
@@ -8,6 +7,9 @@ import { Button } from "@mui/material";
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import IconButton from "@mui/material/IconButton";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 function OrdersTable() {
   const dispatch = useDispatch();
@@ -26,10 +28,15 @@ function OrdersTable() {
     dispatch({
       type: "FETCH_ORDERS",
     });
-
-    console.log("ORDERS :", orders);
   }, []);
 
+  //Filtering through the dates to make them more readable
+  useEffect(() => {
+    orders.forEach((order) => {
+      let dateArr = order.date.split(`T`);
+      order.date = dateArr[0];
+    });
+  }, [orders]);
   //Filtering the inventory to convert quantities and units so that they
   //are more readable
   //   useEffect(() => {
@@ -61,9 +68,9 @@ function OrdersTable() {
   function handleDelete(event, cellValues) {
     let rowToDelete = cellValues.row;
 
-    axios.delete(`/api/inventory/${rowToDelete.id}`).then(() => {
+    axios.delete(`/api/orders/${rowToDelete.id}`).then(() => {
       dispatch({
-        type: "FETCH_INVENTORY",
+        type: "FETCH_ORDERS",
       });
     });
   }
@@ -97,10 +104,10 @@ function OrdersTable() {
     },
     {
       field: "date",
-      headerName: "Date",
+      headerName: "Date Recieved",
       flex: 1,
       cellClassName: "date-column-cell",
-      editable: true,
+      editable: false,
     },
     {
       field: "View",
@@ -109,7 +116,12 @@ function OrdersTable() {
       cellClassName: "unit-column-cell",
       editable: true,
       renderCell: (cellValues) => {
-        return <Button variant="contained">View Order</Button>;
+        return (
+          <IconButton variant="contained">
+            {" "}
+            <ExpandMoreIcon />
+          </IconButton>
+        );
       },
     },
 
@@ -122,14 +134,14 @@ function OrdersTable() {
       hide: deleteIsVisbile,
       renderCell: (cellValues) => {
         return (
-          <Button
+          <IconButton
             variant="contained"
             onClick={(event) => {
               handleDelete(event, cellValues);
             }}
           >
-            Delete
-          </Button>
+            <DeleteForeverIcon />
+          </IconButton>
         );
       },
     },
