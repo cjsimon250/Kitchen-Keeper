@@ -159,9 +159,11 @@ const Inventory = () => {
                 ? colors.khakiAccent[900]
                 : colors.khakiAccent[700]
             }`,
+            fontSize: "0.9rem",
           },
           "& .MuiDataGrid-columnHeader": {
             backgroundColor: colors.khakiAccent[800],
+            fontSize: "0.9rem",
           },
           "& .MuiDataGrid-footerContainer": {
             borderTop: "none",

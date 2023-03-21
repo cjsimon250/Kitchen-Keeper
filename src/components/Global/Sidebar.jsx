@@ -9,7 +9,7 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import PermContactCalendarIcon from "@mui/icons-material/PermContactCalendar";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import BarChartIcon from "@mui/icons-material/BarChart";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import FoodBankIcon from "@mui/icons-material/FoodBank";
@@ -60,9 +60,6 @@ const Sidebar = () => {
         "& .pro-icon-wrapper": {
           backgroundColor: "transparent !important",
         },
-        // "& .pro-inner-item": {
-        //   padding: "5px 35px 5px 20px !important",
-        // },
         "& .pro-inner-item:hover": {
           color: `${colors.orangeAccent[500]} !important`,
         },
@@ -199,9 +196,9 @@ const Sidebar = () => {
               collapsed={isCollapsed}
             />
             <Item
-              title="Graphs"
-              to="/graphs"
-              icon={<BarChartIcon />}
+              title="Sales"
+              to="/sales"
+              icon={<AttachMoneyIcon />}
               selected={selected}
               setSelected={setSelected}
               collapsed={isCollapsed}

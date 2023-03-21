@@ -3,14 +3,13 @@ import { useState, useEffect } from "react";
 import { Box, useTheme } from "@mui/system";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../../theme";
-import { Button } from "@mui/material";
-import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import IconButton from "@mui/material/IconButton";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import OrderDetailDialog from "./OrderDetailDialog";
+import dayjs from "dayjs";
 
 function OrdersTable() {
   const dispatch = useDispatch();
@@ -20,24 +19,12 @@ function OrdersTable() {
   //User's past orders
   const orders = useSelector((store) => store.orders.orders);
 
-  //Variables for toggling the delete column and button text
-  const [deleteIsVisbile, setDeleteIsVisible] = useState(true);
-  const [deleteButtonText, setDeleteButtonText] = useState("Delete Orders");
-
   //Fetch user's orders and inventory on page load for form
   useEffect(() => {
     dispatch({
       type: "FETCH_ORDERS",
     });
   }, []);
-
-  //Function to handle toggling the delete column
-  const handleToggleDeleteColumn = () => {
-    setDeleteIsVisible(!deleteIsVisbile);
-    setDeleteButtonText(
-      deleteIsVisbile ? "Hide Delete Column" : "Delete Orders"
-    );
-  };
 
   //Function for handling deleting a row
   function handleDelete(event, cellValues) {
@@ -63,51 +50,45 @@ function OrdersTable() {
       editable: false,
       renderCell: () => {
         return orders.forEach((order) => {
-          let dateArr = order.date.split(`T`);
-          order.date = dateArr[0];
+          // let dateArr = order.date.split(`T`);
+          order.date = dayjs(order.date).format("MMMM D, YYYY");
         });
       },
     },
     {
-      field: "View",
-      headerName: "Unit",
+      field: "actions",
+      headerName: "Actions",
       flex: 0.5,
       cellClassName: "unit-column-cell",
       editable: false,
+      headerAlign: "center",
+      align: "center",
       renderCell: (cellValues) => {
         return (
-          <IconButton
-            variant="contained"
-            onClick={() => {
-              dispatch({ type: "SET_SHOW_ORDER_DETAILS", payload: true });
+          <Box display="flex" justifyContent="space-between">
+            <IconButton
+              variant="contained"
+              onClick={() => {
+                dispatch({ type: "SET_SHOW_ORDER_DETAILS", payload: true });
 
-              dispatch({ type: "SET_SELECTED_ORDER", payload: cellValues.row });
-            }}
-          >
-            {" "}
-            <ExpandMoreIcon />
-          </IconButton>
-        );
-      },
-    },
-
-    {
-      field: "delete",
-      headerName: "Delete",
-      flex: 0.5,
-      cellClassName: "delete-btn-column-cell",
-      editable: false,
-      hide: deleteIsVisbile,
-      renderCell: (cellValues) => {
-        return (
-          <IconButton
-            variant="contained"
-            onClick={(event) => {
-              handleDelete(event, cellValues);
-            }}
-          >
-            <DeleteForeverIcon />
-          </IconButton>
+                dispatch({
+                  type: "SET_SELECTED_ORDER",
+                  payload: cellValues.row,
+                });
+              }}
+            >
+              {" "}
+              <VisibilityOutlinedIcon />
+            </IconButton>
+            <IconButton
+              variant="contained"
+              onClick={(event) => {
+                handleDelete(event, cellValues);
+              }}
+            >
+              <DeleteForeverIcon />
+            </IconButton>
+          </Box>
         );
       },
     },
@@ -122,7 +103,6 @@ function OrdersTable() {
       sx={{
         "& .MuiDataGrid-root": {
           border: "none",
-          fontSize: "small",
         },
         "& .MuiDataGrid-virtualScroller": {
           backgroundColor: `${
@@ -130,9 +110,11 @@ function OrdersTable() {
               ? colors.khakiAccent[900]
               : colors.khakiAccent[700]
           }`,
+          fontSize: "0.9rem",
         },
         "& .MuiDataGrid-columnHeader": {
           backgroundColor: colors.khakiAccent[800],
+          fontSize: "0.9rem",
         },
         "& .MuiDataGrid-footerContainer": {
           borderTop: "none",
@@ -158,16 +140,6 @@ function OrdersTable() {
         //After edit by pressing enter user updates database
         // onCellEditCommit={handleEditCell}
       />
-      <Box display="flex" alignItems="right">
-        <Button
-          sx={{ mt: "10px" }}
-          onClick={() => {
-            handleToggleDeleteColumn();
-          }}
-        >
-          {deleteButtonText}
-        </Button>
-      </Box>
       <OrderDetailDialog />
     </Box>
   );
