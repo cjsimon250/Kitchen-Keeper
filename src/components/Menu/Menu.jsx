@@ -41,7 +41,14 @@ const Menu = () => {
       >
         <AddIcon style={{ fontSize: "1.5em" }} />
       </IconButton>
-      <ImageList margin="auto" variant="masonry" cols={4} gap={8}>
+      <ImageList
+        //  margin="auto" variant="masonry" rows={1} gap={8}
+        sx={{
+          gridAutoFlow: "column",
+          gridTemplateColumns: "repeat(auto-fill,minmax(15%,1fr)) !important",
+          gridAutoColumns: "minmax(15%, 1fr)",
+        }}
+      >
         {menuData.map((menuItem) => {
           return (
             <MenuList

@@ -26,7 +26,7 @@ import Inventory from "../Inventory/Inventory";
 import Orders from "../Orders/Orders";
 import Team from "../Team/Team";
 import Contacts from "../Contacts/Contacts";
-import Graphs from "../Graphs/Graphs";
+import Sales from "../Sales/Sales";
 import Calendar from "../Calendar/Calendar";
 
 function App() {
@@ -139,8 +139,8 @@ function App() {
                   <ProtectedRoute exact path="/calendar">
                     <Calendar />
                   </ProtectedRoute>
-                  <ProtectedRoute exact path="/graphs">
-                    <Graphs />
+                  <ProtectedRoute exact path="/sales">
+                    <Sales />
                   </ProtectedRoute>
                 </Box>
               </Box>
