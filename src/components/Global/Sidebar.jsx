@@ -9,9 +9,7 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import PermContactCalendarIcon from "@mui/icons-material/PermContactCalendar";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import InventoryIcon from "@mui/icons-material/Inventory";
 import FoodBankIcon from "@mui/icons-material/FoodBank";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 
@@ -141,17 +139,9 @@ const Sidebar = () => {
               Data
             </Typography>
             <Item
-              title="Menu"
-              to="/menu"
+              title="Menu & Inventory"
+              to="/menuinventory"
               icon={<FoodBankIcon />}
-              selected={selected}
-              setSelected={setSelected}
-              collapsed={isCollapsed}
-            />
-            <Item
-              title="Inventory"
-              to="/inventory"
-              icon={<InventoryIcon />}
               selected={selected}
               setSelected={setSelected}
               collapsed={isCollapsed}
@@ -191,14 +181,6 @@ const Sidebar = () => {
               title="Calendar"
               to="/calendar"
               icon={<CalendarTodayIcon />}
-              selected={selected}
-              setSelected={setSelected}
-              collapsed={isCollapsed}
-            />
-            <Item
-              title="Sales"
-              to="/sales"
-              icon={<AttachMoneyIcon />}
               selected={selected}
               setSelected={setSelected}
               collapsed={isCollapsed}

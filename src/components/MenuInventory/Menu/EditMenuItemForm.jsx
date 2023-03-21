@@ -12,7 +12,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import axios from "axios";
 import { Box, useTheme } from "@mui/system";
-import { tokens } from "../../theme";
+import { tokens } from "../../../theme";
 import MenuFormNewIngredient from "./MenuFormNewIngredient";
 
 function EditMenuItemForm() {
