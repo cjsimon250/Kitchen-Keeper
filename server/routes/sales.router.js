@@ -6,7 +6,7 @@ const {
 } = require("../modules/authentication-middleware");
 
 //GET sales data from a specific timeframe
-router.get("/", rejectUnauthenticated, async (req, res) => {
+router.get("/monthly", rejectUnauthenticated, async (req, res) => {
   const queryText = `
   SELECT 
   DATE_TRUNC('month', "sales".date) AS "month",
@@ -19,12 +19,31 @@ GROUP BY "month", "year"
 ORDER BY "year", "month" ASC;
     `;
 
-  const salesByMonth = await pool.query(queryText, [
+  const salesData = await pool.query(queryText, [
     req.query.minDate,
     req.query.maxDate,
   ]);
-  console.log(req.query.minDate);
-  res.send(salesByMonth.rows);
+  res.send(salesData.rows);
+});
+
+//GET sales data from a specific timeframe
+router.get("/daily", rejectUnauthenticated, async (req, res) => {
+  const queryText = `
+  SELECT 
+  DATE_TRUNC('day', "sales".date) AS "day",
+  SUM("amountSold" * "menu".price) AS "totalSales"
+FROM "sales"
+JOIN "menu" ON "sales".menu_id = "menu".id
+WHERE "sales".date > $1 AND "sales".date < $2
+GROUP BY "day"
+ORDER BY "day" ASC;
+    `;
+
+  const salesData = await pool.query(queryText, [
+    req.query.minDate,
+    req.query.maxDate,
+  ]);
+  res.send(salesData.rows);
 });
 
 //POST to order table

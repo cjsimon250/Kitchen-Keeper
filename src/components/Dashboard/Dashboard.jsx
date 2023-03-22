@@ -3,7 +3,8 @@ import { Box } from "@mui/system";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import NewUserSetup from "./NewUserSetup/NewUserSetup";
-import SalesByMonthBarGraph from "./Sales/SalesByMonthLine";
+import SalesByMonthLine from "./Sales/SalesByMonthLine";
+import SalesByWeekBar from "./Sales/SalesByWeekBar";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -31,7 +32,8 @@ const Dashboard = () => {
         <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
         <NewUserSetup />
       </Box>
-      <SalesByMonthBarGraph />
+      <SalesByMonthLine />
+      <SalesByWeekBar />
     </Box>
   );
 };

@@ -3,25 +3,25 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { tokens } from "../../../theme";
 import dayjs from "dayjs";
-import { Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
 
-function SalesByMonthLine() {
+function SalesByWeekBar() {
   const dispatch = useDispatch();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  //Database year's sales data
-  const sales = useSelector((store) => store.sales.yearSales);
+  //Database week's sales data
+  const sales = useSelector((store) => store.sales.weekSales);
   //Data for query
   let today = dayjs().format("YYYY-MM-DD");
-  let oneYearAgo = dayjs().add(-1, "year").format("YYYY-MM-DD");
+  let oneWeekAgo = dayjs().add(-7, "day").format("YYYY-MM-DD");
 
   //Formatting dates that came back from the database
-  let formattedData = sales.map((monthlySales) => {
-    let month = monthlySales.month;
+  let formattedData = sales.map((dailySales) => {
+    let day = dailySales.day;
     return {
-      month: dayjs(month).format("MMMM, YYYY"),
-      totalMonthlySales: monthlySales.totalSales,
+      day: dayjs(day).format("dddd, MMMM D"),
+      totalDailySales: dailySales.totalSales,
     };
   });
   //Variable to hold data to be displayed on chart
@@ -30,14 +30,12 @@ function SalesByMonthLine() {
     datasets: [],
   });
 
-  console.log("SALES", sales);
-
   //Fetch this year's total sales on page load
   useEffect(() => {
     dispatch({
-      type: "FETCH_YEARS_SALES",
+      type: "FETCH_WEEKS_SALES",
       payload: {
-        minDate: `${oneYearAgo}`,
+        minDate: `${oneWeekAgo}`,
         maxDate: `${today}`,
       },
     });
@@ -45,11 +43,11 @@ function SalesByMonthLine() {
 
   useEffect(() => {
     setSalesData({
-      labels: formattedData?.map((data) => data.month),
+      labels: formattedData?.map((data) => data.day),
       datasets: [
         {
           label: "Total Revenue",
-          data: formattedData?.map((data) => data.totalMonthlySales),
+          data: formattedData?.map((data) => data.totalDailySales),
           backgroundColor: colors.orangeAccent[400],
         },
       ],
@@ -66,9 +64,9 @@ function SalesByMonthLine() {
         borderRadius: "10px",
       }}
     >
-      <Line data={salesData} />
+      <Bar data={salesData} />
     </Box>
   );
 }
 
-export default SalesByMonthLine;
+export default SalesByWeekBar;

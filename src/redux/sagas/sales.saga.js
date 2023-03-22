@@ -3,20 +3,35 @@ import axios from "axios";
 
 //WATCHER FUNCTION
 function* salesSaga() {
-  yield takeEvery("FETCH_SALES", fetchSales);
+  yield takeEvery("FETCH_YEARS_SALES", fetchYearsSales);
+  yield takeEvery("FETCH_WEEKS_SALES", fetchWeeksSales);
 }
 
-//GET sales
-function* fetchSales(action) {
+//GET year's sales
+function* fetchYearsSales(action) {
   try {
     const params = {
       minDate: action.payload.minDate,
       maxDate: action.payload.maxDate,
     };
-    const response = yield axios.get(`/api/sales`, { params });
-    yield put({ type: "SET_SALES_DATA", payload: response.data });
+    const response = yield axios.get(`/api/sales/monthly`, { params });
+    yield put({ type: "SET_YEARS_SALES_DATA", payload: response.data });
   } catch (error) {
-    console.log("error in fetchOrders", error);
+    console.log("error in fetchYearsSales", error);
+  }
+}
+
+//GET week's sales
+function* fetchWeeksSales(action) {
+  try {
+    const params = {
+      minDate: action.payload.minDate,
+      maxDate: action.payload.maxDate,
+    };
+    const response = yield axios.get(`/api/sales/daily`, { params });
+    yield put({ type: "SET_WEEKS_SALES_DATA", payload: response.data });
+  } catch (error) {
+    console.log("error in fetchWeeksSales", error);
   }
 }
 
