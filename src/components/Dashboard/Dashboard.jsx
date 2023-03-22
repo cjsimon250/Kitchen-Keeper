@@ -3,6 +3,7 @@ import { Box } from "@mui/system";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import NewUserSetup from "./NewUserSetup/NewUserSetup";
+import SalesByMonthBarGraph from "./Sales/SalesByMonthLine";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -29,21 +30,8 @@ const Dashboard = () => {
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
         <NewUserSetup />
-        <button
-          onClick={() => {
-            dispatch({
-              type: "FETCH_SALES",
-              payload: {
-                minDate: "2022-03-21",
-                maxDate: "2023-03-21",
-              },
-            });
-            console.log(sales);
-          }}
-        >
-          GET SALES
-        </button>
       </Box>
+      <SalesByMonthBarGraph />
     </Box>
   );
 };

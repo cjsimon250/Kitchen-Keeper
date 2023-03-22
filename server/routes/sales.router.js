@@ -23,8 +23,8 @@ ORDER BY "year", "month" ASC;
     req.query.minDate,
     req.query.maxDate,
   ]);
-
-  res.send(salesByMonth.rows[0]);
+  console.log(req.query.minDate);
+  res.send(salesByMonth.rows);
 });
 
 //POST to order table
