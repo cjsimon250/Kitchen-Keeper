@@ -77,7 +77,6 @@ function MenuItem({ menuItem }) {
           actionPosition="left"
         />
       </ImageListItem>
-      <EditMenuItemForm />
     </Box>
   );
 }

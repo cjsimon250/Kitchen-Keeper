@@ -6,6 +6,7 @@ import NewUserSetup from "./NewUserSetup/NewUserSetup";
 import SalesByMonthLine from "./Sales/SalesByMonthLine";
 import SalesByWeekBar from "./Sales/SalesByWeekBar";
 import AddSalesForm from "./Sales/SalesForm/AddSalesForm";
+import Notifications from "./Notifications/Notifications";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -46,6 +47,7 @@ const Dashboard = () => {
       >
         SHOW FORM
       </button>
+      <Notifications />
     </Box>
   );
 };
