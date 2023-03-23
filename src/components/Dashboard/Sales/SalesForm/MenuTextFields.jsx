@@ -25,7 +25,7 @@ function MenuTextFields() {
 
   //Function to send sales data to the data base
   async function handlePostSales() {
-    await axios.post("/api/sales", { salesToSend });
+    await axios.post("/api/sales", salesToSend);
 
     setSalesToSend({
       date: "",
