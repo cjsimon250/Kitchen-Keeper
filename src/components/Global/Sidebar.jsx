@@ -64,6 +64,9 @@ const Sidebar = () => {
         "& .pro-menu-item.active": {
           color: `${colors.orangeAccent[500]} !important`,
         },
+        "& .pro-icon": {
+          fontSize: "3rem !important",
+        },
       }}
     >
       <ProSidebar collapsed={isCollapsed}>
@@ -126,22 +129,15 @@ const Sidebar = () => {
             <Item
               title="Dashboard"
               to="/dashboard"
-              icon={<HomeOutlinedIcon />}
+              icon={<HomeOutlinedIcon fontSize="large" />}
               selected={selected}
               setSelected={setSelected}
               collapsed={isCollapsed}
             />
-            <Typography
-              variant="h6"
-              color={colors.grey[400]}
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              Data
-            </Typography>
             <Item
               title="Menu & Inventory"
               to="/menuinventory"
-              icon={<FoodBankIcon />}
+              icon={<FoodBankIcon fontSize="large" />}
               selected={selected}
               setSelected={setSelected}
               collapsed={isCollapsed}
@@ -149,22 +145,15 @@ const Sidebar = () => {
             <Item
               title="Orders"
               to="/orders"
-              icon={<AddShoppingCartIcon />}
+              icon={<AddShoppingCartIcon fontSize="large" />}
               selected={selected}
               setSelected={setSelected}
               collapsed={isCollapsed}
             />
-            <Typography
-              variant="h6"
-              color={colors.grey[400]}
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              Pages
-            </Typography>
             <Item
               title="Manage Team"
               to="/team"
-              icon={<PeopleOutlinedIcon />}
+              icon={<PeopleOutlinedIcon fontSize="large" />}
               selected={selected}
               setSelected={setSelected}
               collapsed={isCollapsed}
@@ -172,7 +161,7 @@ const Sidebar = () => {
             <Item
               title="Contacts Information"
               to="/contacts"
-              icon={<PermContactCalendarIcon />}
+              icon={<PermContactCalendarIcon fontSize="large" />}
               selected={selected}
               setSelected={setSelected}
               collapsed={isCollapsed}
@@ -180,7 +169,7 @@ const Sidebar = () => {
             <Item
               title="Calendar"
               to="/calendar"
-              icon={<CalendarTodayIcon />}
+              icon={<CalendarTodayIcon fontSize="large" />}
               selected={selected}
               setSelected={setSelected}
               collapsed={isCollapsed}

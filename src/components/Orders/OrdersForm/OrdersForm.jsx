@@ -193,7 +193,6 @@ function OrdersTable() {
       </IconButton>
       <ul>
         {orderToSend.inventoryItems.map((item, index) => {
-          console.log("INVENTORY ITEMS :", orderToSend);
           return (
             <li key={index}>
               {item.item}: {item.quantity} {item.unit}

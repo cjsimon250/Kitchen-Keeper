@@ -68,8 +68,9 @@ CREATE TABLE "menu_inventory" (
 CREATE TABLE "sales" (
 	"id" serial NOT NULL,
 	"menu_id" int NOT NULL,
-	"date" varchar(20) NOT NULL,
+	"date" date NOT NULL,
 	"amountSold" int NOT NULL,
+	"company_id" int NOT NULL,
 	CONSTRAINT "sales_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
@@ -116,7 +117,7 @@ CREATE TABLE "orders"(
 CREATE TABLE "orders_inventory"(
 	"id" serial NOT NULL,
 	"inventory_id" int NOT NULL,
-	 "orders_id", int NOT NULL,
+	 "orders_id" int NOT NULL,
 	 "quantity" int NOT NULL,
 	 "unit" varchar(20) NOT NULL,
 	 CONSTRAINT "orders_inventory_pk" PRIMARY KEY ("id")
@@ -131,11 +132,11 @@ ALTER TABLE "company" ADD CONSTRAINT "company_fk0" FOREIGN KEY ("user_id") REFER
 
 ALTER TABLE "inventory" ADD CONSTRAINT "inventory_fk0" FOREIGN KEY ("company_id") REFERENCES "company"("id");
 
-
 ALTER TABLE "menu_inventory" ADD CONSTRAINT "menu_inventory_fk0" FOREIGN KEY ("menu_id") REFERENCES "menu"("id") ON DELETE CASCADE
 ALTER TABLE "menu_inventory" ADD CONSTRAINT "menu_inventory_fk1" FOREIGN KEY ("inventory_id") REFERENCES "inventory"("id");
 
 ALTER TABLE "sales" ADD CONSTRAINT "sales_fk0" FOREIGN KEY ("menu_id") REFERENCES "menu"("id");
+ALTER TABLE "sales" ADD CONSTRAINT "sales_fk0" FOREIGN Key ("company_id") REFERENCES "company"("id");
 
 ALTER TABLE "team" ADD CONSTRAINT "team_fk0" FOREIGN KEY ("company_id") REFERENCES "company"("id");
 
