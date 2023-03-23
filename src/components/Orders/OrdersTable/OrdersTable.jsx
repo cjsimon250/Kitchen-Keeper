@@ -1,5 +1,4 @@
-import axios from "axios";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Box, useTheme } from "@mui/system";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../../theme";
@@ -25,6 +24,13 @@ function OrdersTable() {
       type: "FETCH_ORDERS",
     });
   }, []);
+
+  //Fetch orders when an one is deleted
+  useEffect(() => {
+    dispatch({
+      type: "FETCH_ORDERS",
+    });
+  }, [handleDelete]);
 
   //Function for handling deleting a row
   function handleDelete(event, cellValues) {

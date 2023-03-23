@@ -9,9 +9,9 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import PermContactCalendarIcon from "@mui/icons-material/PermContactCalendar";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import FoodBankIcon from "@mui/icons-material/FoodBank";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import AssignmentIcon from "@mui/icons-material/Assignment";
 
 //Function to be given props when called that determine the
 //title, link, icon, and whether it is selected or not
@@ -61,11 +61,11 @@ const Sidebar = () => {
         "& .pro-inner-item:hover": {
           color: `${colors.orangeAccent[500]} !important`,
         },
+        "& .pro-inner-item": {
+          mt: "10%",
+        },
         "& .pro-menu-item.active": {
           color: `${colors.orangeAccent[500]} !important`,
-        },
-        "& .pro-icon": {
-          fontSize: "3rem !important",
         },
       }}
     >
@@ -145,7 +145,7 @@ const Sidebar = () => {
             <Item
               title="Orders"
               to="/orders"
-              icon={<AddShoppingCartIcon fontSize="large" />}
+              icon={<AssignmentIcon fontSize="large" />}
               selected={selected}
               setSelected={setSelected}
               collapsed={isCollapsed}
