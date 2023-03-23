@@ -25,10 +25,23 @@ function MenuTextFields() {
 
   //Function to send sales data to the data base
   async function handlePostSales() {
-    await axios.post("/api/sales", salesToSend);
+    await axios.post("/api/sales", salesToSend).then((response) => {
+      //Sending the low stock items to the notifications reducer
+      dispatch({
+        type: "SET_NOTIFICATIONS",
+        payload: response.data,
+      });
+    });
 
+    //Clear sales to send
     setSalesToSend({
       date: "",
+    });
+
+    //Close Form
+    dispatch({
+      type: "SET_SHOW_SALES_FORM",
+      payload: false,
     });
   }
   return (
