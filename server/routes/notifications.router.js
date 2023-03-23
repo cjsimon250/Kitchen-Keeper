@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
     let companyId = result.rows[0].id;
     //Query to select all inventory items that are below the specified minimum stock
     const inventoryNotificationQuery = `
-  SELECT "inventory".item FROM "inventory"
+  SELECT "inventory".item, "inventory".quantity, "inventory".unit FROM "inventory"
    WHERE "inventory".quantity < "inventory"."minimumStock"
    AND "inventory".company_id = $1;
   `;

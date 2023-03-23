@@ -116,9 +116,9 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
 
     //Query to select all inventory items that are below the specified minimum stock
     const inventoryNotificationQuery = `
-  SELECT "inventory".item FROM "inventory"
-   WHERE "inventory".quantity < "inventory"."minimumStock"
-   AND "inventory".company_id = $1;
+    SELECT "inventory".item, "inventory".quantity, "inventory".unit FROM "inventory"
+    WHERE "inventory".quantity < "inventory"."minimumStock"
+    AND "inventory".company_id = $1;
   `;
 
     const inventoryNotificationResult = await pool.query(

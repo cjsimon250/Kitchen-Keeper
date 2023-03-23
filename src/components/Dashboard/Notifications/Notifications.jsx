@@ -12,28 +12,56 @@ function Notifications() {
   //All low stock inventory items
   const lowStockItems = useSelector((store) => store.notifications);
 
+  //Fetch notifications on page load
+  useEffect(() => {
+    dispatch({
+      type: "FETCH_NOTIFICATIONS",
+    });
+  }, []);
+
   return (
     <Box
       width="20vw"
       height="40vh"
       backgroundColor={colors.khakiAccent[500]}
       borderRadius="10px"
+      sx={{ border: `10px solid ${colors.khakiAccent[700]}`, overflow: "auto" }}
     >
-      <Typography variant="h3" textAlign="center" color={colors.primary[500]}>
+      <Typography
+        variant="h3"
+        textAlign="center"
+        pt="3%"
+        color={colors.greenAccent[700]}
+      >
         Notifications
       </Typography>
-      {lowStockItems.map((lowStockItem, index) => {
-        return (
+      <Box mt="5%">
+        {lowStockItems.length > 0 ? (
+          lowStockItems.map((lowStockItem, index) => {
+            return (
+              <Typography
+                variant="subtitle1"
+                textAlign="center"
+                color={colors.primary[500]}
+                key={index}
+                mt="5%"
+              >
+                You're low on {lowStockItem.item}. Only {lowStockItem.quantity}{" "}
+                {lowStockItem.unit} left in stock!
+              </Typography>
+            );
+          })
+        ) : (
           <Typography
-            variant="h3"
+            variant="subtitle1"
             textAlign="center"
             color={colors.primary[500]}
-            key={index}
+            mt="5%"
           >
-            {lowStockItem.item}
+            No New Notifications!
           </Typography>
-        );
-      })}
+        )}
+      </Box>
     </Box>
   );
 }
