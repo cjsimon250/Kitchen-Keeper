@@ -30,8 +30,6 @@ function SalesByMonthLine() {
     datasets: [],
   });
 
-  console.log("SALES", sales);
-
   //Fetch this year's total sales on page load
   useEffect(() => {
     dispatch({

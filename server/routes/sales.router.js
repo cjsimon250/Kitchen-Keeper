@@ -46,9 +46,15 @@ ORDER BY "day" ASC;
   res.send(salesData.rows);
 });
 
-//POST to order table
-router.post("/", (req, res) => {
-  //POST ROUTE
+//POST to new sales data
+router.post("/", rejectUnauthenticated, (req, res) => {
+  // req.body.salesToSend.map(() => {
+  //   //Select prices by menu items
+  //   const selectPriceQuery = `
+  // SELECT "price" from "menu" WHERE id = $1
+  // `;
+  // });
+  console.log("REQ BODY : ", req.body.salesToSend);
 });
 
 module.exports = router;

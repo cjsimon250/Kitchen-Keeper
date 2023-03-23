@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import NewUserSetup from "./NewUserSetup/NewUserSetup";
 import SalesByMonthLine from "./Sales/SalesByMonthLine";
 import SalesByWeekBar from "./Sales/SalesByWeekBar";
+import AddSalesForm from "./Sales/SalesForm/AddSalesForm";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -34,6 +35,17 @@ const Dashboard = () => {
       </Box>
       <SalesByMonthLine />
       <SalesByWeekBar />
+      <AddSalesForm />
+      <button
+        onClick={() => {
+          dispatch({
+            type: "SET_SHOW_SALES_FORM",
+            payload: true,
+          });
+        }}
+      >
+        SHOW FORM
+      </button>
     </Box>
   );
 };
