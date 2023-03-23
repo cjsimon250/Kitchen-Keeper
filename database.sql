@@ -117,7 +117,7 @@ CREATE TABLE "orders"(
 CREATE TABLE "orders_inventory"(
 	"id" serial NOT NULL,
 	"inventory_id" int NOT NULL,
-	 "orders_id", int NOT NULL,
+	 "orders_id" int NOT NULL,
 	 "quantity" int NOT NULL,
 	 "unit" varchar(20) NOT NULL,
 	 CONSTRAINT "orders_inventory_pk" PRIMARY KEY ("id")
