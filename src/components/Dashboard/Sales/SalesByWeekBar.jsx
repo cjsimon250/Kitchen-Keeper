@@ -48,7 +48,7 @@ function SalesByWeekBar() {
         {
           label: "Total Revenue",
           data: formattedData?.map((data) => data.totalDailySales),
-          backgroundColor: colors.orangeAccent[400],
+          backgroundColor: [colors.orangeAccent[500], colors.greenAccent[600]],
         },
       ],
     });
@@ -56,8 +56,8 @@ function SalesByWeekBar() {
 
   return (
     <Box
-      width="50vw"
-      height="50vh"
+      width="40vw"
+      height="40vh"
       sx={{
         border: `10px solid ${colors.khakiAccent[700]}`,
         backgroundColor: `${colors.khakiAccent[500]}`,
