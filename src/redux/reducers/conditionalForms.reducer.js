@@ -3,6 +3,8 @@ const conditionalForms = (
     showInitialWelcome: false,
     showAddToInventoryForm: false,
     showAddToMenuForm: false,
+    showOrderDetails: false,
+    showAddSalesForm: false,
   },
   action
 ) => {
@@ -22,7 +24,16 @@ const conditionalForms = (
         ...state,
         showAddToInventoryForm: action.payload,
       };
-
+    case "SET_SHOW_ORDER_DETAILS":
+      return {
+        ...state,
+        showOrderDetails: action.payload,
+      };
+    case "SET_SHOW_SALES_FORM":
+      return {
+        ...state,
+        showAddSalesForm: action.payload,
+      };
     default:
       return state;
   }

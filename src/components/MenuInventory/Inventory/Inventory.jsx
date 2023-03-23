@@ -1,14 +1,14 @@
-import Header from "../Header/Header";
+import Header from "../../Header/Header";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Box, useTheme } from "@mui/system";
 import { DataGrid } from "@mui/x-data-grid";
-import { tokens } from "../../theme";
+import { tokens } from "../../../theme";
 import { Button } from "@mui/material";
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import AddToInventoryForm from "../Forms/AddToInventoryForm";
+import AddToInventoryForm from "../../Forms/AddToInventoryForm";
 
 const Inventory = () => {
   const dispatch = useDispatch();
@@ -141,8 +141,7 @@ const Inventory = () => {
   ];
   return (
     // HEADER
-    <Box m="20px">
-      <Header title="INVENTORY" subtitle="Welcome to your Inventory" />
+    <Box mt="2%">
       <Box
         //All styling on the table and box holding it
         m="40px 0 40px 0"
@@ -159,9 +158,11 @@ const Inventory = () => {
                 ? colors.khakiAccent[900]
                 : colors.khakiAccent[700]
             }`,
+            fontSize: "0.9rem",
           },
           "& .MuiDataGrid-columnHeader": {
             backgroundColor: colors.khakiAccent[800],
+            fontSize: "0.9rem",
           },
           "& .MuiDataGrid-footerContainer": {
             borderTop: "none",

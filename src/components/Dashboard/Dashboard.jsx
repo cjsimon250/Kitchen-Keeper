@@ -3,6 +3,9 @@ import { Box } from "@mui/system";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import NewUserSetup from "./NewUserSetup/NewUserSetup";
+import SalesByMonthLine from "./Sales/SalesByMonthLine";
+import SalesByWeekBar from "./Sales/SalesByWeekBar";
+import AddSalesForm from "./Sales/SalesForm/AddSalesForm";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -16,7 +19,7 @@ const Dashboard = () => {
   //If the current inventory is empty (user is new) then display
   //the add item to inventory form
   useEffect(() => {
-    if (inventory.length === 0) {
+    if (inventory?.length === 0) {
       dispatch({ type: "SET_SHOW_INITIAL_WELCOME", payload: true });
     } else {
       dispatch({ type: "SET_SHOW_INITIAL_WELCOME", payload: false });
@@ -30,6 +33,19 @@ const Dashboard = () => {
         <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
         <NewUserSetup />
       </Box>
+      <SalesByMonthLine />
+      <SalesByWeekBar />
+      <AddSalesForm />
+      <button
+        onClick={() => {
+          dispatch({
+            type: "SET_SHOW_SALES_FORM",
+            payload: true,
+          });
+        }}
+      >
+        SHOW FORM
+      </button>
     </Box>
   );
 };

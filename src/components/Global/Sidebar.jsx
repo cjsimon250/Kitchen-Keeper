@@ -9,9 +9,7 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import PermContactCalendarIcon from "@mui/icons-material/PermContactCalendar";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import BarChartIcon from "@mui/icons-material/BarChart";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import InventoryIcon from "@mui/icons-material/Inventory";
 import FoodBankIcon from "@mui/icons-material/FoodBank";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 
@@ -60,14 +58,14 @@ const Sidebar = () => {
         "& .pro-icon-wrapper": {
           backgroundColor: "transparent !important",
         },
-        // "& .pro-inner-item": {
-        //   padding: "5px 35px 5px 20px !important",
-        // },
         "& .pro-inner-item:hover": {
           color: `${colors.orangeAccent[500]} !important`,
         },
         "& .pro-menu-item.active": {
           color: `${colors.orangeAccent[500]} !important`,
+        },
+        "& .pro-icon": {
+          fontSize: "3rem !important",
         },
       }}
     >
@@ -131,30 +129,15 @@ const Sidebar = () => {
             <Item
               title="Dashboard"
               to="/dashboard"
-              icon={<HomeOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-              collapsed={isCollapsed}
-            />
-            <Typography
-              variant="h6"
-              color={colors.grey[400]}
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              Data
-            </Typography>
-            <Item
-              title="Menu"
-              to="/menu"
-              icon={<FoodBankIcon />}
+              icon={<HomeOutlinedIcon fontSize="large" />}
               selected={selected}
               setSelected={setSelected}
               collapsed={isCollapsed}
             />
             <Item
-              title="Inventory"
-              to="/inventory"
-              icon={<InventoryIcon />}
+              title="Menu & Inventory"
+              to="/menuinventory"
+              icon={<FoodBankIcon fontSize="large" />}
               selected={selected}
               setSelected={setSelected}
               collapsed={isCollapsed}
@@ -162,22 +145,15 @@ const Sidebar = () => {
             <Item
               title="Orders"
               to="/orders"
-              icon={<AddShoppingCartIcon />}
+              icon={<AddShoppingCartIcon fontSize="large" />}
               selected={selected}
               setSelected={setSelected}
               collapsed={isCollapsed}
             />
-            <Typography
-              variant="h6"
-              color={colors.grey[400]}
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              Pages
-            </Typography>
             <Item
               title="Manage Team"
               to="/team"
-              icon={<PeopleOutlinedIcon />}
+              icon={<PeopleOutlinedIcon fontSize="large" />}
               selected={selected}
               setSelected={setSelected}
               collapsed={isCollapsed}
@@ -185,7 +161,7 @@ const Sidebar = () => {
             <Item
               title="Contacts Information"
               to="/contacts"
-              icon={<PermContactCalendarIcon />}
+              icon={<PermContactCalendarIcon fontSize="large" />}
               selected={selected}
               setSelected={setSelected}
               collapsed={isCollapsed}
@@ -193,15 +169,7 @@ const Sidebar = () => {
             <Item
               title="Calendar"
               to="/calendar"
-              icon={<CalendarTodayIcon />}
-              selected={selected}
-              setSelected={setSelected}
-              collapsed={isCollapsed}
-            />
-            <Item
-              title="Graphs"
-              to="/graphs"
-              icon={<BarChartIcon />}
+              icon={<CalendarTodayIcon fontSize="large" />}
               selected={selected}
               setSelected={setSelected}
               collapsed={isCollapsed}

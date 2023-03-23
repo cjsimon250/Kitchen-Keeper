@@ -1,4 +1,4 @@
-import { tokens } from "../../theme";
+import { tokens } from "../../../theme";
 import { useDispatch } from "react-redux";
 import EditMenuItemForm from "./EditMenuItemForm";
 //MUI
@@ -27,13 +27,25 @@ function MenuItem({ menuItem }) {
   }
 
   return (
-    <Box>
-      <ImageListItem>
+    <Box
+      sx={{
+        h: "50%",
+        border: "1px solid blue",
+        "& 	.MuiImageListItem-img": {
+          height: "100%",
+          width: "100%",
+          objectFit: "cover",
+        },
+      }}
+    >
+      <ImageListItem sx={{ objectFit: "cover", w: "100%", h: "100%" }}>
         <img
           src={menuItem.image}
           srcSet={menuItem.image}
           alt={menuItem.item}
           loading="lazy"
+          style={{ border: "1px solid red", objectFit: "cover" }}
+          sx={{ objectFit: "cover", w: "100%", h: "100%" }}
         />
         <ImageListItemBar
           sx={{

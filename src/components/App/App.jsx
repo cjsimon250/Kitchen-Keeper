@@ -21,13 +21,12 @@ import Topbar from "../Global/Topbar";
 import Sidebar from "../Global/Sidebar";
 // //all scenes
 import Dashboard from "../Dashboard/Dashboard";
-import Menu from "../Menu/Menu";
-import Inventory from "../Inventory/Inventory";
+import Menu from "../MenuInventory/Menu/Menu";
 import Orders from "../Orders/Orders";
 import Team from "../Team/Team";
 import Contacts from "../Contacts/Contacts";
-import Graphs from "../Graphs/Graphs";
 import Calendar from "../Calendar/Calendar";
+import MenuInventory from "../MenuInventory/MenuInventory";
 
 function App() {
   //giving app access to theme and color mode
@@ -120,11 +119,8 @@ function App() {
                   <ProtectedRoute exact path="/dashboard">
                     <Dashboard />
                   </ProtectedRoute>
-                  <ProtectedRoute exact path="/menu">
-                    <Menu />
-                  </ProtectedRoute>
-                  <ProtectedRoute exact path="/inventory">
-                    <Inventory />
+                  <ProtectedRoute exact path="/menuinventory">
+                    <MenuInventory />
                   </ProtectedRoute>
                   <ProtectedRoute exact path="/team">
                     <Team />
@@ -138,9 +134,6 @@ function App() {
                   </ProtectedRoute>
                   <ProtectedRoute exact path="/calendar">
                     <Calendar />
-                  </ProtectedRoute>
-                  <ProtectedRoute exact path="/graphs">
-                    <Graphs />
                   </ProtectedRoute>
                 </Box>
               </Box>
