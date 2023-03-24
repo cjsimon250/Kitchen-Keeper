@@ -220,7 +220,6 @@ const Inventory = () => {
           onCellEditCommit={handleEditCell}
           onEditCellChange={handleEditCellChange}
         />
-        ;
         <Box display="flex" justifyContent="space-between">
           <Button
             sx={{ mt: "10px" }}
