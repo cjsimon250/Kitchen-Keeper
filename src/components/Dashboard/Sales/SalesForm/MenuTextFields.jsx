@@ -101,8 +101,8 @@ function MenuTextFields() {
       })}
       <Button
         sx={{
-          marginTop: "4%",
-          ml: "70%",
+          marginTop: "6%",
+          ml: "74.5%",
         }}
         onClick={() => {
           handlePostSales();
