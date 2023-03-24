@@ -31,23 +31,47 @@ const Inventory = () => {
     });
   }, []);
 
-  //Filtering the inventory to convert quantities and units so that they
-  //are more readable
+  // New state variable to hold the modified inventory
+  const [modifiedInventory, setModifiedInventory] = useState([]);
+
+  //Converting Quantaties to be more readable
   useEffect(() => {
-    inventory.forEach((item) => {
-      if (item.unit === "Oz" && (item.quantity || item.minimumStock) > 48) {
-        item.quantity /= 16;
-        item.minimumStock /= 16;
-        item.unit = "Lb";
-      } else if (
-        item.unit === "Fl. Oz" &&
-        (item.quantity || item.minimumStock) > 63
-      ) {
-        item.quantity /= 128;
-        item.minimumStock /= 128;
-        item.unit = "Gal.";
+    const newInventory = inventory.map((item) => {
+      let newItem = { ...item };
+      if (item.unit === "Oz") {
+        if ((item.quantity || item.minimumStock) >= 16) {
+          newItem.quantity = item.quantity / 16;
+          newItem.minimumStock = item.minimumStock / 16;
+          newItem.unit = "Lb";
+        }
+      } else if (item.unit === "Fl. Oz") {
+        if ((item.quantity || item.minimumStock) >= 128) {
+          newItem.quantity = item.quantity / 128;
+          newItem.minimumStock = item.minimumStock / 128;
+          newItem.unit = "Gal.";
+        } else if ((item.quantity || item.minimumStock) >= 16) {
+          newItem.quantity = item.quantity / 16;
+          newItem.minimumStock = item.minimumStock / 16;
+          newItem.unit = "Fl. Oz";
+        }
+      } else if (item.unit === "Lb") {
+        if ((item.quantity || item.minimumStock) >= 1) {
+          newItem.quantity = item.quantity * 16;
+          newItem.minimumStock = item.minimumStock * 16;
+          newItem.unit = "Oz";
+        }
+      } else if (item.unit === "Gal.") {
+        if ((item.quantity || item.minimumStock) >= 1) {
+          newItem.quantity = item.quantity * 128;
+          newItem.minimumStock = item.minimumStock * 128;
+          newItem.unit = "Fl. Oz";
+        }
       }
+      return newItem;
     });
+
+    // Set the new copy of the inventory as the state
+    setModifiedInventory(newInventory);
   }, [inventory]);
 
   //Function to handle toggling the delete column
@@ -69,21 +93,29 @@ const Inventory = () => {
     });
   }
 
-  // Function to handle updating an edited row
+  //Change the value of the item in the modified inventory array
+  const handleEditCellChange = useCallback((params) => {
+    const { id, field, value } = params;
+    setModifiedInventory((prevInventory) =>
+      prevInventory.map((item) =>
+        item.id === id ? { ...item, [field]: value } : item
+      )
+    );
+  }, []);
+
+  //Handle sending the item to update to the database
   const handleEditCell = useCallback(
     (params) => {
-      // Get the corresponding database id from the hidden "id" column
-      const id = params.id;
-      //field is the field name in SQL
-      const field = params.field;
-      //Value of updated cell
-      const value = params.value;
-
-      axios.put(`/api/inventory/${id}`, {
-        payload: { value: value, field: field },
-      });
+      const { id, field, value } = params;
+      const itemToBeUpdated = modifiedInventory.find((item) => item.id === id);
+      itemToBeUpdated[field] = value;
+      axios
+        .put(`/api/inventory/${id}`, { payload: itemToBeUpdated })
+        .catch((error) => {
+          console.log("PUT ERROR", error);
+        });
     },
-    [inventory]
+    [modifiedInventory]
   );
 
   //For every row this grabs the value from the key to put into the "headerName" column
@@ -183,11 +215,12 @@ const Inventory = () => {
         }}
       >
         <DataGrid
-          rows={inventory}
+          rows={modifiedInventory}
           columns={columns}
-          //After edit by pressing enter user updates database
           onCellEditCommit={handleEditCell}
+          onEditCellChange={handleEditCellChange}
         />
+        ;
         <Box display="flex" justifyContent="space-between">
           <Button
             sx={{ mt: "10px" }}

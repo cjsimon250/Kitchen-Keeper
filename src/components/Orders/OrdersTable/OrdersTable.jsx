@@ -25,17 +25,14 @@ function OrdersTable() {
     });
   }, []);
 
-  //Fetch orders when an one is deleted
-  useEffect(() => {
-    dispatch({
-      type: "FETCH_ORDERS",
-    });
-  }, [handleDelete]);
-
   //Function for handling deleting a row
   function handleDelete(event, cellValues) {
     let rowToDelete = cellValues.row;
     dispatch({ type: "DELETE_ORDER", payload: rowToDelete.id });
+
+    dispatch({
+      type: "FETCH_ORDERS",
+    });
   }
 
   //For every row this grabs the value from the key to put into the "headerName" column

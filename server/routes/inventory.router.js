@@ -107,23 +107,24 @@ router.delete("/:id", rejectUnauthenticated, async (req, res) => {
 
 //UPDATE inventory
 router.put("/:id", rejectUnauthenticated, (req, res) => {
-  const id = req.params.id;
-  const value = req.body.payload.value;
-  const field = req.body.payload.field;
+  // const id = req.params.id;
+  // const value = req.body.payload.value;
+  // const field = req.body.payload.field;
 
-  const queryText = `
-  UPDATE "inventory" SET "${field}" = $1 WHERE id = $2
-  `;
+  // const queryText = `
+  // UPDATE "inventory" SET "${field}" = $1 WHERE id = $2
+  // `;
 
-  pool
-    .query(queryText, [value, id])
-    .then(() => {
-      res.sendStatus(204);
-    })
-    .catch((error) => {
-      console.log("Error executing SQL query", ":", error);
-      res.sendStatus(500);
-    });
+  // pool
+  //   .query(queryText, [value, id])
+  //   .then(() => {
+  //     res.sendStatus(204);
+  //   })
+  //   .catch((error) => {
+  //     console.log("Error executing SQL query", ":", error);
+  //     res.sendStatus(500);
+  //   });
+  console.log("REQ BODY: ", req.body.payload);
 });
 
 module.exports = router;
