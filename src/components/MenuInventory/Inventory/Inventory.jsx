@@ -54,18 +54,6 @@ const Inventory = () => {
           newItem.minimumStock = item.minimumStock / 16;
           newItem.unit = "Fl. Oz";
         }
-      } else if (item.unit === "Lb") {
-        if ((item.quantity || item.minimumStock) >= 1) {
-          newItem.quantity = item.quantity * 16;
-          newItem.minimumStock = item.minimumStock * 16;
-          newItem.unit = "Oz";
-        }
-      } else if (item.unit === "Gal.") {
-        if ((item.quantity || item.minimumStock) >= 1) {
-          newItem.quantity = item.quantity * 128;
-          newItem.minimumStock = item.minimumStock * 128;
-          newItem.unit = "Fl. Oz";
-        }
       }
       return newItem;
     });
@@ -109,8 +97,14 @@ const Inventory = () => {
       const { id, field, value } = params;
       const itemToBeUpdated = modifiedInventory.find((item) => item.id === id);
       itemToBeUpdated[field] = value;
+      console.log(id, itemToBeUpdated);
       axios
         .put(`/api/inventory/${id}`, { payload: itemToBeUpdated })
+        .then(() => {
+          dispatch({
+            type: "FETCH_INVENTORY",
+          });
+        })
         .catch((error) => {
           console.log("PUT ERROR", error);
         });

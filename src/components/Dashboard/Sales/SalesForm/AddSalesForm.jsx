@@ -30,7 +30,7 @@ function AddSalesForm() {
           },
         }}
       >
-        <DialogTitle variant="h3" color={colors.greenAccent[400]}>
+        <DialogTitle variant="h3" color={colors.orangeAccent[500]} mb="5%">
           End Of Day Sales Summary
           <IconButton
             onClick={() => {

@@ -164,6 +164,8 @@ router.put("/:id", rejectUnauthenticated, async (req, res) => {
       id,
       companyId,
     ]);
+
+    res.sendStatus(201);
   } catch (error) {
     res.sendStatus(500);
     console.log("Error executing SQL Query :", error);
