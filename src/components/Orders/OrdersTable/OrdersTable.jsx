@@ -28,11 +28,7 @@ function OrdersTable() {
   //Function for handling deleting a row
   async function handleDelete(event, cellValues) {
     let rowToDelete = cellValues.row;
-    dispatch({ type: "DELETE_ORDER", payload: rowToDelete.id }).then(
-      dispatch({
-        type: "FETCH_ORDERS",
-      })
-    );
+    dispatch({ type: "DELETE_ORDER", payload: rowToDelete.id });
   }
 
   //For every row this grabs the value from the key to put into the "headerName" column

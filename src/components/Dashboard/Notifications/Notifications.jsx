@@ -21,11 +21,16 @@ function Notifications() {
 
   return (
     <Box
-      width="20vw"
-      height="40vh"
+      width="30vw"
+      height="70vh"
       backgroundColor={colors.khakiAccent[500]}
       borderRadius="10px"
-      sx={{ border: `10px solid ${colors.khakiAccent[700]}`, overflow: "auto" }}
+      mb="5%"
+      sx={{
+        overflow: "auto",
+        boxShadow:
+          "rgba(0, 0, 0, 0.35) 0px 19px 38px, rgba(0, 0, 0, 0.35) 0px 15px 12px",
+      }}
     >
       <Typography
         variant="h3"
@@ -40,7 +45,7 @@ function Notifications() {
           lowStockItems.map((lowStockItem, index) => {
             return (
               <Typography
-                variant="subtitle1"
+                variant="h5"
                 textAlign="center"
                 color={colors.primary[500]}
                 key={index}

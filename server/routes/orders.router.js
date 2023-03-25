@@ -159,6 +159,7 @@ router.delete("/:id", rejectUnauthenticated, async (req, res) => {
   `;
 
     await pool.query(ordersQuery, [req.params.id, companyId]);
+    res.sendStatus(200);
   } catch (error) {
     console.log("Error executing SQL query", ":", error);
     res.sendStatus(500);
