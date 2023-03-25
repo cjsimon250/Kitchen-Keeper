@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { Box, useTheme } from "@mui/system";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../../theme";
-import { Button } from "@mui/material";
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import IconButton from "@mui/material/IconButton";
@@ -18,12 +17,6 @@ const Inventory = () => {
 
   //User's inventory
   const inventory = useSelector((store) => store.inventory);
-
-  //Variables for toggling the delete column and button text
-  const [deleteIsVisbile, setDeleteIsVisible] = useState(true);
-  const [deleteButtonText, setDeleteButtonText] = useState(
-    "Delete Inventory Item"
-  );
 
   //Fetch user's inventory on page load
   useEffect(() => {
@@ -62,14 +55,6 @@ const Inventory = () => {
     // Set the new copy of the inventory as the state
     setModifiedInventory(newInventory);
   }, [inventory]);
-
-  //Function to handle toggling the delete column
-  const handleToggleDeleteColumn = () => {
-    setDeleteIsVisible(!deleteIsVisbile);
-    setDeleteButtonText(
-      deleteIsVisbile ? "Hide Delete Column" : "Delete Inventory Item"
-    );
-  };
 
   //Function for handling deleting a row
   function handleDelete(event, cellValues) {
@@ -171,9 +156,9 @@ const Inventory = () => {
     <Box>
       <Box
         //All styling on the table and box holding it
-        m="34px 0 34px 0"
+        mt="15px"
         height="70vh"
-        width="65vw"
+        width="63vw"
         sx={{
           "& .MuiDataGrid-root": {
             border: "none",

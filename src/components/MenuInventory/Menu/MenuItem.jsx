@@ -10,7 +10,6 @@ import ViewHeadlineIcon from "@mui/icons-material/ViewHeadline";
 
 function MenuItem({ menuItem }) {
   const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
   const dispatch = useDispatch();
 
   //Function to show edit menu item form

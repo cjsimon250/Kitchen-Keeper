@@ -15,18 +15,16 @@ function MenuInventory() {
   const colors = tokens(theme.palette.mode);
 
   return (
-    <Box m="20px" width="100%">
+    <Box m="20px" width="98%">
       <Header title="MENU & INVENTORY" subtitle="View your menu & inventory" />
       <Box>
-        <Box display="flex" justifyContent="space-between">
+        <Box display="flex" justifyContent="space-between" width="100%">
           <Box display="flex" justifyContent="space-around">
-            <Typography variant="h4" pt="9%">
+            <Typography variant="h4" pt="10%">
               Inventory
             </Typography>
             <Tooltip
-              title={
-                <Typography fontSize="1.3em">Add Inventory Item</Typography>
-              }
+              title={<Typography fontSize="1.3em">Add Team Member</Typography>}
               placement="right"
               arrow
             >
@@ -45,8 +43,8 @@ function MenuInventory() {
               </IconButton>
             </Tooltip>
           </Box>
-          <Box display="flex" justifyContent="space-around">
-            <Typography variant="h4" pt="10%">
+          <Box display="flex" justifyContent="space-around" mr="20px">
+            <Typography variant="h4" pt="13%">
               Menu
             </Typography>
             <Tooltip
@@ -77,7 +75,9 @@ function MenuInventory() {
         </Box>
         <Box display="flex" justifyContent="space-between">
           <Inventory />
-          <Menu />
+          <Box width="25vw" sx={{ h: "25vh" }}>
+            <Menu />
+          </Box>
         </Box>
       </Box>
     </Box>
