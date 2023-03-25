@@ -29,8 +29,8 @@ CREATE TABLE "inventory" (
 	"id" serial NOT NULL,
 	"company_id" int NOT NULL,
 	"item" varchar(255) NOT NULL,
-	"quantity" int NOT NULL,
-	"minimumStock" int NOT NULL,
+	"quantity" DECIMAL(10,2) NOT NULL,
+	"minimumStock" DECIMAL(10,2) NOT NULL,
 	"unit" varchar(255) NOT NULL,
 	CONSTRAINT "inventory_pk" PRIMARY KEY ("id")
 ) WITH (
@@ -117,7 +117,7 @@ CREATE TABLE "orders"(
 CREATE TABLE "orders_inventory"(
 	"id" serial NOT NULL,
 	"inventory_id" int NOT NULL,
-	 "orders_id", int NOT NULL,
+	 "orders_id" int NOT NULL,
 	 "quantity" int NOT NULL,
 	 "unit" varchar(20) NOT NULL,
 	 CONSTRAINT "orders_inventory_pk" PRIMARY KEY ("id")
@@ -130,13 +130,13 @@ CREATE TABLE "orders_inventory"(
 
 ALTER TABLE "company" ADD CONSTRAINT "company_fk0" FOREIGN KEY ("user_id") REFERENCES "user"("id");
 
-ALTER TABLE "inventory" ADD CONSTRAINT "inventory_fk0" FOREIGN KEY ("company_id") REFERENCES "company"("id");
+ALTER TABLE "inventory" ADD CONSTRAINT "inventory_fk0" FOREIGN KEY ("company_id") REFERENCES "company"("id") ON DELETE CASCADE
 
 ALTER TABLE "menu_inventory" ADD CONSTRAINT "menu_inventory_fk0" FOREIGN KEY ("menu_id") REFERENCES "menu"("id") ON DELETE CASCADE
-ALTER TABLE "menu_inventory" ADD CONSTRAINT "menu_inventory_fk1" FOREIGN KEY ("inventory_id") REFERENCES "inventory"("id");
+ALTER TABLE "menu_inventory" ADD CONSTRAINT "menu_inventory_fk1" FOREIGN KEY ("inventory_id") REFERENCES "inventory"("id") ON DELETE CASCADE 
 
-ALTER TABLE "sales" ADD CONSTRAINT "sales_fk0" FOREIGN KEY ("menu_id") REFERENCES "menu"("id");
-ALTER TABLE "sales" ADD CONSTRAINT "sales_fk0" FOREIGN Key ("company_id") REFERENCES "company"("id");
+ALTER TABLE "sales" ADD CONSTRAINT "sales_fk0" FOREIGN KEY ("menu_id") REFERENCES "menu"("id") ON DELETE CASCADE;
+ALTER TABLE "sales" ADD CONSTRAINT "sales_fk1" FOREIGN Key ("company_id") REFERENCES "company"("id") ON DELETE CASCADE;
 
 ALTER TABLE "team" ADD CONSTRAINT "team_fk0" FOREIGN KEY ("company_id") REFERENCES "company"("id");
 

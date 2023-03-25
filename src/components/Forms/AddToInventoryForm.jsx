@@ -7,7 +7,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import RadioGroup from "@mui/material/RadioGroup/RadioGroup";
 import { FormControl, FormControlLabel, FormLabel, Radio } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box, useTheme } from "@mui/system";
 import { tokens } from "../../theme";
 
@@ -20,6 +20,9 @@ function AddToInventoryForm() {
   const showAddToInventoryForm = useSelector(
     (store) => store.conditionalForms.showAddToInventoryForm
   );
+
+  //Variable for checking if the menu is empty
+  const menu = useSelector((store) => store.menu.menu);
 
   //Variable to hold inventory item information to send
   // **These to values are set so that on first render they are considered controlled**
@@ -55,10 +58,15 @@ function AddToInventoryForm() {
       payload: false,
     });
 
-    dispatch({
-      type: "SET_SHOW_ADD_TO_MENU_FORM",
-      payload: true,
-    });
+    if (menu.length === 0) {
+      dispatch({
+        type: "SET_SHOW_ADD_TO_MENU_FORM",
+        payload: true,
+      });
+    }
+
+    console.log("MENU : ", menu.menu);
+
     dispatch({
       type: "SET_SHOW_ADD_TO_INVENTORY_FORM",
       payload: false,

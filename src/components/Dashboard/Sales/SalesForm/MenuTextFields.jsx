@@ -3,12 +3,13 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { Box, useTheme } from "@mui/system";
-import InputLabel from "@mui/material/InputLabel";
-import { Button, IconButton } from "@mui/material";
-import Close from "@mui/icons-material/Close";
+import { tokens } from "../../../../theme";
+import { Button } from "@mui/material";
 
 function MenuTextFields() {
   const dispatch = useDispatch();
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
 
   const dishes = useSelector((store) => store.menu.menu);
 
@@ -24,15 +25,35 @@ function MenuTextFields() {
   }, []);
 
   //Function to send sales data to the data base
-  async function handlePostSales() {
-    await axios.post("/api/sales", salesToSend);
+  function handlePostSales() {
+    axios.post("/api/sales", salesToSend).then((response) => {
+      //Sending the low stock items to the notifications reducer
+      dispatch({
+        type: "SET_NOTIFICATIONS",
+        payload: response.data,
+      });
+    });
 
+    //Clear sales to send
     setSalesToSend({
       date: "",
     });
+
+    //Close Form
+    dispatch({
+      type: "SET_SHOW_SALES_FORM",
+      payload: false,
+    });
   }
   return (
-    <Box width="100%">
+    <Box
+      width="100%"
+      sx={{
+        "& .MuiButton-sizeMedium": {
+          backgroundColor: colors.greenAccent[500],
+        },
+      }}
+    >
       <TextField
         autoFocus
         id="order-date"
@@ -49,7 +70,7 @@ function MenuTextFields() {
       />
       {dishes.map((dish, index) => {
         return (
-          <Box key={index} width="100%">
+          <Box key={index} width="100%" mt="5%">
             <TextField
               value={
                 salesToSend.dishes?.[dish.dish]?.quantitySold
@@ -59,7 +80,7 @@ function MenuTextFields() {
               autoFocus
               label={dish.dish}
               type="number"
-              variant="outlined"
+              variant="standard"
               inputProps={{ min: 0 }}
               fullWidth
               onChange={(event) => {
@@ -79,6 +100,10 @@ function MenuTextFields() {
         );
       })}
       <Button
+        sx={{
+          marginTop: "6%",
+          ml: "74.5%",
+        }}
         onClick={() => {
           handlePostSales();
         }}

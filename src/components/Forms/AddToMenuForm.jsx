@@ -51,6 +51,22 @@ function AddToMenuForm() {
 
   //Function to close the add contact form via redux
   const handleClose = () => {
+    //Clear inputs
+    setMenuItemToSend({
+      dish: "",
+      image: "",
+      price: 0,
+      companyId: companyId,
+      ingredients: [],
+    });
+
+    //Clearing the ingredient object
+    setIngredientObject({
+      ingredientName: "",
+      quantity: 1,
+      unit: "Lb",
+    });
+
     dispatch({
       type: "SET_SHOW_ADD_TO_MENU_FORM",
       payload: false,
@@ -84,7 +100,6 @@ function AddToMenuForm() {
   }
 
   //Function to display previously added ingredients to the user
-
   function displayAddedIngredients() {
     return menuItemToSend.ingredients.map((ingredient) => {
       return (
@@ -127,6 +142,8 @@ function AddToMenuForm() {
       <Dialog
         open={showMenuForm}
         sx={{
+          m: "auto",
+          width: "30vw",
           "& .MuiPaper-root": {
             backgroundColor: colors.khakiAccent[800],
           },
@@ -141,7 +158,11 @@ function AddToMenuForm() {
           },
         }}
       >
-        <DialogTitle variant="h4" color={colors.greenAccent[400]}>
+        <DialogTitle
+          variant="h3"
+          color={colors.greenAccent[400]}
+          textAlign="center"
+        >
           Add Dishes to Your Menu
         </DialogTitle>
         <DialogContent>
@@ -184,6 +205,7 @@ function AddToMenuForm() {
             label="Price of Dish"
             type="number"
             variant="standard"
+            fullWidth
             inputProps={{ min: 0 }}
             value={menuItemToSend.price}
             onChange={(event) =>
@@ -193,44 +215,44 @@ function AddToMenuForm() {
               })
             }
           />
-          <Box display="inline-flex">
+          <Box>
             {/* Selecting from list of previously added ingredients */}
-            <FormControl sx={{ mt: "10px" }}>
-              <InputLabel>Ingredient</InputLabel>
-              <Select
-                margin="dense"
-                id="quantity"
-                label="Ingredient Name"
-                value={ingredientObject.ingredientName}
-                onChange={(event) =>
-                  setIngredientObject({
-                    ...ingredientObject,
-                    ingredientName: event.target.value,
-                  })
-                }
-              >
-                {/* Mappng through all previously added ingredients to show options*/}
-                {showAllIngredients()}
-              </Select>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="quantity"
-                label="Quantity In Dish"
-                type="number"
-                variant="standard"
-                inputProps={{ min: 1 }}
-                value={ingredientObject.quantity}
-                onChange={(event) =>
-                  setIngredientObject({
-                    ...ingredientObject,
-                    quantity: event.target.value,
-                  })
-                }
-              />
-
+            <Box sx={{ mt: "10px" }}>
+              <Box display="flex" justifyContent="space-between">
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  label="Quantity In Dish"
+                  type="number"
+                  variant="standard"
+                  inputProps={{ min: 1 }}
+                  value={ingredientObject.quantity}
+                  onChange={(event) =>
+                    setIngredientObject({
+                      ...ingredientObject,
+                      quantity: event.target.value,
+                    })
+                  }
+                />
+                <Select
+                  margin="dense"
+                  label="Ingredient Name"
+                  variant="standard"
+                  value={ingredientObject.ingredientName}
+                  sx={{ width: "50%" }}
+                  onChange={(event) =>
+                    setIngredientObject({
+                      ...ingredientObject,
+                      ingredientName: event.target.value,
+                    })
+                  }
+                >
+                  {/* Mappng through all previously added ingredients to show options*/}
+                  {showAllIngredients()}
+                </Select>
+              </Box>
               <Box sx={{ mt: "10px", ml: "30px" }}>
-                <FormLabel id="access">Unit of Measurement</FormLabel>
+                <FormLabel>Unit of Measurement</FormLabel>
                 <RadioGroup
                   row
                   defaultValue="Lb"
@@ -257,10 +279,14 @@ function AddToMenuForm() {
                   />
                 </RadioGroup>
               </Box>
-            </FormControl>
+            </Box>
           </Box>
           {/* Displaying a list of previously added ingredients */}
-          <DialogTitle variant="h5" color={colors.greenAccent[400]}>
+          <DialogTitle
+            variant="h5"
+            color={colors.greenAccent[400]}
+            textAlign="center"
+          >
             Added Ingredients:
           </DialogTitle>
           <ul>{displayAddedIngredients()}</ul>
