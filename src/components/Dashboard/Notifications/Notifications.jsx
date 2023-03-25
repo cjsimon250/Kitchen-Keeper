@@ -36,7 +36,7 @@ function Notifications() {
         variant="h3"
         textAlign="center"
         pt="3%"
-        color={colors.greenAccent[700]}
+        color={colors.orangeAccent[600]}
       >
         Notifications
       </Typography>

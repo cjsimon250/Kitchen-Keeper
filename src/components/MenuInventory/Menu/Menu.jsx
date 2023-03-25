@@ -22,14 +22,8 @@ const Menu = () => {
 
   return (
     <>
-      <Box m="20px" sx={{ w: "80%", h: "100%" }}>
-        <ImageList
-          sx={{
-            gridAutoFlow: "column",
-            gridTemplateColumns: "repeat(auto-fill,minmax(15%,1fr)) !important",
-            gridAutoColumns: "minmax(15%, 1fr)",
-          }}
-        >
+      <Box m="20px" sx={{ w: "100%", h: "70vh" }}>
+        <ImageList sx={{ width: "100%", height: "70vh" }} cols={1} gap={8}>
           {menuData.map((menuItem) => {
             return (
               <MenuList

@@ -126,9 +126,6 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
       let updatedQuantity =
         Number(currentQuantity.rows[0].quantity) + orderQuantity;
 
-      console.log("CURRENT QUANTITY :", currentQuantity.rows[0].quantity);
-      console.log("ORDER QUANTITY :", orderQuantity);
-      console.log("UPDATED SHIT  :", updatedQuantity);
       const updateInventoryQuery = `
     UPDATE "inventory" SET "quantity" = $1 WHERE id = $2
       `;

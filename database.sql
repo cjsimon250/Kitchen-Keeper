@@ -135,8 +135,8 @@ ALTER TABLE "inventory" ADD CONSTRAINT "inventory_fk0" FOREIGN KEY ("company_id"
 ALTER TABLE "menu_inventory" ADD CONSTRAINT "menu_inventory_fk0" FOREIGN KEY ("menu_id") REFERENCES "menu"("id") ON DELETE CASCADE
 ALTER TABLE "menu_inventory" ADD CONSTRAINT "menu_inventory_fk1" FOREIGN KEY ("inventory_id") REFERENCES "inventory"("id") ON DELETE CASCADE 
 
-ALTER TABLE "sales" ADD CONSTRAINT "sales_fk0" FOREIGN KEY ("menu_id") REFERENCES "menu"("id");
-ALTER TABLE "sales" ADD CONSTRAINT "sales_fk1" FOREIGN Key ("company_id") REFERENCES "company"("id");
+ALTER TABLE "sales" ADD CONSTRAINT "sales_fk0" FOREIGN KEY ("menu_id") REFERENCES "menu"("id") ON DELETE CASCADE;
+ALTER TABLE "sales" ADD CONSTRAINT "sales_fk1" FOREIGN Key ("company_id") REFERENCES "company"("id") ON DELETE CASCADE;
 
 ALTER TABLE "team" ADD CONSTRAINT "team_fk0" FOREIGN KEY ("company_id") REFERENCES "company"("id");
 

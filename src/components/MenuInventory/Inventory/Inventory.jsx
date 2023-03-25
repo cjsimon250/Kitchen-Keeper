@@ -6,8 +6,9 @@ import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../../theme";
 import { Button } from "@mui/material";
 import { useCallback } from "react";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import IconButton from "@mui/material/IconButton";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddToInventoryForm from "../../Forms/AddToInventoryForm";
 
 const Inventory = () => {
@@ -144,22 +145,22 @@ const Inventory = () => {
       editable: true,
     },
     {
-      field: "delete",
-      headerName: "Delete",
+      field: "actions",
+      headerName: "Actions",
       flex: 0.5,
       cellClassName: "delete-btn-column-cell",
       editable: false,
-      hide: deleteIsVisbile,
+      headerAlign: "center",
+      align: "center",
       renderCell: (cellValues) => {
         return (
-          <Button
-            variant="contained"
+          <IconButton
             onClick={(event) => {
               handleDelete(event, cellValues);
             }}
           >
-            Delete
-          </Button>
+            <DeleteForeverIcon />
+          </IconButton>
         );
       },
     },
@@ -167,12 +168,12 @@ const Inventory = () => {
   ];
   return (
     // HEADER
-    <Box mt="2%">
+    <Box>
       <Box
         //All styling on the table and box holding it
-        m="40px 0 40px 0"
-        paddingBottom="40px"
-        height="75vh"
+        m="34px 0 34px 0"
+        height="70vh"
+        width="65vw"
         sx={{
           "& .MuiDataGrid-root": {
             border: "none",
@@ -214,27 +215,6 @@ const Inventory = () => {
           onCellEditCommit={handleEditCell}
           onEditCellChange={handleEditCellChange}
         />
-        <Box display="flex" justifyContent="space-between">
-          <Button
-            sx={{ mt: "10px" }}
-            onClick={() => {
-              dispatch({
-                type: "SET_SHOW_ADD_TO_INVENTORY_FORM",
-                payload: true,
-              });
-            }}
-          >
-            Add Inventory Items
-          </Button>
-          <Button
-            sx={{ mt: "10px" }}
-            onClick={() => {
-              handleToggleDeleteColumn();
-            }}
-          >
-            {deleteButtonText}
-          </Button>
-        </Box>
         <AddToInventoryForm />
       </Box>
     </Box>

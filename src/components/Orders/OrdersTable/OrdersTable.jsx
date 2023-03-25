@@ -2,8 +2,7 @@ import { useEffect } from "react";
 import { Box, useTheme } from "@mui/system";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../../theme";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import IconButton from "@mui/material/IconButton";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
@@ -80,7 +79,6 @@ function OrdersTable() {
               <VisibilityOutlinedIcon />
             </IconButton>
             <IconButton
-              variant="contained"
               onClick={(event) => {
                 handleDelete(event, cellValues);
               }}
