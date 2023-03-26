@@ -96,7 +96,7 @@ function OrdersTable() {
       //All styling on the table and box holding it
       paddingBottom="40px"
       height="75vh"
-      width="52vw"
+      width="55vw"
       sx={{
         "& .MuiDataGrid-root": {
           border: "none",

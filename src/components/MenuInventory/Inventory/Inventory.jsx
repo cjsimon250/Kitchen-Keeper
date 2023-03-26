@@ -158,7 +158,7 @@ const Inventory = () => {
         //All styling on the table and box holding it
         mt="15px"
         height="70vh"
-        width="63vw"
+        width="60vw"
         sx={{
           "& .MuiDataGrid-root": {
             border: "none",
