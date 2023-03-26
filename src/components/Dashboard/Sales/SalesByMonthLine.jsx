@@ -48,6 +48,7 @@ function SalesByMonthLine() {
         {
           label: "Total Revenue",
           data: formattedData?.map((data) => data.totalMonthlySales),
+          borderWidth: 4,
           backgroundColor: colors.orangeAccent[500],
         },
       ],
@@ -67,7 +68,20 @@ function SalesByMonthLine() {
         borderRadius: "10px",
       }}
     >
-      <Line data={salesData} />
+      <Line
+        data={salesData}
+        options={{
+          plugins: {
+            legend: {
+              labels: {
+                font: {
+                  size: "16px",
+                },
+              },
+            },
+          },
+        }}
+      />
     </Box>
   );
 }

@@ -131,12 +131,7 @@ function OrdersTable() {
         },
       }}
     >
-      <DataGrid
-        rows={orders}
-        columns={columns}
-        //After edit by pressing enter user updates database
-        // onCellEditCommit={handleEditCell}
-      />
+      <DataGrid rows={orders} columns={columns} />
       <OrderDetailDialog />
     </Box>
   );

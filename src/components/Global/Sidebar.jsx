@@ -8,7 +8,6 @@ import Tooltip from "@mui/material/Tooltip";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import PermContactCalendarIcon from "@mui/icons-material/PermContactCalendar";
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import FoodBankIcon from "@mui/icons-material/FoodBank";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import AssignmentIcon from "@mui/icons-material/Assignment";
@@ -162,14 +161,6 @@ const Sidebar = () => {
               title="Contacts Information"
               to="/contacts"
               icon={<PermContactCalendarIcon fontSize="large" />}
-              selected={selected}
-              setSelected={setSelected}
-              collapsed={isCollapsed}
-            />
-            <Item
-              title="Calendar"
-              to="/calendar"
-              icon={<CalendarTodayIcon fontSize="large" />}
               selected={selected}
               setSelected={setSelected}
               collapsed={isCollapsed}

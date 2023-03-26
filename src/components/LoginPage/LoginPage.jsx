@@ -1,26 +1,23 @@
-import React from 'react';
-import LoginForm from '../LoginForm/LoginForm';
-import { useHistory } from 'react-router-dom';
+import React from "react";
+import LoginForm from "../LoginForm/LoginForm";
+import { useHistory } from "react-router-dom";
+import { Box, useTheme } from "@mui/system";
+import { tokens } from "../../theme";
+import LandingPage from "../LandingPage/LandingPage";
+import RegisterForm from "../RegisterPage/RegisterForm/RegisterForm";
+import { useSelector } from "react-redux";
+import { useState } from "react";
 
 function LoginPage() {
-  const history = useHistory();
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
 
   return (
-    <div>
-      <LoginForm />
-
-      <center>
-        <button
-          type="button"
-          className="btn btn_asLink"
-          onClick={() => {
-            history.push('/registration');
-          }}
-        >
-          Register
-        </button>
-      </center>
-    </div>
+    <Box style={{ boxSizing: "initial", p: "initial" }}>
+      <Box width="35vw" margin="auto">
+        <LandingPage />
+      </Box>
+    </Box>
   );
 }
 

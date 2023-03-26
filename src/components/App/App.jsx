@@ -25,7 +25,6 @@ import Menu from "../MenuInventory/Menu/Menu";
 import Orders from "../Orders/Orders";
 import Team from "../Team/Team";
 import Contacts from "../Contacts/Contacts";
-import Calendar from "../Calendar/Calendar";
 import MenuInventory from "../MenuInventory/MenuInventory";
 
 function App() {
@@ -131,9 +130,6 @@ function App() {
                 </ProtectedRoute>
                 <ProtectedRoute exact path="/contacts">
                   <Contacts />
-                </ProtectedRoute>
-                <ProtectedRoute exact path="/calendar">
-                  <Calendar />
                 </ProtectedRoute>
 
                 {/* If none of the other routes matched, we will show a 404. */}

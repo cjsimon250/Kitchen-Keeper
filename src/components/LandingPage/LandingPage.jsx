@@ -1,24 +1,47 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import "./LandingPage.css";
+import LoginForm from "../LoginForm/LoginForm";
+import { Box, useTheme } from "@mui/system";
+import { Button } from "@mui/material";
+import { tokens } from "../../theme";
+import { useSelector, useDispatch } from "react-redux";
 
 // CUSTOM COMPONENTS
 import RegisterForm from "../RegisterPage/RegisterForm/RegisterForm";
 
 function LandingPage() {
   const [heading, setHeading] = useState("Welcome");
-  const history = useHistory();
+  const dispatch = useDispatch();
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+
+  const alreadyUser = useSelector((store) => store.alreadyUser);
 
   const onLogin = (event) => {
-    history.push("/login");
+    dispatch({
+      type: "SET_IS_USER",
+      payload: true,
+    });
   };
 
   return (
-    <div className="container">
+    <Box
+      className="container"
+      sx={{
+        "& .MuiButton-sizeMedium": {
+          backgroundColor: colors.orangeAccent[500],
+          p: "3px",
+        },
+        "& .MuiButton-sizeMedium:hover": {
+          backgroundColor: colors.orangeAccent[700],
+        },
+      }}
+    >
       <h2>{heading}</h2>
 
-      <div className="grid">
-        <div className="grid-col grid-col_8">
+      <Box className="grid">
+        <Box className="grid-col grid-col_8">
           <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
             id felis metus. Vestibulum et pulvinar tortor. Morbi pharetra lacus
@@ -50,19 +73,21 @@ function LandingPage() {
             non fermentum mauris. Sed in enim ac turpis faucibus pretium in sit
             amet nisi.
           </p>
-        </div>
-        <div className="grid-col grid-col_4">
-          <RegisterForm />
+        </Box>
+        <Box className="grid-col grid-col_4">
+          {alreadyUser ? <LoginForm /> : <RegisterForm />}
 
-          <center>
-            <h4>Already a Member?</h4>
-            <button className="btn btn_sizeSm" onClick={onLogin}>
-              Login
-            </button>
-          </center>
-        </div>
-      </div>
-    </div>
+          {!alreadyUser && (
+            <center>
+              <h4>Already a Member?</h4>
+              <Button className="btn btn_sizeSm" onClick={onLogin}>
+                Login
+              </Button>
+            </center>
+          )}
+        </Box>
+      </Box>
+    </Box>
   );
 }
 

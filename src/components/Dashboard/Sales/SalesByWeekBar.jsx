@@ -66,7 +66,20 @@ function SalesByWeekBar() {
         borderRadius: "10px",
       }}
     >
-      <Bar data={salesData} />
+      <Bar
+        data={salesData}
+        options={{
+          plugins: {
+            legend: {
+              labels: {
+                font: {
+                  size: "16px",
+                },
+              },
+            },
+          },
+        }}
+      />
     </Box>
   );
 }

@@ -1,10 +1,8 @@
 import Header from "../Header/Header";
-import { useState } from "react";
 import { Box, useTheme } from "@mui/system";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import { mockDataContacts } from "../../data/mockData";
-import { Button } from "@mui/material";
 import AddContactsForm from "./AddContactsForm";
 import { useDispatch } from "react-redux";
 import IconButton from "@mui/material/IconButton";
