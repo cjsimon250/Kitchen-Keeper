@@ -63,6 +63,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
       const ordersInventoryQuery = `INSERT INTO orders_inventory (inventory_id, orders_id, quantity, unit)
       VALUES ($1, $2, $3, $4)
       `;
+
       //Converting quantity to oz or fluid oz for database
       switch (unit) {
         case "Lb":
@@ -84,7 +85,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
       await pool.query(ordersInventoryQuery, [
         item.inventoryId,
         ordersId,
-        item.quantity,
+        quantity,
         unit,
       ]);
     });
@@ -94,24 +95,6 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
     const updateInventory = inventoryItems.map(async (item) => {
       let orderQuantity = item.quantity;
       let orderUnit = item.unit;
-
-      //Converting quantity to oz or fluid oz for database
-      switch (orderUnit) {
-        case "Lb":
-          orderQuantity *= 16;
-          orderUnit = "Oz";
-          break;
-        case "Oz":
-          orderUnit = "Oz";
-          break;
-        case "Gal.":
-          orderQuantity *= 128;
-          orderUnit = "Fl. Oz";
-          break;
-        case "Fl. Oz.":
-          orderUnit = "Fl. Oz";
-          break;
-      }
       //Selecting quantity to add to
       const getQuantityQuery = `
       SELECT "inventory".quantity FROM "inventory" WHERE
@@ -122,7 +105,8 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
         item.inventoryId,
       ]);
 
-      let updatedQuantity = currentQuantity.rows[0].quantity + orderQuantity;
+      let updatedQuantity =
+        Number(currentQuantity.rows[0].quantity) + Number(orderQuantity);
 
       const updateInventoryQuery = `
     UPDATE "inventory" SET "quantity" = $1 WHERE id = $2
@@ -154,6 +138,7 @@ router.delete("/:id", rejectUnauthenticated, async (req, res) => {
   `;
 
     await pool.query(ordersQuery, [req.params.id, companyId]);
+    res.sendStatus(200);
   } catch (error) {
     console.log("Error executing SQL query", ":", error);
     res.sendStatus(500);

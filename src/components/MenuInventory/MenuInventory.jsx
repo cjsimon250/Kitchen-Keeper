@@ -15,39 +15,70 @@ function MenuInventory() {
   const colors = tokens(theme.palette.mode);
 
   return (
-    <Box m="20px">
+    <Box m="20px" width="98%">
       <Header title="MENU & INVENTORY" subtitle="View your menu & inventory" />
-      <Box width="100%">
-        <Box display="flex" width="100%" justifyContent="space-between">
-          <Typography variant="h3">Menu</Typography>
-          <Tooltip
-            title={<Typography fontSize="1.5em">Add Menu Item</Typography>}
-            placement="top"
-            arrow
-          >
-            <IconButton
-              sx={{ alignItems: "right", color: `${colors.orangeAccent[500]}` }}
-              // Open the form to add new menu item
-              onClick={() => {
-                dispatch({
-                  type: "SET_SHOW_ADD_TO_MENU_FORM",
-                  payload: true,
-                });
-
-                dispatch({
-                  type: "FETCH_INVENTORY",
-                });
-              }}
+      <Box>
+        <Box display="flex" justifyContent="space-between" width="100%">
+          <Box display="flex" justifyContent="space-around">
+            <Typography variant="h4" pt="10%">
+              Inventory
+            </Typography>
+            <Tooltip
+              title={<Typography fontSize="1.3em">Add Team Member</Typography>}
+              placement="right"
+              arrow
             >
-              <AddIcon style={{ fontSize: "1.5em" }} />
-            </IconButton>
-          </Tooltip>
+              <IconButton
+                sx={{
+                  color: `${colors.orangeAccent[500]}`,
+                }}
+                onClick={() => {
+                  dispatch({
+                    type: "SET_SHOW_ADD_TO_INVENTORY_FORM",
+                    payload: true,
+                  });
+                }}
+              >
+                <AddIcon style={{ fontSize: "1.5em" }} />
+              </IconButton>
+            </Tooltip>
+          </Box>
+          <Box display="flex" justifyContent="space-around" mr="20px">
+            <Typography variant="h4" pt="13%">
+              Menu
+            </Typography>
+            <Tooltip
+              title={<Typography fontSize="1.5em">Add Menu Item</Typography>}
+              placement="top"
+              arrow
+            >
+              <IconButton
+                sx={{
+                  color: `${colors.orangeAccent[500]}`,
+                }}
+                // Open the form to add new menu item
+                onClick={() => {
+                  dispatch({
+                    type: "SET_SHOW_ADD_TO_MENU_FORM",
+                    payload: true,
+                  });
+
+                  dispatch({
+                    type: "FETCH_INVENTORY",
+                  });
+                }}
+              >
+                <AddIcon style={{ fontSize: "1.5em" }} />
+              </IconButton>
+            </Tooltip>
+          </Box>
         </Box>
-        <Menu />
-        <Typography variant="h3" mt="3%">
-          Inventory
-        </Typography>
-        <Inventory />
+        <Box display="flex" justifyContent="space-between">
+          <Inventory />
+          <Box width="25vw" sx={{ h: "25vh" }}>
+            <Menu />
+          </Box>
+        </Box>
       </Box>
     </Box>
   );

@@ -1,30 +1,20 @@
 import Header from "../Header/Header";
-import { useState } from "react";
 import { Box, useTheme } from "@mui/system";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import { mockDataContacts } from "../../data/mockData";
-import { Button } from "@mui/material";
 import AddContactsForm from "./AddContactsForm";
 import { useDispatch } from "react-redux";
+import IconButton from "@mui/material/IconButton";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 
 const Contacts = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
-  //variables for toggling the delete column and button text
-  const [deleteIsVisbile, setDeleteIsVisible] = useState(true);
-  const [deleteButtonText, setDeleteButtonText] =
-    useState("Delete Team Member");
-
-  //function to handle toggling the delete column
-  const handleToggleDeleteColumn = () => {
-    setDeleteIsVisible(!deleteIsVisbile);
-    setDeleteButtonText(
-      deleteIsVisbile ? "Hide Delete Column" : "Delete Contact"
-    );
-  };
 
   //function to show the add contact form via redux
   const handleShowAddContactForm = () => {
@@ -80,22 +70,22 @@ const Contacts = () => {
       editable: true,
     },
     {
-      field: "delete",
-      headerName: "Delete",
+      field: "actions",
+      headerName: "Actions",
       flex: 0.5,
       cellClassName: "delete-btn-column-cell",
       editable: false,
-      hide: deleteIsVisbile,
+      headerAlign: "center",
+      align: "center",
       renderCell: (cellValues) => {
         return (
-          <Button
-            variant="contained"
+          <IconButton
             onClick={(event) => {
               handleDelete(event, cellValues);
             }}
           >
-            Delete
-          </Button>
+            <DeleteForeverIcon />
+          </IconButton>
         );
       },
     },
@@ -148,30 +138,32 @@ const Contacts = () => {
           },
         }}
       >
+        <Tooltip
+          placement="top"
+          arrow
+          title={<Typography fontSize="1.3em">Add New Contact</Typography>}
+        >
+          <IconButton
+            sx={{
+              mb: "2.5px",
+              color: `${colors.orangeAccent[500]}`,
+              position: "absolute",
+              right: "3%",
+              top: "15%",
+            }}
+            onClick={() => {
+              handleShowAddContactForm();
+            }}
+          >
+            <AddIcon style={{ fontSize: "1.5em" }} />
+          </IconButton>
+        </Tooltip>
         <DataGrid
           //mui api to allow editing on each cell
           experimentalFeatures={{ newEditingApi: true }}
           rows={mockDataContacts}
           columns={columns}
         />
-        <Box display="flex" justifyContent="space-between" alignItems="right">
-          <Button
-            sx={{ mt: "2.5px" }}
-            onClick={() => {
-              handleShowAddContactForm();
-            }}
-          >
-            Add Contact
-          </Button>
-          <Button
-            sx={{ mt: "2.5px" }}
-            onClick={() => {
-              handleToggleDeleteColumn();
-            }}
-          >
-            {deleteButtonText}
-          </Button>
-        </Box>
         <AddContactsForm />
       </Box>
     </Box>
@@ -179,16 +171,3 @@ const Contacts = () => {
 };
 
 export default Contacts;
-
-// ** THIS IS NEEDED TO SAVE DATA AFTER TABLE EDIT **
-// const processRowUpdate = (newRow) => {
-//   const updatedRow = { ...newRow, isNew: false };
-//   ...
-//   return updatedRow;
-// };
-
-// <DataGrid
-//   editMode="row"
-//   processRowUpdate={processRowUpdate}
-//   experimentalFeatures={{ newEditingApi: true }}
-//   ...

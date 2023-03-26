@@ -10,7 +10,6 @@ import ViewHeadlineIcon from "@mui/icons-material/ViewHeadline";
 
 function MenuItem({ menuItem }) {
   const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
   const dispatch = useDispatch();
 
   //Function to show edit menu item form
@@ -27,25 +26,13 @@ function MenuItem({ menuItem }) {
   }
 
   return (
-    <Box
-      sx={{
-        h: "50%",
-        border: "1px solid blue",
-        "& 	.MuiImageListItem-img": {
-          height: "100%",
-          width: "100%",
-          objectFit: "cover",
-        },
-      }}
-    >
-      <ImageListItem sx={{ objectFit: "cover", w: "100%", h: "100%" }}>
+    <Box>
+      <ImageListItem>
         <img
           src={menuItem.image}
           srcSet={menuItem.image}
           alt={menuItem.item}
           loading="lazy"
-          style={{ border: "1px solid red", objectFit: "cover" }}
-          sx={{ objectFit: "cover", w: "100%", h: "100%" }}
         />
         <ImageListItemBar
           sx={{

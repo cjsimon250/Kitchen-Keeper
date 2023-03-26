@@ -1,29 +1,20 @@
 import Header from "../Header/Header";
-import { useState } from "react";
 import { Box, useTheme } from "@mui/system";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import { mockDataTeam } from "../../data/mockData";
-import { Button } from "@mui/material";
 import { useDispatch } from "react-redux";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import IconButton from "@mui/material/IconButton";
 import AddTeamMemberForm from "./AddTeamMemberForm/AddTeamMemberForm";
+import AddIcon from "@mui/icons-material/Add";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+
 const Team = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
-  //variables for toggling the delete column and button text
-  const [deleteIsVisbile, setDeleteIsVisible] = useState(true);
-  const [deleteButtonText, setDeleteButtonText] =
-    useState("Delete Team Member");
-
-  //function to handle toggling the delete column
-  const handleToggleDeleteColumn = () => {
-    setDeleteIsVisible(!deleteIsVisbile);
-    setDeleteButtonText(
-      deleteIsVisbile ? "Hide Delete Column" : "Delete Team Member"
-    );
-  };
 
   //function to show the add contact form via redux
   const handleShowAddTeamMemberForm = () => {
@@ -72,22 +63,22 @@ const Team = () => {
       editable: true,
     },
     {
-      field: "delete",
-      headerName: "Delete",
+      field: "actions",
+      headerName: "Actions",
       flex: 0.5,
       cellClassName: "delete-btn-column-cell",
       editable: false,
-      hide: deleteIsVisbile,
+      headerAlign: "center",
+      align: "center",
       renderCell: (cellValues) => {
         return (
-          <Button
-            variant="contained"
+          <IconButton
             onClick={(event) => {
               handleDelete(event, cellValues);
             }}
           >
-            Delete
-          </Button>
+            <DeleteForeverIcon />
+          </IconButton>
         );
       },
     },
@@ -140,30 +131,32 @@ const Team = () => {
           },
         }}
       >
+        <Tooltip
+          placement="top"
+          arrow
+          title={<Typography fontSize="1.3em">Add Team Member</Typography>}
+        >
+          <IconButton
+            sx={{
+              mb: "2.5px",
+              color: `${colors.orangeAccent[500]}`,
+              position: "absolute",
+              right: "3%",
+              top: "15%",
+            }}
+            onClick={() => {
+              handleShowAddTeamMemberForm();
+            }}
+          >
+            <AddIcon style={{ fontSize: "1.5em" }} />
+          </IconButton>
+        </Tooltip>
         <DataGrid
           //mui api to allow editing on each cell
           experimentalFeatures={{ newEditingApi: true }}
           rows={mockDataTeam}
           columns={columns}
         />
-        <Box display="flex" justifyContent="space-between">
-          <Button
-            sx={{ mt: "2.5px" }}
-            onClick={() => {
-              handleShowAddTeamMemberForm();
-            }}
-          >
-            Add Team Member
-          </Button>
-          <Button
-            sx={{ mt: "2.5px" }}
-            onClick={() => {
-              handleToggleDeleteColumn();
-            }}
-          >
-            {deleteButtonText}
-          </Button>
-        </Box>
         <AddTeamMemberForm />
       </Box>
     </Box>

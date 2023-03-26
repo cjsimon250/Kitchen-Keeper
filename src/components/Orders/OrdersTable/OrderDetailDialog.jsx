@@ -48,7 +48,7 @@ function OrderDetailDialog() {
           display="flex"
           justifyContent="space-between"
         >
-          {selectedOrder.supplier}: {selectedOrder.date}
+          {selectedOrder.supplier} {selectedOrder.date}
           <IconButton
             id="close-btn"
             sx={{ ml: "5%" }}

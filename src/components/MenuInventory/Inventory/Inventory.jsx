@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import { Box, useTheme } from "@mui/system";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../../theme";
-import { Button } from "@mui/material";
 import { useCallback } from "react";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import IconButton from "@mui/material/IconButton";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddToInventoryForm from "../../Forms/AddToInventoryForm";
 
 const Inventory = () => {
@@ -18,12 +18,6 @@ const Inventory = () => {
   //User's inventory
   const inventory = useSelector((store) => store.inventory);
 
-  //Variables for toggling the delete column and button text
-  const [deleteIsVisbile, setDeleteIsVisible] = useState(true);
-  const [deleteButtonText, setDeleteButtonText] = useState(
-    "Delete Inventory Item"
-  );
-
   //Fetch user's inventory on page load
   useEffect(() => {
     dispatch({
@@ -31,32 +25,36 @@ const Inventory = () => {
     });
   }, []);
 
-  //Filtering the inventory to convert quantities and units so that they
-  //are more readable
-  useEffect(() => {
-    inventory.forEach((item) => {
-      if (item.unit === "Oz" && (item.quantity || item.minimumStock) > 48) {
-        item.quantity /= 16;
-        item.minimumStock /= 16;
-        item.unit = "Lb";
-      } else if (
-        item.unit === "Fl. Oz" &&
-        (item.quantity || item.minimumStock) > 63
-      ) {
-        item.quantity /= 128;
-        item.minimumStock /= 128;
-        item.unit = "Gal.";
-      }
-    });
-  }, [inventory]);
+  // New state variable to hold the modified inventory
+  const [modifiedInventory, setModifiedInventory] = useState([]);
 
-  //Function to handle toggling the delete column
-  const handleToggleDeleteColumn = () => {
-    setDeleteIsVisible(!deleteIsVisbile);
-    setDeleteButtonText(
-      deleteIsVisbile ? "Hide Delete Column" : "Delete Inventory Item"
-    );
-  };
+  //Converting Quantaties to be more readable
+  useEffect(() => {
+    const newInventory = inventory.map((item) => {
+      let newItem = { ...item };
+      if (item.unit === "Oz") {
+        if ((item.quantity || item.minimumStock) >= 16) {
+          newItem.quantity = item.quantity / 16;
+          newItem.minimumStock = item.minimumStock / 16;
+          newItem.unit = "Lb";
+        }
+      } else if (item.unit === "Fl. Oz") {
+        if ((item.quantity || item.minimumStock) >= 128) {
+          newItem.quantity = item.quantity / 128;
+          newItem.minimumStock = item.minimumStock / 128;
+          newItem.unit = "Gal.";
+        } else if ((item.quantity || item.minimumStock) >= 16) {
+          newItem.quantity = item.quantity / 16;
+          newItem.minimumStock = item.minimumStock / 16;
+          newItem.unit = "Fl. Oz";
+        }
+      }
+      return newItem;
+    });
+
+    // Set the new copy of the inventory as the state
+    setModifiedInventory(newInventory);
+  }, [inventory]);
 
   //Function for handling deleting a row
   function handleDelete(event, cellValues) {
@@ -69,21 +67,35 @@ const Inventory = () => {
     });
   }
 
-  // Function to handle updating an edited row
+  //Change the value of the item in the modified inventory array
+  const handleEditCellChange = useCallback((params) => {
+    const { id, field, value } = params;
+    setModifiedInventory((prevInventory) =>
+      prevInventory.map((item) =>
+        item.id === id ? { ...item, [field]: value } : item
+      )
+    );
+  }, []);
+
+  //Handle sending the item to update to the database
   const handleEditCell = useCallback(
     (params) => {
-      // Get the corresponding database id from the hidden "id" column
-      const id = params.id;
-      //field is the field name in SQL
-      const field = params.field;
-      //Value of updated cell
-      const value = params.value;
-
-      axios.put(`/api/inventory/${id}`, {
-        payload: { value: value, field: field },
-      });
+      const { id, field, value } = params;
+      const itemToBeUpdated = modifiedInventory.find((item) => item.id === id);
+      itemToBeUpdated[field] = value;
+      console.log(id, itemToBeUpdated);
+      axios
+        .put(`/api/inventory/${id}`, { payload: itemToBeUpdated })
+        .then(() => {
+          dispatch({
+            type: "FETCH_INVENTORY",
+          });
+        })
+        .catch((error) => {
+          console.log("PUT ERROR", error);
+        });
     },
-    [inventory]
+    [modifiedInventory]
   );
 
   //For every row this grabs the value from the key to put into the "headerName" column
@@ -118,22 +130,22 @@ const Inventory = () => {
       editable: true,
     },
     {
-      field: "delete",
-      headerName: "Delete",
+      field: "actions",
+      headerName: "Actions",
       flex: 0.5,
       cellClassName: "delete-btn-column-cell",
       editable: false,
-      hide: deleteIsVisbile,
+      headerAlign: "center",
+      align: "center",
       renderCell: (cellValues) => {
         return (
-          <Button
-            variant="contained"
+          <IconButton
             onClick={(event) => {
               handleDelete(event, cellValues);
             }}
           >
-            Delete
-          </Button>
+            <DeleteForeverIcon />
+          </IconButton>
         );
       },
     },
@@ -141,12 +153,12 @@ const Inventory = () => {
   ];
   return (
     // HEADER
-    <Box mt="2%">
+    <Box>
       <Box
         //All styling on the table and box holding it
-        m="40px 0 40px 0"
-        paddingBottom="40px"
-        height="75vh"
+        mt="15px"
+        height="70vh"
+        width="60vw"
         sx={{
           "& .MuiDataGrid-root": {
             border: "none",
@@ -183,32 +195,11 @@ const Inventory = () => {
         }}
       >
         <DataGrid
-          rows={inventory}
+          rows={modifiedInventory}
           columns={columns}
-          //After edit by pressing enter user updates database
           onCellEditCommit={handleEditCell}
+          onEditCellChange={handleEditCellChange}
         />
-        <Box display="flex" justifyContent="space-between">
-          <Button
-            sx={{ mt: "10px" }}
-            onClick={() => {
-              dispatch({
-                type: "SET_SHOW_ADD_TO_INVENTORY_FORM",
-                payload: true,
-              });
-            }}
-          >
-            Add Inventory Items
-          </Button>
-          <Button
-            sx={{ mt: "10px" }}
-            onClick={() => {
-              handleToggleDeleteColumn();
-            }}
-          >
-            {deleteButtonText}
-          </Button>
-        </Box>
         <AddToInventoryForm />
       </Box>
     </Box>

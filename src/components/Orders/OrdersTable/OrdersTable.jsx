@@ -1,10 +1,8 @@
-import axios from "axios";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Box, useTheme } from "@mui/system";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../../theme";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import IconButton from "@mui/material/IconButton";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
@@ -27,7 +25,7 @@ function OrdersTable() {
   }, []);
 
   //Function for handling deleting a row
-  function handleDelete(event, cellValues) {
+  async function handleDelete(event, cellValues) {
     let rowToDelete = cellValues.row;
     dispatch({ type: "DELETE_ORDER", payload: rowToDelete.id });
   }
@@ -81,7 +79,6 @@ function OrdersTable() {
               <VisibilityOutlinedIcon />
             </IconButton>
             <IconButton
-              variant="contained"
               onClick={(event) => {
                 handleDelete(event, cellValues);
               }}
@@ -99,7 +96,7 @@ function OrdersTable() {
       //All styling on the table and box holding it
       paddingBottom="40px"
       height="75vh"
-      width="52vw"
+      width="55vw"
       sx={{
         "& .MuiDataGrid-root": {
           border: "none",
@@ -134,12 +131,7 @@ function OrdersTable() {
         },
       }}
     >
-      <DataGrid
-        rows={orders}
-        columns={columns}
-        //After edit by pressing enter user updates database
-        // onCellEditCommit={handleEditCell}
-      />
+      <DataGrid rows={orders} columns={columns} />
       <OrderDetailDialog />
     </Box>
   );

@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import TextField from "@mui/material/TextField";
@@ -6,9 +5,6 @@ import { Box, useTheme } from "@mui/system";
 import { tokens } from "../../../theme";
 import { Typography, Button } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -71,21 +67,31 @@ function OrdersTable() {
   }
   return (
     <Box
-      width="30vw"
-      height="60vh"
-      borderRadius="3%"
+      width="25vw"
+      height="52vh"
+      borderRadius="2%"
       sx={{
+        mt: "5vh",
+        overflowY: "auto",
         backgroundColor: `${colors.khakiAccent[700]}`,
         boxShadow: "8px 8px 12px rgba(0,0,0,0.4)",
-        border: `5px solid ${colors.khakiAccent[800]}`,
-        "& #add-ingredient-btn:hover": {
-          color: colors.orangeAccent[500],
+        "& .MuiButton-sizeMedium": {
+          width: "30vw",
+          backgroundColor: colors.greenAccent[600],
+        },
+        "& .MuiButton-sizeMedium:hover": {
+          backgroundColor: colors.greenAccent[700],
         },
       }}
     >
       <Typography
         variant="h3"
-        sx={{ color: colors.greenAccent[400], textAlign: "center", mt: "4%" }}
+        sx={{
+          color: colors.greenAccent[400],
+          textAlign: "center",
+          mt: "4%",
+          mb: "12%",
+        }}
       >
         Add New Order
       </Typography>
@@ -96,7 +102,8 @@ function OrdersTable() {
         variant="outlined"
         fullWidth
         value={orderToSend.date}
-        sx={{ mt: "12%" }}
+        sx={{ ml: "5%", width: "90%" }}
+        m="auto"
         onChange={(event) => {
           setOrderToSend({
             ...orderToSend,
@@ -111,7 +118,7 @@ function OrdersTable() {
         variant="outlined"
         fullWidth
         value={orderToSend.supplier}
-        sx={{ mt: "4%" }}
+        sx={{ ml: "5%", mt: "5%", width: "90%" }}
         onChange={(event) => {
           setOrderToSend({
             ...orderToSend,
@@ -119,11 +126,19 @@ function OrdersTable() {
           });
         }}
       />
-      <FormControl>
-        <InputLabel>Inventory Item</InputLabel>
-        <Select
+      <Box
+        mt="5%"
+        display="flex"
+        justifyContent="space-evenly"
+        width="90%"
+        ml="3.5%"
+      >
+        <TextField
           variant="outlined"
           value={inventoryItem.item}
+          select
+          sx={{ width: "40%" }}
+          label="Inventory Item"
           onChange={(event) => {
             const selectedValue = event.target.value;
             //Find the id of the inventory item
@@ -144,29 +159,29 @@ function OrdersTable() {
               </MenuItem>
             );
           })}
-        </Select>
-      </FormControl>
+        </TextField>
 
-      <TextField
-        autoFocus
-        label="Quantity"
-        type="number"
-        variant="outlined"
-        inputProps={{ min: 1 }}
-        value={inventoryItem.quantity}
-        onChange={(event) => {
-          setInventoryItem({
-            ...inventoryItem,
-            quantity: event.target.value,
-          });
-        }}
-      />
-      <FormControl>
-        <InputLabel>Unit</InputLabel>
-        <Select
+        <TextField
+          autoFocus
+          label="Quantity"
+          type="number"
+          variant="outlined"
+          inputProps={{ min: 1 }}
+          sx={{ width: "20%" }}
+          value={inventoryItem.quantity}
+          onChange={(event) => {
+            setInventoryItem({
+              ...inventoryItem,
+              quantity: event.target.value,
+            });
+          }}
+        />
+        <TextField
           variant="outlined"
           value={inventoryItem.unit}
-          style={{ width: "100%" }}
+          sx={{ width: "20%" }}
+          label="Unit"
+          select
           onChange={(event) => {
             setInventoryItem({
               ...inventoryItem,
@@ -181,16 +196,17 @@ function OrdersTable() {
               </MenuItem>
             );
           })}
-        </Select>
-      </FormControl>
-      <IconButton
-        id="add-ingredient-btn"
-        onClick={() => {
-          handleAddInventoryItem();
-        }}
-      >
-        <AddIcon />
-      </IconButton>
+        </TextField>
+        <IconButton
+          id="add-ingredient-btn"
+          width="10%"
+          onClick={() => {
+            handleAddInventoryItem();
+          }}
+        >
+          <AddIcon />
+        </IconButton>
+      </Box>
       <ul>
         {orderToSend.inventoryItems.map((item, index) => {
           return (
@@ -200,13 +216,19 @@ function OrdersTable() {
           );
         })}
       </ul>
-      <Button
-        onClick={() => {
-          handleAddOrder();
-        }}
-      >
-        Add Order
-      </Button>
+      <Box display="flex" justifyContent="flex-end">
+        <Button
+          display="flex"
+          justifyContent="flex-end"
+          sx={{ mr: "5%", position: "relative", mt: "25%", mb: "3%" }}
+          style={{ width: "25%" }}
+          onClick={() => {
+            handleAddOrder();
+          }}
+        >
+          Add Order
+        </Button>
+      </Box>
     </Box>
   );
 }

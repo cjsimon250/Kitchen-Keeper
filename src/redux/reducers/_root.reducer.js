@@ -10,6 +10,7 @@ import conditionalForms from "./conditionalForms.reducer";
 import orders from "./orders.reducer";
 import sales from "./sales.reducer";
 import notifications from "./notifications.reducer";
+import alreadyUser from "./login.reducer";
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
 // This is imported in index.js as rootSaga
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
   orders, //All of the user's past orders
   sales, //All of the user's sales data
   notifications, //All inventory items the user is low on
+  alreadyUser,
 });
 
 export default rootReducer;
