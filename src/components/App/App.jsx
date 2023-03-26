@@ -13,7 +13,6 @@ import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import AboutPage from "../AboutPage/AboutPage";
 import LandingPage from "../LandingPage/LandingPage";
 import LoginPage from "../LoginPage/LoginPage";
-import RegisterPage from "../RegisterPage/RegisterPage";
 import { ColorModeContext, useMode } from "../../theme";
 import { CssBaseline, ThemeProvider, Box } from "@mui/material";
 // //global components
@@ -78,17 +77,6 @@ function App() {
                   ) : (
                     // Otherwise, show the login page
                     <LoginPage />
-                  )}
-                </Route>
-
-                <Route exact path="/registration">
-                  {user.id ? (
-                    // If the user is already logged in,
-                    // redirect them to the /dashboard page
-                    <Redirect to="/dashboard" />
-                  ) : (
-                    // Otherwise, show the registration page
-                    <RegisterPage />
                   )}
                 </Route>
 
