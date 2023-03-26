@@ -95,24 +95,6 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
     const updateInventory = inventoryItems.map(async (item) => {
       let orderQuantity = item.quantity;
       let orderUnit = item.unit;
-
-      //Converting quantity to oz or fluid oz for database
-      // switch (orderUnit) {
-      //   case "Lb":
-      //     orderQuantity *= 16;
-      //     orderUnit = "Oz";
-      //     break;
-      //   case "Oz":
-      //     orderUnit = "Oz";
-      //     break;
-      //   case "Gal.":
-      //     orderQuantity *= 128;
-      //     orderUnit = "Fl. Oz";
-      //     break;
-      //   case "Fl. Oz.":
-      //     orderUnit = "Fl. Oz";
-      //     break;
-      // }
       //Selecting quantity to add to
       const getQuantityQuery = `
       SELECT "inventory".quantity FROM "inventory" WHERE
@@ -124,7 +106,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
       ]);
 
       let updatedQuantity =
-        Number(currentQuantity.rows[0].quantity) + orderQuantity;
+        Number(currentQuantity.rows[0].quantity) + Number(orderQuantity);
 
       const updateInventoryQuery = `
     UPDATE "inventory" SET "quantity" = $1 WHERE id = $2

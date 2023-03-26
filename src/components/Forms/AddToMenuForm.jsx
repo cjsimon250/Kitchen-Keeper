@@ -234,10 +234,11 @@ function AddToMenuForm() {
                     })
                   }
                 />
-                <Select
+                <TextField
                   margin="dense"
                   label="Ingredient Name"
                   variant="standard"
+                  select
                   value={ingredientObject.ingredientName}
                   sx={{ width: "50%" }}
                   onChange={(event) =>
@@ -249,7 +250,7 @@ function AddToMenuForm() {
                 >
                   {/* Mappng through all previously added ingredients to show options*/}
                   {showAllIngredients()}
-                </Select>
+                </TextField>
               </Box>
               <Box sx={{ mt: "10px", ml: "30px" }}>
                 <FormLabel>Unit of Measurement</FormLabel>

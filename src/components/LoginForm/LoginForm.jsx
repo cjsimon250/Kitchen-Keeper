@@ -81,15 +81,15 @@ function LoginForm() {
           mt="10%"
           style={{ display: "flex", justifyContent: "space-between" }}
         >
-          <Button className="btn" type="submit" name="submit">
-            Log In
-          </Button>
           <Button
             onClick={() => {
               dispatch({ type: "SET_IS_USER", payload: false });
             }}
           >
             Register
+          </Button>
+          <Button className="btn" type="submit" name="submit">
+            Log In
           </Button>
         </Box>
       </form>
