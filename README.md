@@ -1,121 +1,94 @@
+(View Raw will give you the markdown that you can copy to your repos!)
 
-# Prime Solo Project Starting Repo
-This version uses React, Redux, Express, Passport, and PostgreSQL (a full list of dependencies can be found in `package.json`).
+![MIT LICENSE](https://img.shields.io/github/license/cjsimon/the_marketplace.svg?style=flat-square)
+![REPO SIZE](https://img.shields.io/github/repo-size/cjsimon/the_marketplace.svg?style=flat-square)
+![TOP_LANGUAGE](https://img.shields.io/github/languages/top/cjsimon/the_marketplace.svg?style=flat-square)
+![FORKS](https://img.shields.io/github/forks/cjsimon/the_marketplace.svg?style=social)
 
-We **STRONGLY** recommend following these instructions carefully. It's a lot, and will take some time to set up, but your life will be much easier this way in the long run.
+# PROJECT NAME
 
-## Use the Template for This Repository (Don't Clone)
+## Description
 
-- Don't Fork or Clone. Instead, click the `Use this Template` button, and make a copy to your personal account. Make the project `PUBLIC`!
+_Duration: 2 Week Sprint_
 
+Kitchen Keeper is a functional prototype for a restaraunt inventory management application. For Kitchen Keeper to perform to the best of it's abilities, the user will be required to first upload all of their current iventory information. For example, this application will need every item name, the current quantity in stock, as well as the minimum stock desired for each item (when an item is below this quantity the user will be noitified). Next, the user will upload all of the dishes on their menu as well as the quantity and name of the previously added inventory items that are in each dish. Kitchen Keeper also allows users to upload the orders that they get from their distributer and track that data as well as restock your current inventory. Due to the way Kitchen Keeper is built, restaraunt owners or managers will need to upload their daily sales per menu item at the end of each day. This allows for automatated inventory mangament, the ability to see a variety of sales data, and the ability to see how much food is being wasted by how far off the current stock is in the application versus how much the user actually has.
 
-## Prerequisites
+To see the fully functional site, please visit: [DEPLOYED VERSION OF APP](https://kitchenkeeper.herokuapp.com/)
 
-Before you get started, make sure you have the following software installed on your computer:
+## Screen Shots
+
+![Alt text](./documentation/images/dashboard.png?raw=true "User Dashboard")
+![Alt text](./documentation/images/menuInventory.png?raw=true "User's Invetnory & Menu")
+
+### Prerequisites
+
+Link to software that is required to install the app (e.g. node).
 
 - [Node.js](https://nodejs.org/en/)
-- [PostrgeSQL](https://www.postgresql.org/)
-- [Nodemon](https://nodemon.io/)
+- [Postgres](https://www.postgresql.org/download/)
 
-## Create database and table
+## Installation
 
-Create a new database called `prime_app` and create a `user` table:
+1. Create a database named `kitchen-keeper`,
+2. The queries in the `database.sql` file are set up to create all the necessary tables and populate the needed data to allow the application to run correctly. The project is built on [Postgres](https://www.postgresql.org/download/), so you will need to make sure to have that installed. We recommend using Postico to run those queries as that was used to create the queries,
+3. Create a `.env` file and set "SERVER_SESSION_SECRET" to whatever you like as long as it is longer than 8 characters
+4. Open up your editor of choice and run an `npm install`
+5. Run `npm run server` in your terminal
+6. Run `npm run client` in your terminal
+7. The `npm run client` command will open up a new browser tab for you!
 
-```SQL
-CREATE TABLE "user" (
-    "id" SERIAL PRIMARY KEY,
-    "username" VARCHAR (80) UNIQUE NOT NULL,
-    "password" VARCHAR (1000) NOT NULL
-);
-```
+## Usage
 
-If you would like to name your database something else, you will need to change `prime_app` to the name of your new database name in `server/modules/pool.js`
+1. As a new user, you will log in and upload all of your current menu and inventory in stock. The data needed consists of the current quantities of all inventory items in stock, the user's minimum desired stock, as well as how much of each inventory item is in every dish.
+2. If the user has access to past sales data they can upload how much of each Menu Item was sold on a given day and view sales metrics over the last year as well as last seven days.
+3. Users will also be able to track and add orders they recieve from suppliers so that they can restock their inventory.
+4. At the end of every day, the user will upload how much of each menu item was sold and their current inventory will be adjusted accordingly
+5. Using the notifications about low quantity items, the user is able to see what items they need to restock so that their is no need to take inventory manually
 
-## Development Setup Instructions
+## Built With
 
-- Run `npm install`
-- Create a `.env` file at the root of the project and paste this line into the file:
-  ```
-  SERVER_SESSION_SECRET=superDuperSecret
-  ```
-  While you're in your new `.env` file, take the time to replace `superDuperSecret` with some long random string like `25POUbVtx6RKVNWszd9ERB9Bb6` to keep your application secure. Here's a site that can help you: [https://passwordsgenerator.net/](https://passwordsgenerator.net/). If you don't do this step, create a secret with less than eight characters, or leave it as `superDuperSecret`, you will get a warning.
-- Start postgres if not running already by using `brew services start postgresql`
-- Run `npm run server`
-- Run `npm run client`
-- Navigate to `localhost:3000`
+- [![HTML5][html]][html-url]
+- [![CSS3][css]][css-url]
+- [![JavaScript][javascript]][javascript-url]
+- [![React][react.js]][react-url]
+- [![Redux-Saga][redux-saga]][redux-saga-url]
+- [![Express][express.js]][express-url]
+- [![Node][node.js]][node-url]
+- [![PostgreSQL][postgres]][postgres-url]
+- [![MUI][mui]][mui-url]
+- [![Chart.js][chart.js]][chart-url]
 
-## Debugging
+## License
 
-To debug, you will need to run the client-side separately from the server. Start the client by running the command `npm run client`. Start the debugging server by selecting the Debug button.
+[MIT](https://choosealicense.com/licenses/mit/)
 
-![VSCode Toolbar](documentation/images/vscode-toolbar.png)
+## Acknowledgement
 
-Then make sure `Launch Program` is selected from the dropdown, then click the green play arrow.
+Thanks to [Prime Digital Academy](www.primeacademy.io) who equipped and helped me to make this application a reality. Special thanks to Dane Smith, Key Clark, Edan Schwartz, and all of the Amethyst Cohort.
 
-![VSCode Debug Bar](documentation/images/vscode-debug-bar.png)
+## Support
 
-## Testing Routes with Postman
+If you have suggestions or issues, please email me at [cjsimon615@gmail.com](www.google.com)
 
-To use Postman with this repo, you will need to set up requests in Postman to register a user and login a user at a minimum.
+<!-- MARKDOWN LINKS & IMAGES -->
 
-Keep in mind that once you using the login route, Postman will manage your session cookie for you just like a browser, ensuring it is sent with each subsequent request. If you delete the `localhost` cookie in Postman, it will effectively log you out.
-
-1. Start the server - `npm run server`
-2. Import the sample routes JSON file [v2](./PostmanPrimeSoloRoutesv2.json) by clicking `Import` in Postman. Select the file.
-3. Click `Collections` and `Send` the following three calls in order:
-   1. `POST /api/user/register` registers a new user, see body to change username/password
-   2. `POST /api/user/login` will login a user, see body to change username/password
-   3. `GET /api/user` will get user information, by default it's not very much
-
-After running the login route above, you can try any other route you've created that requires a logged in user!
-
-## Production Build
-
-Before pushing to Heroku, run `npm run build` in terminal. This will create a build folder that contains the code Heroku will be pointed at. You can test this build by typing `npm start`. Keep in mind that `npm start` will let you preview the production build but will **not** auto update.
-
-- Start postgres if not running already by using `brew services start postgresql`
-- Run `npm start`
-- Navigate to `localhost:5000`
-
-## Lay of the Land
-
-There are a few videos linked below that show a walkthrough the client and sever setup to help acclimatize to the boilerplate. Please take some time to watch the videos in order to get a better understanding of what the boilerplate is like.
-
-- [Initial Set](https://vimeo.com/453297271)
-- [Server Walkthrough](https://vimeo.com/453297212)
-- [Client Walkthrough](https://vimeo.com/453297124)
-
-Directory Structure:
-
-- `src/` contains the React application
-- `public/` contains static assets for the client-side
-- `build/` after you build the project, contains the transpiled code from `src/` and `public/` that will be viewed on the production site
-- `server/` contains the Express App
-
-This code is also heavily commented. We recommend reading through the comments, getting a lay of the land, and becoming comfortable with how the code works before you start making too many changes. If you're wondering where to start, consider reading through component file comments in the following order:
-
-- src/components
-  - App/App
-  - Footer/Footer
-  - Nav/Nav
-  - AboutPage/AboutPage
-  - InfoPage/InfoPage
-  - UserPage/UserPage
-  - LoginPage/LoginPage
-  - RegisterPage/RegisterPage
-  - LogOutButton/LogOutButton
-  - ProtectedRoute/ProtectedRoute
-
-## Deployment
-
-1. Create a new Heroku project
-1. Link the Heroku project to the project GitHub Repo
-1. Create an Heroku Postgres database
-1. Connect to the Heroku Postgres database from Postico
-1. Create the necessary tables
-1. Add an environment variable for `SERVER_SESSION_SECRET` with a nice random string for security
-1. In the deploy section, select manual deploy
-
-## Update Documentation
-
-Customize this ReadMe and the code comments in this project to read less like a starter repo and more like a project. Here is an example: https://gist.github.com/PurpleBooth/109311bb0361f32d87a2
+[react.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[react-url]: https://reactjs.org/
+[javascript]: https://img.shields.io/badge/JavaScript?style=for-the-badge&logo=Javascript&logoColor=F7DF1E
+[javascript-url]: https://www.javascript.com/
+[mui]: https://img.shields.io/badge/MUI?style=for-the-badge&logo=MUI&logoColor=007FFF
+[mui-url]: https://mui.com/
+[redux-saga]: https://img.shields.io/badge/Redux-Saga?style=for-the-badge&logo=Redux-Saga&logoColor=999999
+[redux-saga-url]: https://redux-saga.js.org/\
+[express.js]: https://img.shields.io/badge/Express?style=for-the-badge&logo=Express&logoColor=000000
+[express-url]: https://expressjs.com/
+[node.js]: https://img.shields.io/badge/Node.js?style=for-the-badge&logo=Node.js&logoColor=339933
+[node-url]: https://nodejs.org/en
+[css]: https://img.shields.io/badge/CSS3?style=for-the-badge&logo=CSS3&logoColor=1572B6
+[css-url]: https://www.w3.org/Style/CSS/Overview.en.html
+[html]: https://img.shields.io/badge/HTML5?style=for-the-badge&logo=HTML5&logoColor=E34F26
+[html-url]: https://html.spec.whatwg.org/multipage/
+[postgres]: https://img.shields.io/badge/PostgreSQL?style=for-the-badge&logo=PostgreSQL&logoColor=4169E1
+[postgres-url]: https://www.postgresql.org/
+[chart.js]: https://img.shields.io/badge/Chart.js?style=for-the-badge&logo=Chart.js&logoColor=FF6384
+[chart-url]: https://www.chartjs.org/
