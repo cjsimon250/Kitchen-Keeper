@@ -20,11 +20,11 @@ To see the fully functional site, please visit: https://kitchenkeeper.herokuapp.
 ## Installation
 
 1. Create a database named `kitchen-keeper`,
-2. The queries in the `database.sql` file are set up to create all the necessary tables and populate the needed data to allow the application to run correctly. The project is built on [Postgres](https://www.postgresql.org/download/), so you will need to make sure to have that installed. We recommend using Postico to run those queries as that was used to create the queries,
-3. Create a `.env` file and set "SERVER_SESSION_SECRET" to whatever you like as long as it is longer than 8 characters
-4. Open up your editor of choice and run an `npm install`
-5. Run `npm run server` in your terminal
-6. Run `npm run client` in your terminal
+2. The queries in the `database.sql` file are set up to create all the necessary tables and populate the needed data to allow the application to run correctly. The project is built on [Postgres](https://www.postgresql.org/download/), so you will need to make sure to have that installed. We recommend using Postico to run those queries as that was used to create the queries.
+3. Create a `.env` file and set "SERVER_SESSION_SECRET" to whatever you like as long as it is longer than 8 characters.
+4. Open up your editor of choice and run an `npm install`.
+5. Run `npm run server` in your terminal.
+6. Run `npm run client` in your terminal.
 7. The `npm run client` command will open up a new browser tab for you!
 
 ## Usage
@@ -32,8 +32,8 @@ To see the fully functional site, please visit: https://kitchenkeeper.herokuapp.
 1. As a new user, you will log in and upload all of your current menu and inventory in stock. The data needed consists of the current quantities of all inventory items in stock, the user's minimum desired stock, as well as how much of each inventory item is in every dish.
 2. If the user has access to past sales data they can upload how much of each Menu Item was sold on a given day and view sales metrics over the last year as well as last seven days.
 3. Users will also be able to track and add orders they recieve from suppliers so that they can restock their inventory.
-4. At the end of every day, the user will upload how much of each menu item was sold and their current inventory will be adjusted accordingly
-5. Using the notifications about low quantity items, the user is able to see what items they need to restock so that their is no need to take inventory manually
+4. At the end of every day, the user will upload how much of each menu item was sold and their current inventory will be adjusted accordingly.
+5. Using the notifications about low quantity items, the user is able to see what items they need to restock so that their is no need to take inventory manually.
 
 ## Built With
 <p align="center"> <a href="https://www.w3.org/html/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original-wordmark.svg" alt="html5" width="40" height="40"/> </a> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="40" height="40"/>
