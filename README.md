@@ -1,9 +1,9 @@
 (View Raw will give you the markdown that you can copy to your repos!)
 
-![MIT LICENSE](https://img.shields.io/github/license/cjsimon/the_marketplace.svg?style=flat-square)
-![REPO SIZE](https://img.shields.io/github/repo-size/cjsimon/the_marketplace.svg?style=flat-square)
-![TOP_LANGUAGE](https://img.shields.io/github/languages/top/cjsimon/the_marketplace.svg?style=flat-square)
-![FORKS](https://img.shields.io/github/forks/cjsimon/the_marketplace.svg?style=social)
+![MIT LICENSE](https://img.shields.io/github/license/cjsimon/Kitchen-Keeper.svg?style=flat-square)
+![REPO SIZE](https://img.shields.io/github/repo-size/cjsimon/Kitchen-Keeper.svg?style=flat-square)
+![TOP_LANGUAGE](https://img.shields.io/github/languages/top/cjsimon/Kitchen-Keeper.svg?style=flat-square)
+![FORKS](https://img.shields.io/github/forks/cjsimon/Kitchen-Keeper.svg?style=social)
 
 # PROJECT NAME
 
