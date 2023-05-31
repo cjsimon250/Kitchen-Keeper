@@ -25,10 +25,14 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
 
 // Post new item to the inventory
 router.post("/", rejectUnauthenticated, async (req, res) => {
+  const connection = await pool.connect();
+
   try {
+    await connection.query("BEGIN");
+
     //Get id of the company belonging to the user
     const queryText = `SELECT * FROM company WHERE user_id = $1;`;
-    const result = await pool.query(queryText, [req.user.id]);
+    const result = await connection.query(queryText, [req.user.id]);
 
     const companyId = result.rows[0].id;
     const queryText2 = `INSERT INTO inventory (company_id, item, quantity, "minimumStock", unit)
@@ -76,7 +80,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
         break;
     }
 
-    await pool.query(queryText2, [
+    await connection.query(queryText2, [
       companyId,
       item,
       quantity,
@@ -84,9 +88,12 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
       unit,
     ]);
     res.sendStatus(201);
+    await connection.query("COMMIT");
   } catch (error) {
     console.log("Error executing SQL query", ":", error);
     res.sendStatus(500);
+  } finally {
+    connection.release();
   }
 });
 
