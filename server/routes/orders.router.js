@@ -33,10 +33,14 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
 
 //POST to order table
 router.post("/", rejectUnauthenticated, async (req, res) => {
+  const connection = await pool.connect();
+
   try {
+    connection.query("BEGIN");
+
     //Get id of the company belonging to the user
     const companyQuery = `SELECT * FROM company WHERE user_id = $1;`;
-    const result = await pool.query(companyQuery, [req.user.id]);
+    const result = await connection.query(companyQuery, [req.user.id]);
 
     let companyId = result.rows[0].id;
 
@@ -48,7 +52,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
     let supplier = req.body.supplier;
     let inventoryItems = req.body.inventoryItems;
 
-    const ordersResult = await pool.query(ordersQuery, [
+    const ordersResult = await connection.query(ordersQuery, [
       supplier,
       date,
       companyId,
@@ -82,7 +86,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
           break;
       }
 
-      await pool.query(ordersInventoryQuery, [
+      await connection.query(ordersInventoryQuery, [
         item.inventoryId,
         ordersId,
         quantity,
@@ -101,7 +105,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
       id = $1
       `;
 
-      let currentQuantity = await pool.query(getQuantityQuery, [
+      let currentQuantity = await connection.query(getQuantityQuery, [
         item.inventoryId,
       ]);
 
@@ -112,7 +116,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
     UPDATE "inventory" SET "quantity" = $1 WHERE id = $2
       `;
 
-      await pool.query(updateInventoryQuery, [
+      await connection.query(updateInventoryQuery, [
         updatedQuantity,
         item.inventoryId,
       ]);
@@ -120,9 +124,13 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
 
     await Promise.all(updateInventory);
     res.sendStatus(200);
+
+    await connection.query("COMMIT");
   } catch (error) {
     console.log("Error executing SQL query", ":", error);
     res.sendStatus(500);
+  } finally {
+    connection.release();
   }
 });
 
