@@ -8,16 +8,10 @@ const {
 //Get all of the inventory associated with the user who is logged in
 router.get("/", rejectUnauthenticated, async (req, res) => {
   try {
-    //Get id of the company belonging to the user
-    const queryText = `SELECT * FROM company WHERE user_id = $1;`;
-    const result = await pool.query(queryText, [req.user.id]);
-
-    const companyId = result.rows[0].id;
-    const queryText2 = `SELECT * FROM inventory WHERE company_id = $1;`;
-
+    const queryText = `SELECT * FROM inventory WHERE company_id = $1;`;
     //Get the inventory items belonging to the user
-    const result2 = await pool.query(queryText2, [companyId]);
-    res.send(result2.rows);
+    const result = await pool.query(queryText, [req.user.companyId]);
+    res.send(result.rows);
   } catch (error) {
     console.log(`Error executing SQL query :`, error);
   }
@@ -25,17 +19,8 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
 
 // Post new item to the inventory
 router.post("/", rejectUnauthenticated, async (req, res) => {
-  const connection = await pool.connect();
-
   try {
-    await connection.query("BEGIN");
-
-    //Get id of the company belonging to the user
-    const queryText = `SELECT * FROM company WHERE user_id = $1;`;
-    const result = await connection.query(queryText, [req.user.id]);
-
-    const companyId = result.rows[0].id;
-    const queryText2 = `INSERT INTO inventory (company_id, item, quantity, "minimumStock", unit)
+    const queryText = `INSERT INTO inventory (company_id, item, quantity, "minimumStock", unit)
   VALUES ($1, $2, $3, $4, $5);
   `;
 
@@ -80,20 +65,17 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
         break;
     }
 
-    await connection.query(queryText2, [
-      companyId,
+    await pool.query(queryText, [
+      req.user.companyId,
       item,
       quantity,
       minimumStock,
       unit,
     ]);
     res.sendStatus(201);
-    await connection.query("COMMIT");
   } catch (error) {
     console.log("Error executing SQL query", ":", error);
     res.sendStatus(500);
-  } finally {
-    connection.release();
   }
 });
 
@@ -116,7 +98,7 @@ router.delete("/:id", rejectUnauthenticated, async (req, res) => {
 router.put("/:id", rejectUnauthenticated, async (req, res) => {
   try {
     const id = req.body.payload.id;
-    const companyId = req.body.payload.company_id;
+    const companyId = req.user.companyId;
     let item = req.body.payload.item;
     let quantity = req.body.payload.quantity;
     let minimumStock = req.body.payload.minimumStock;

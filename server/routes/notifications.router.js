@@ -5,11 +5,7 @@ const router = express.Router();
 //Get low quantity items
 router.get("/", async (req, res) => {
   try {
-    //Get id of the company belonging to the user
-    const companyQuery = `SELECT * FROM company WHERE user_id = $1;`;
-    const result = await pool.query(companyQuery, [req.user.id]);
-
-    let companyId = result.rows[0].id;
+    const companyId = req.user.companyId;
     //Query to select all inventory items that are below the specified minimum stock
     const inventoryNotificationQuery = `
   SELECT "inventory".item, "inventory".quantity, "inventory".unit FROM "inventory"

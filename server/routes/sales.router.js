@@ -8,11 +8,7 @@ const {
 //GET sales data from a specific timeframe
 router.get("/monthly", rejectUnauthenticated, async (req, res) => {
   try {
-    //Get id of the company belonging to the user
-    const companyQuery = `SELECT * FROM company WHERE user_id = $1;`;
-    const result = await pool.query(companyQuery, [req.user.id]);
-
-    let companyId = result.rows[0].id;
+    const companyId = req.user.companyId;
     const salesQuery = `
   SELECT 
   DATE_TRUNC('month', "sales".date) AS "month",
@@ -40,11 +36,7 @@ ORDER BY "year", "month" ASC;
 //GET sales data from a specific timeframe
 router.get("/daily", rejectUnauthenticated, async (req, res) => {
   try {
-    //Get id of the company belonging to the user
-    const companyQuery = `SELECT * FROM company WHERE user_id = $1;`;
-    const result = await pool.query(companyQuery, [req.user.id]);
-
-    let companyId = result.rows[0].id;
+    const companyId = req.user.companyId;
     const salesQuery = `
   SELECT 
   DATE_TRUNC('day', "sales".date) AS "day",
@@ -74,12 +66,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
 
   try {
     connection.query("BEGIN");
-
-    //Get id of the company belonging to the user
-    const companyQuery = `SELECT id FROM company WHERE user_id = $1;`;
-    const result = await connection.query(companyQuery, [req.user.id]);
-
-    const companyId = result.rows[0].id;
+    const companyId = req.user.companyId;
     const sales = req.body;
     //Mapping through the dish object
     const dishesList = Object.keys(sales.dishes);

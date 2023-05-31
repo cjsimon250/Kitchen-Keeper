@@ -7,11 +7,7 @@ const {
 
 router.get("/", rejectUnauthenticated, async (req, res) => {
   try {
-    //Get id of the company belonging to the user
-    const companyQuery = `SELECT * FROM company WHERE user_id = $1;`;
-    const companyResult = await pool.query(companyQuery, [req.user.id]);
-
-    let companyId = companyResult.rows[0].id;
+    const companyId = req.user.companyId;
     const ordersQuery = `
     SELECT "orders".id, "orders".supplier, "orders".date,
     json_agg(json_build_object('item', "inventory".item, 'ordersId', "orders".id, 'quantity', "orders_inventory".quantity, 'unit', "orders_inventory".unit))
@@ -37,13 +33,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
 
   try {
     connection.query("BEGIN");
-
-    //Get id of the company belonging to the user
-    const companyQuery = `SELECT * FROM company WHERE user_id = $1;`;
-    const result = await connection.query(companyQuery, [req.user.id]);
-
-    let companyId = result.rows[0].id;
-
+    const companyId = req.user.companyId;
     const ordersQuery = `
     INSERT INTO "orders" (supplier, date, company_id)
     VALUES ($1, $2, $3) RETURNING id;
@@ -136,11 +126,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
 
 router.delete("/:id", rejectUnauthenticated, async (req, res) => {
   try {
-    //Get id of the company belonging to the user
-    const companyQuery = `SELECT * FROM company WHERE user_id = $1;`;
-    const companyResult = await pool.query(companyQuery, [req.user.id]);
-
-    let companyId = companyResult.rows[0].id;
+    const companyId = req.user.companyId;
     const ordersQuery = `
   DELETE FROM "orders" WHERE id = $1 AND company_id = $2
   `;

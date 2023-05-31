@@ -6,16 +6,8 @@ const {
 } = require("../modules/authentication-middleware");
 
 router.get("/", rejectUnauthenticated, async (req, res) => {
-  const connection = await pool.connect();
-
   try {
-    await connection.query("BEGIN");
-
-    // Get id of the company belonging to the user
-    const queryText = `SELECT * FROM company WHERE user_id = $1;`;
-    const companyResult = await connection.query(queryText, [req.user.id]);
-    const companyId = companyResult.rows[0].id;
-
+    //Selecting all of the user's menu items and their ingredients
     const selectMenuQuery = `
     SELECT "menu".dish, "menu".id, "menu".image, "menu".price, 
     json_agg(json_build_object('inventoryId', "inventory".id,'item', "inventory".item, 'quantity', "menu_inventory".quantity, 'unit', "menu_inventory".unit)) AS "ingredients" 
@@ -26,15 +18,13 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
     GROUP BY "menu".id
         `;
 
-    const menuDataToSend = await connection.query(selectMenuQuery, [companyId]);
+    const menuDataToSend = await pool.query(selectMenuQuery, [
+      req.user.companyId,
+    ]);
     res.send(menuDataToSend.rows);
-
-    await connection.query("COMMIT");
   } catch (error) {
     console.log("Error executing SQL query", ":", error);
     res.sendStatus(500);
-  } finally {
-    connection.release();
   }
 });
 
@@ -44,7 +34,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
   const price = req.body.price;
   const image = req.body.image;
   const ingredients = req.body.ingredients;
-  let companyId = null;
+  const companyId = req.user.companyId;
   //Holding the returned menu id from first query
   let menuId = null;
   //Holding the returned id's from the inventory
@@ -54,12 +44,6 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
 
   try {
     await connection.query("BEGIN");
-
-    //Get id of the company belonging to the user
-    const queryText = `SELECT * FROM company WHERE user_id = $1;`;
-    const companyResult = await connection.query(queryText, [req.user.id]);
-    companyId = companyResult.rows[0].id;
-
     //Insert data into the menu table and return the id of the menu item
     const insertMenuQueryText = `INSERT INTO menu (dish, price, image, company_id)
       VALUES ($1, $2, $3, $4) RETURNING id;`;
@@ -74,10 +58,10 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
 
     //Loop through the array of objects and get the inventory id of that item
     const getInventoryIds = ingredients.map(async (ingredient) => {
-      const queryText2 = `
+      const inventoryQueryText = `
           SELECT id FROM inventory WHERE company_id = $1 AND item = $2;
           `;
-      const inventoryResult = await connection.query(queryText2, [
+      const inventoryResult = await connection.query(inventoryQueryText, [
         companyId,
         ingredient.ingredientName,
       ]);
@@ -92,7 +76,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
       let unit = ingredient.unit;
       //Variable to hold the the quantity so it can be converted if neccessary
       let quantity = ingredient.quantity;
-      let queryText3 = `
+      let menuInventoryQueryText = `
             INSERT INTO menu_inventory (menu_id, inventory_id, quantity, unit)
             VALUES ($1, $2, $3, $4);
             `;
@@ -115,7 +99,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
           break;
       }
 
-      await connection.query(queryText3, [
+      await connection.query(menuInventoryQueryText, [
         menuId,
         inventoryIds[index],
         quantity,
@@ -125,7 +109,6 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
     await Promise.all(postIngredients);
 
     res.sendStatus(200);
-
     await connection.query("COMMIT");
   } catch (error) {
     console.log("Error executing SQL query", ":", error);
@@ -141,11 +124,7 @@ router.put("/:id", rejectUnauthenticated, async (req, res) => {
 
   try {
     await connection.query("BEGIN");
-
-    //Get id of the company belonging to the user
-    const queryText = `SELECT * FROM company WHERE user_id = $1;`;
-    const companyResult = await connection.query(queryText, [req.user.id]);
-    const companyId = companyResult.rows[0].id;
+    const companyId = req.user.companyId;
 
     //New menu item data
     const updatedMenuItem = req.body.payload;
