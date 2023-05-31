@@ -10,20 +10,45 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { Box, useTheme } from "@mui/system";
 import { tokens } from "../../../theme";
+import { useState } from "react";
 
 function AddTeamMemberForm() {
   const dispatch = useDispatch();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  //variable to show whether the add contact form is showing
+  //Variable to show whether the add contact form is showing
   const showContactForm = useSelector((store) => store.showTeamForm);
 
-  //function to close the add contact form via redux
+  //Variable to hold the new team member to add
+  const [teamMember, setTeamMember] = useState({
+    name: "",
+    email: "",
+    phoneNumber: "",
+    access: "employee",
+  });
+
+  //Function to close the add contact form via redux
   const handleClose = () => {
     dispatch({
       type: "SET_SHOW_TEAM_FORM",
       payload: false,
+    });
+  };
+
+  //Function to handle adding a team member
+  const handleAddTeamMember = (teamMember) => {
+    dispatch({
+      type: "POST_TEAM",
+      payload: teamMember,
+    });
+
+    //Clear inputs
+    setTeamMember({
+      name: "",
+      email: "",
+      phoneNumber: "",
+      access: "employee",
     });
   };
 
@@ -55,6 +80,13 @@ function AddTeamMemberForm() {
             type="text"
             fullWidth
             variant="standard"
+            value={teamMember.name}
+            onChange={(evt) =>
+              setTeamMember({
+                ...teamMember,
+                name: evt.target.value,
+              })
+            }
           />
           <TextField
             autoFocus
@@ -64,6 +96,13 @@ function AddTeamMemberForm() {
             type="email"
             fullWidth
             variant="standard"
+            value={teamMember.email}
+            onChange={(evt) =>
+              setTeamMember({
+                ...teamMember,
+                email: evt.target.value,
+              })
+            }
           />
           <TextField
             autoFocus
@@ -73,6 +112,13 @@ function AddTeamMemberForm() {
             type="text"
             fullWidth
             variant="standard"
+            value={teamMember.phoneNumber}
+            onChange={(evt) =>
+              setTeamMember({
+                ...teamMember,
+                phoneNumber: evt.target.value,
+              })
+            }
           />
           <Box sx={{ mt: "10px" }}>
             <FormControl>
@@ -81,6 +127,12 @@ function AddTeamMemberForm() {
                 row
                 defaultValue="employee"
                 name="access-radio-btn-group"
+                onChange={(evt) =>
+                  setTeamMember({
+                    ...teamMember,
+                    access: evt.target.value,
+                  })
+                }
               >
                 <FormControlLabel
                   value="employee"
@@ -106,7 +158,7 @@ function AddTeamMemberForm() {
           >
             Cancel
           </Button>
-          <Button id="add-btn" onClick={handleClose}>
+          <Button id="add-btn" onClick={() => handleAddTeamMember(teamMember)}>
             Add Team Member
           </Button>
         </DialogActions>

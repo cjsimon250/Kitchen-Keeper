@@ -19,17 +19,17 @@ router.post("/register", (req, res, next) => {
   const password = encryptLib.encryptPassword(req.body.password);
   const company = req.body.company;
 
-  const queryText = `INSERT INTO "user" (username, password)
+  const userQueryText = `INSERT INTO "user" (username, password)
     VALUES ($1, $2) RETURNING id;
     `;
   pool
-    .query(queryText, [username, password])
+    .query(userQueryText, [username, password])
     .then((result) => {
       const userId = result.rows[0].id; // get the returned id value
-      const queryText2 = `INSERT INTO "company" (company, user_id)
+      const companyQueryText = `INSERT INTO "company" (company, user_id)
         VALUES ($1, $2);
         `;
-      return pool.query(queryText2, [company, userId]); // return second query
+      return pool.query(companyQueryText, [company, userId]); // return second query
     })
     .then(() => res.sendStatus(201))
     .catch((err) => {
