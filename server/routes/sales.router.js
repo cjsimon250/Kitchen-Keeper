@@ -8,11 +8,7 @@ const {
 //GET sales data from a specific timeframe
 router.get("/monthly", rejectUnauthenticated, async (req, res) => {
   try {
-    //Get id of the company belonging to the user
-    const companyQuery = `SELECT * FROM company WHERE user_id = $1;`;
-    const result = await pool.query(companyQuery, [req.user.id]);
-
-    let companyId = result.rows[0].id;
+    const companyId = req.user.companyId;
     const salesQuery = `
   SELECT 
   DATE_TRUNC('month', "sales".date) AS "month",
@@ -40,11 +36,7 @@ ORDER BY "year", "month" ASC;
 //GET sales data from a specific timeframe
 router.get("/daily", rejectUnauthenticated, async (req, res) => {
   try {
-    //Get id of the company belonging to the user
-    const companyQuery = `SELECT * FROM company WHERE user_id = $1;`;
-    const result = await pool.query(companyQuery, [req.user.id]);
-
-    let companyId = result.rows[0].id;
+    const companyId = req.user.companyId;
     const salesQuery = `
   SELECT 
   DATE_TRUNC('day', "sales".date) AS "day",
@@ -70,12 +62,11 @@ ORDER BY "day" ASC;
 
 //POST to new sales data
 router.post("/", rejectUnauthenticated, async (req, res) => {
-  try {
-    //Get id of the company belonging to the user
-    const companyQuery = `SELECT id FROM company WHERE user_id = $1;`;
-    const result = await pool.query(companyQuery, [req.user.id]);
+  const connection = await pool.connect();
 
-    const companyId = result.rows[0].id;
+  try {
+    connection.query("BEGIN");
+    const companyId = req.user.companyId;
     const sales = req.body;
     //Mapping through the dish object
     const dishesList = Object.keys(sales.dishes);
@@ -90,7 +81,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
         INSERT INTO "sales" (menu_id, date, "amountSold", company_id)
         VALUES($1, $2, $3, $4);
       `;
-        await pool.query(insertSalesQuery, [
+        await connection.query(insertSalesQuery, [
           menuId,
           sales.date,
           quantitySold,
@@ -110,7 +101,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
           WHERE "menu_inventory".menu_id = $2 AND "menu_inventory".inventory_id = "inventory".id
         );
       `;
-        await pool.query(updateInventoryQuery, [quantitySold, menuId]);
+        await connection.query(updateInventoryQuery, [quantitySold, menuId]);
       })
     );
 
@@ -121,7 +112,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
     AND "inventory".company_id = $1;
   `;
 
-    const inventoryNotificationResult = await pool.query(
+    const inventoryNotificationResult = await connection.query(
       inventoryNotificationQuery,
       [companyId]
     );
@@ -129,9 +120,12 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
     let inventoryNotifications = inventoryNotificationResult.rows;
 
     res.send(inventoryNotifications);
+    await connection.query("COMMIT");
   } catch (error) {
     console.log("Error posting sales :", error);
     res.sendStatus(500);
+  } finally {
+    connection.release();
   }
 });
 

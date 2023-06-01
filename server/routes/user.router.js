@@ -13,29 +13,33 @@ router.get("/", rejectUnauthenticated, (req, res) => {
   // Send back user object from the session (previously queried from the database)
   res.send(req.user);
 });
-// Handles POST request with new user data
-router.post("/register", (req, res, next) => {
-  const username = req.body.username;
-  const password = encryptLib.encryptPassword(req.body.password);
-  const company = req.body.company;
 
-  const queryText = `INSERT INTO "user" (username, password)
-    VALUES ($1, $2) RETURNING id;
+// Handles POST request with new user data
+router.post("/register", async (req, res, next) => {
+  try {
+    const username = req.body.username;
+    const password = encryptLib.encryptPassword(req.body.password);
+    const company = req.body.company;
+
+    const userQueryText = `INSERT INTO "user" (email, password, access)
+    VALUES ($1, $2, $3) RETURNING id;
     `;
-  pool
-    .query(queryText, [username, password])
-    .then((result) => {
-      const userId = result.rows[0].id; // get the returned id value
-      const queryText2 = `INSERT INTO "company" (company, user_id)
+    const userResponse = await pool.query(userQueryText, [
+      username,
+      password,
+      3,
+    ]);
+
+    const userId = userResponse.rows[0].id; // get the returned id value
+    const companyQueryText = `INSERT INTO "company" (company, user_id)
         VALUES ($1, $2);
         `;
-      return pool.query(queryText2, [company, userId]); // return second query
-    })
-    .then(() => res.sendStatus(201))
-    .catch((err) => {
-      console.log("User registration failed: ", err);
-      res.sendStatus(500);
-    });
+    await pool.query(companyQueryText, [company, userId]); // return second query
+    res.sendStatus(201);
+  } catch {
+    console.log("User registration failed: ", err);
+    res.sendStatus(500);
+  }
 });
 
 // Handles login form authenticate/login POST

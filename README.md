@@ -1,17 +1,8 @@
 # Kitchen Keeper
 
-<<<<<<< HEAD
-![MIT LICENSE](https://img.shields.io/github/license/cjsimon/Kitchen-Keeper.svg?style=flat-square)
-![REPO SIZE](https://img.shields.io/github/repo-size/cjsimon/Kitchen-Keeper.svg?style=flat-square)
-![TOP_LANGUAGE](https://img.shields.io/github/languages/top/cjsimon/Kitchen-Keeper.svg?style=flat-square)
-![FORKS](https://img.shields.io/github/forks/cjsimon/Kitchen-Keeper.svg?style=social)
-
-# PROJECT NAME
-
 ## Description
-=======
+
 Kitchen Keeper is a fully functional prototype designed to streamline inventory management for restaurants. It automates inventory-related tasks, including tracking stock levels and generating alerts for restocking. The application uses daily sales data to determine which specific items need to be restocked, ensuring that the restaurant always has enough ingredients on hand to meet customer demand. This application has the potential to increase a restaurant's efficiency and profitability while saving time and reducing the chances of running out of essential ingredients.
->>>>>>> 6c1968e27115fc2ef8f2d9e835878be995a83f35
 
 _Duration: 2 Week Sprint_
 
@@ -47,10 +38,10 @@ To see the fully functional site, please visit: https://kitchenkeeper.herokuapp.
 5. Using the notifications about low quantity items, the user is able to see what items they need to restock so that their is no need to take inventory manually.
 
 ## Built With
+
 <p align="center"> <a href="https://www.w3.org/html/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original-wordmark.svg" alt="html5" width="40" height="40"/> </a> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="40" height="40"/>
   <a href="https://www.w3schools.com/css/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original-wordmark.svg" alt="css3" width="40" height="40"/> </a> 
  <a href="https://expressjs.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/express/express-original-wordmark.svg" alt="express" width="40" height="40"/> </a>  </a> <a href="https://nodejs.org" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original-wordmark.svg" alt="nodejs" width="40" height="40"/> </a> <a href="https://www.postgresql.org" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/postgresql/postgresql-original-wordmark.svg" alt="postgresql" width="40" height="40"/> </a> <a href="https://reactjs.org/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" alt="react" width="40" height="40"/> </a> <a href="https://redux.js.org" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/redux/redux-original.svg" alt="redux" width="40" height="40"/> </a>  <a href="https://mui.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/materialui/materialui-original.svg" alt="Material UI" width="40" height="40"/> </a></p>
-
 
 ## License
 
@@ -63,7 +54,6 @@ Thanks to [Prime Digital Academy](www.primeacademy.io) and everyone who helped m
 ## Support
 
 If you have suggestions or issues, please email me at [cjsimon615@gmail.com](www.google.com)
-<<<<<<< HEAD
 
 <!-- MARKDOWN LINKS & IMAGES -->
 
@@ -87,5 +77,3 @@ If you have suggestions or issues, please email me at [cjsimon615@gmail.com](www
 [postgres-url]: https://www.postgresql.org/
 [chart.js]: https://img.shields.io/badge/Chart.js-20232A?style=for-the-badge&logo=Chart.js&logoColor=FF6384
 [chart-url]: https://www.chartjs.org/
-=======
->>>>>>> 6c1968e27115fc2ef8f2d9e835878be995a83f35
