@@ -64,4 +64,21 @@ router.delete("/:id", rejectUnauthenticated, (req, res) => {
     });
 });
 
+router.put("/", rejectUnauthenticated, (req, res) => {
+  const queryText = `
+    UPDATE contacts 
+    SET ${req.body.field} = $1
+    WHERE id = $2
+    `;
+  pool
+    .query(queryText, [req.body.value, req.body.id])
+    .then(() => {
+      res.sendStatus(204);
+    })
+    .catch((error) => {
+      console.log("Error updating contact :", error);
+      res.sendStatus(500);
+    });
+});
+
 module.exports = router;

@@ -53,6 +53,18 @@ const Contacts = () => {
       .catch((error) => console.log(error));
   }
 
+  //Function to handle editting a cell
+  function handleEditCell(params) {
+    axios
+      .put("/api/contacts/", params)
+      .then(() => {
+        fetchContacts();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   //For every row this grabs the value from the key to put into the "headerName" column
   const columns = [
     {
@@ -181,10 +193,9 @@ const Contacts = () => {
           </IconButton>
         </Tooltip>
         <DataGrid
-          //Mui api to allow editing on each cell
-          experimentalFeatures={{ newEditingApi: true }}
           rows={userContacts}
           columns={columns}
+          onCellEditCommit={(params) => handleEditCell(params)}
         />
         <AddContactsForm fetchContacts={fetchContacts} />
       </Box>
