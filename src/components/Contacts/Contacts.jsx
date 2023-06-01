@@ -43,9 +43,14 @@ const Contacts = () => {
 
   //Function for handling deleting a row
   function handleDelete(event, cellValues) {
-    let rowToDelete = cellValues.row;
+    let contactId = cellValues.row.id;
 
-    console.log(rowToDelete);
+    axios
+      .delete(`/api/contacts/${contactId}`)
+      .then(() => {
+        fetchContacts();
+      })
+      .catch((error) => console.log(error));
   }
 
   //For every row this grabs the value from the key to put into the "headerName" column
@@ -176,7 +181,7 @@ const Contacts = () => {
           </IconButton>
         </Tooltip>
         <DataGrid
-          //mui api to allow editing on each cell
+          //Mui api to allow editing on each cell
           experimentalFeatures={{ newEditingApi: true }}
           rows={userContacts}
           columns={columns}

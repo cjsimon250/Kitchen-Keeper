@@ -1,9 +1,12 @@
 const express = require("express");
 const pool = require("../modules/pool");
 const router = express.Router();
+const {
+  rejectUnauthenticated,
+} = require("../modules/authentication-middleware");
 
 // GET all of the users contacts
-router.get("/", (req, res) => {
+router.get("/", rejectUnauthenticated, (req, res) => {
   const queryText = `
 SELECT * FROM contacts WHERE company_id = $1;
 `;
@@ -20,8 +23,7 @@ SELECT * FROM contacts WHERE company_id = $1;
 });
 
 //POST new contact
-router.post("/", (req, res) => {
-  console.log("REQ BODY:", req.body);
+router.post("/", rejectUnauthenticated, (req, res) => {
   const queryText = `
   INSERT INTO contacts (name, email, phone, address, contact_company, company_id)
   VALUES ($1, $2, $3, $4, $5, $6);
@@ -41,6 +43,23 @@ router.post("/", (req, res) => {
     })
     .catch((error) => {
       console.log("Error posting new contact : ", error);
+      res.sendStatus(500);
+    });
+});
+
+router.delete("/:id", rejectUnauthenticated, (req, res) => {
+  const queryText = `
+    DELETE FROM contacts 
+    WHERE id = $1
+    `;
+
+  pool
+    .query(queryText, [req.params.id])
+    .then(() => {
+      res.sendStatus(204);
+    })
+    .catch((error) => {
+      console.log("Error deleteing contact : ", error);
       res.sendStatus(500);
     });
 });
