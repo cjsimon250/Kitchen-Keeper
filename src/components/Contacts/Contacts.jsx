@@ -2,7 +2,6 @@ import Header from "../Header/Header";
 import { Box, useTheme } from "@mui/system";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
-import { mockDataContacts } from "../../data/mockData";
 import AddContactsForm from "./AddContactsForm";
 import { useDispatch } from "react-redux";
 import IconButton from "@mui/material/IconButton";
@@ -10,13 +9,18 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const Contacts = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  //function to show the add contact form via redux
+  //Variable to hold all of the user's contacts
+  const [userContacts, setUserContacts] = useState([]);
+
+  //Function to show the add contact form via redux
   const handleShowAddContactForm = () => {
     dispatch({
       type: "SET_SHOW_CONTACTS_FORM",
@@ -24,14 +28,27 @@ const Contacts = () => {
     });
   };
 
-  //function for handling deleting a row
+  //Function to fetch contacts
+  function fetchContacts() {
+    axios
+      .get("/api/contacts")
+      .then((response) => setUserContacts(response.data))
+      .catch((error) => console.log(error));
+  }
+
+  //Fetch all of the user's contacts on page load
+  useEffect(() => {
+    fetchContacts();
+  }, []);
+
+  //Function for handling deleting a row
   function handleDelete(event, cellValues) {
     let rowToDelete = cellValues.row;
 
     console.log(rowToDelete);
   }
 
-  //for every row this grabs the value from the key to put into the "headerName" column
+  //For every row this grabs the value from the key to put into the "headerName" column
   const columns = [
     {
       field: "name",
@@ -63,7 +80,7 @@ const Contacts = () => {
       editable: true,
     },
     {
-      field: "company",
+      field: "contact_company",
       headerName: "Company",
       flex: 1,
       cellClassName: "company-column-cell",
@@ -161,10 +178,10 @@ const Contacts = () => {
         <DataGrid
           //mui api to allow editing on each cell
           experimentalFeatures={{ newEditingApi: true }}
-          rows={mockDataContacts}
+          rows={userContacts}
           columns={columns}
         />
-        <AddContactsForm />
+        <AddContactsForm fetchContacts={fetchContacts} />
       </Box>
     </Box>
   );

@@ -15,7 +15,7 @@ const companyRouter = require("./routes/company.router");
 const orderRouter = require("./routes/orders.router");
 const salesRouter = require("./routes/sales.router");
 const notificationsRouter = require("./routes/notifications.router");
-const teamRouter = require("./routes/team.router");
+const contactRouter = require("./routes/contacts.router");
 
 // Body parser middleware
 app.use(bodyParser.json());
@@ -36,7 +36,7 @@ app.use("/api/menu", menuRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/sales", salesRouter);
 app.use("/api/notifications", notificationsRouter);
-app.use("/api/team", teamRouter);
+app.use("/api/contacts", contactRouter);
 
 // Serve static files
 app.use(express.static("build"));

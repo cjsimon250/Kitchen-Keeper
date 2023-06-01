@@ -96,8 +96,9 @@ CREATE TABLE "contacts" (
 	"name" varchar(200) NOT NULL,
 	"email" varchar(200) NOT NULL,
 	"phone" varchar(20) NOT NULL,
-	"address" varchar(20) NOT NULL,
-	"company" varchar(20) NOT NULL,
+	"address" varchar(200) NOT NULL,
+	"contact_company" varchar(100) NOT NULL,
+	"company_id" int NOT NULL,
 	CONSTRAINT "contacts_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
@@ -141,6 +142,8 @@ ALTER TABLE "orders" ADD CONSTRAINT "orders_fk0" FOREIGN KEY ("company_id") REFE
 
 ALTER TABLE "orders_inventory" ADD CONSTRAINT "orders_inventory_fk0" FOREIGN KEY ("inventory_id") REFERENCES "inventory"("id");
 ALTER TABLE "orders_inventory" ADD CONSTRAINT "orders_inventory_fk1" FOREIGN KEY ("orders_id") REFERENCES "orders"("id") ON DELETE CASCADE;
+
+ALTER TABLE "contacts" ADD CONSTRAINT "contacts_fk0" FOREIGN KEY ("company_id") REFERENCES "company"("id");
 
 
 
