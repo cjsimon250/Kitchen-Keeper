@@ -20,12 +20,12 @@ passport.deserializeUser(async (id, done) => {
       [id]
     );
 
-    user = {
-      ...user,
-      companyId: companyResult.rows[0].id,
-    };
-
     if (user) {
+      user = {
+        ...user,
+        companyId: companyResult.rows[0].id,
+      };
+
       // user found
       delete user.password; // remove password so it doesn't get sent
       // done takes an error (null in this case) and a user

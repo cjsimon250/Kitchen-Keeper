@@ -25,7 +25,7 @@ function AddTeamMemberForm() {
     name: "",
     email: "",
     phoneNumber: "",
-    access: "employee",
+    access: 1,
   });
 
   //Function to close the add contact form via redux
@@ -48,7 +48,7 @@ function AddTeamMemberForm() {
       name: "",
       email: "",
       phoneNumber: "",
-      access: "employee",
+      access: 1,
     });
   };
 
@@ -125,7 +125,8 @@ function AddTeamMemberForm() {
               <FormLabel id="access">Access</FormLabel>
               <RadioGroup
                 row
-                defaultValue="employee"
+                value={teamMember.access}
+                defaultValue={1}
                 name="access-radio-btn-group"
                 onChange={(evt) =>
                   setTeamMember({
@@ -135,16 +136,12 @@ function AddTeamMemberForm() {
                 }
               >
                 <FormControlLabel
-                  value="employee"
+                  value={1}
                   control={<Radio />}
                   label="Employee"
                 />
 
-                <FormControlLabel
-                  value="admin"
-                  control={<Radio />}
-                  label="Admin"
-                />
+                <FormControlLabel value={2} control={<Radio />} label="Admin" />
               </RadioGroup>
             </FormControl>
           </Box>

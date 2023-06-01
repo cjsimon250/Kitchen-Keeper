@@ -1,12 +1,5 @@
 # Kitchen Keeper
 
-![MIT LICENSE](https://img.shields.io/github/license/cjsimon/Kitchen-Keeper.svg?style=flat-square)
-![REPO SIZE](https://img.shields.io/github/repo-size/cjsimon/Kitchen-Keeper.svg?style=flat-square)
-![TOP_LANGUAGE](https://img.shields.io/github/languages/top/cjsimon/Kitchen-Keeper.svg?style=flat-square)
-![FORKS](https://img.shields.io/github/forks/cjsimon/Kitchen-Keeper.svg?style=social)
-
-# PROJECT NAME
-
 ## Description
 
 Kitchen Keeper is a fully functional prototype designed to streamline inventory management for restaurants. It automates inventory-related tasks, including tracking stock levels and generating alerts for restocking. The application uses daily sales data to determine which specific items need to be restocked, ensuring that the restaurant always has enough ingredients on hand to meet customer demand. This application has the potential to increase a restaurant's efficiency and profitability while saving time and reducing the chances of running out of essential ingredients.
