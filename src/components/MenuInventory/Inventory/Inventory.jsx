@@ -1,19 +1,17 @@
-import Header from "../../Header/Header";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Box, useTheme } from "@mui/system";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../../theme";
-import { useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import IconButton from "@mui/material/IconButton";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddToInventoryForm from "../../Forms/AddToInventoryForm";
+import { useDispatch, useSelector } from "react-redux";
 
 const Inventory = () => {
-  const dispatch = useDispatch();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const dispatch = useDispatch();
 
   //User's inventory
   const inventory = useSelector((store) => store.inventory);
@@ -25,78 +23,30 @@ const Inventory = () => {
     });
   }, []);
 
-  // New state variable to hold the modified inventory
-  const [modifiedInventory, setModifiedInventory] = useState([]);
-
-  //Converting Quantaties to be more readable
-  useEffect(() => {
-    const newInventory = inventory.map((item) => {
-      let newItem = { ...item };
-      if (item.unit === "Oz") {
-        if ((item.quantity || item.minimumStock) >= 16) {
-          newItem.quantity = item.quantity / 16;
-          newItem.minimumStock = item.minimumStock / 16;
-          newItem.unit = "Lb";
-        }
-      } else if (item.unit === "Fl. Oz") {
-        if ((item.quantity || item.minimumStock) >= 128) {
-          newItem.quantity = item.quantity / 128;
-          newItem.minimumStock = item.minimumStock / 128;
-          newItem.unit = "Gal.";
-        } else if ((item.quantity || item.minimumStock) >= 16) {
-          newItem.quantity = item.quantity / 16;
-          newItem.minimumStock = item.minimumStock / 16;
-          newItem.unit = "Fl. Oz";
-        }
-      }
-      return newItem;
-    });
-
-    // Set the new copy of the inventory as the state
-    setModifiedInventory(newInventory);
-  }, [inventory]);
-
   //Function for handling deleting a row
-  function handleDelete(event, cellValues) {
+  async function handleDelete(event, cellValues) {
     let rowToDelete = cellValues.row;
-
-    axios.delete(`/api/inventory/${rowToDelete.id}`).then(() => {
+    try {
+      await axios.delete(`/api/inventory/${rowToDelete.id}`);
       dispatch({
         type: "FETCH_INVENTORY",
       });
-    });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  //Change the value of the item in the modified inventory array
-  const handleEditCellChange = useCallback((params) => {
-    const { id, field, value } = params;
-    setModifiedInventory((prevInventory) =>
-      prevInventory.map((item) =>
-        item.id === id ? { ...item, [field]: value } : item
-      )
-    );
-  }, []);
-
-  //Handle sending the item to update to the database
-  const handleEditCell = useCallback(
-    (params) => {
-      const { id, field, value } = params;
-      const itemToBeUpdated = modifiedInventory.find((item) => item.id === id);
-      itemToBeUpdated[field] = value;
-      console.log(id, itemToBeUpdated);
-      axios
-        .put(`/api/inventory/${id}`, { payload: itemToBeUpdated })
-        .then(() => {
-          dispatch({
-            type: "FETCH_INVENTORY",
-          });
-        })
-        .catch((error) => {
-          console.log("PUT ERROR", error);
-        });
-    },
-    [modifiedInventory]
-  );
+  //Function to handle editing a cell
+  async function handleEditCell(params) {
+    try {
+      await axios.put(`/api/inventory/${params.id}`, params);
+      dispatch({
+        type: "FETCH_INVENTORY",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   //For every row this grabs the value from the key to put into the "headerName" column
   const columns = [
@@ -195,10 +145,9 @@ const Inventory = () => {
         }}
       >
         <DataGrid
-          rows={modifiedInventory}
+          rows={inventory}
           columns={columns}
-          onCellEditCommit={handleEditCell}
-          onEditCellChange={handleEditCellChange}
+          onCellEditCommit={(params) => handleEditCell(params)}
         />
         <AddToInventoryForm />
       </Box>

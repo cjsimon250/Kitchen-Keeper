@@ -7,7 +7,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import RadioGroup from "@mui/material/RadioGroup/RadioGroup";
 import { FormControl, FormControlLabel, FormLabel, Radio } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Box, useTheme } from "@mui/system";
 import { tokens } from "../../theme";
 
@@ -29,9 +29,8 @@ function AddToInventoryForm() {
   const [inventoryItemToSend, setInventoryItemToSend] = useState({
     item: "",
     quantity: 0,
-    inStockUnit: "Lb",
     minimumStock: 0,
-    minimumStockUnit: "Lb",
+    unit: "Lb",
   });
 
   //Function to handle posting the new item to database
@@ -45,9 +44,12 @@ function AddToInventoryForm() {
     setInventoryItemToSend({
       item: "",
       quantity: 0,
-      inStockUnit: "Lb",
       minimumStock: 0,
-      minimumStockUnit: "Lb",
+      unit: "Lb",
+    });
+
+    dispatch({
+      type: "FETCH_INVENTORY",
     });
   }
 
@@ -64,9 +66,6 @@ function AddToInventoryForm() {
         payload: true,
       });
     }
-
-    console.log("MENU : ", menu.menu);
-
     dispatch({
       type: "SET_SHOW_ADD_TO_INVENTORY_FORM",
       payload: false,
@@ -131,36 +130,6 @@ function AddToInventoryForm() {
                 })
               }
             />
-            <Box sx={{ mt: "10px", ml: "30px" }}>
-              <FormControl>
-                <FormLabel id="measurement-unit">Unit of Measurement</FormLabel>
-                <RadioGroup
-                  row
-                  name="in-stock-radio-btn-group"
-                  value={inventoryItemToSend.inStockUnit}
-                  onChange={(event) =>
-                    setInventoryItemToSend({
-                      ...inventoryItemToSend,
-                      inStockUnit: event.target.value,
-                    })
-                  }
-                >
-                  <FormControlLabel value="Lb" control={<Radio />} label="Lb" />
-
-                  <FormControlLabel value="Oz" control={<Radio />} label="Oz" />
-                  <FormControlLabel
-                    value="Gal."
-                    control={<Radio />}
-                    label="Gal."
-                  />
-                  <FormControlLabel
-                    value="Fl. Oz"
-                    control={<Radio />}
-                    label="Fl. Oz"
-                  />
-                </RadioGroup>
-              </FormControl>
-            </Box>
           </Box>
           <Box display="inline-flex">
             <TextField
@@ -181,15 +150,17 @@ function AddToInventoryForm() {
             />
             <Box sx={{ mt: "10px", ml: "30px" }}>
               <FormControl>
-                <FormLabel id="measurement-unit">Unit of Measurement</FormLabel>
+                <FormLabel id="measurement-unit-radio-group">
+                  Unit of Measurement
+                </FormLabel>
                 <RadioGroup
                   row
-                  value={inventoryItemToSend.minimumStockUnit}
-                  name="min-stock-radio-btn-group"
+                  name="unit-radio-btn-group"
+                  value={inventoryItemToSend.unit}
                   onChange={(event) =>
                     setInventoryItemToSend({
                       ...inventoryItemToSend,
-                      minimumStockUnit: event.target.value,
+                      unit: event.target.value,
                     })
                   }
                 >
