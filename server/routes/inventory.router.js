@@ -51,14 +51,17 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
     let unit = req.body.unit;
 
     //Converting amounts to Oz or Fl. Oz for database
-    if (unit === "Lb") {
-      quantity *= 16;
-      minimumStock *= 16;
-      unit = "Oz";
-    } else if (unit === "Gal") {
-      quantity *= 128;
-      minimumStock *= 128;
-      unit = "Fl. Oz";
+    switch (unit) {
+      case "Lb":
+        quantity *= 16;
+        minimumStock *= 16;
+        unit = "Oz";
+        break;
+      case "Gal.":
+        quantity *= 128;
+        minimumStock *= 128;
+        unit = "Fl. Oz";
+        break;
     }
 
     await pool.query(queryText, [

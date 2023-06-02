@@ -88,7 +88,6 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
     // //Updating the amount of each inventory item from the order
     const updateInventory = inventoryItems.map(async (item) => {
       let orderQuantity = item.quantity;
-      let orderUnit = item.unit;
       //Selecting quantity to add to
       const getQuantityQuery = `
       SELECT "inventory".quantity FROM "inventory" WHERE

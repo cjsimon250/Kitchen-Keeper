@@ -48,7 +48,6 @@ function OrdersTable() {
       editable: false,
       renderCell: () => {
         return orders.forEach((order) => {
-          // let dateArr = order.date.split(`T`);
           order.date = dayjs(order.date).format("MMMM D, YYYY");
         });
       },
