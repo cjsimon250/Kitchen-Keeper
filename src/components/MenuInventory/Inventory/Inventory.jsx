@@ -38,8 +38,17 @@ const Inventory = () => {
 
   //Function to handle editing a cell
   async function handleEditCell(params) {
+    //Finding the old data so the amounts can be converted on the server side
+    const inventoryItemToUpdate = inventory.find(
+      (item) => item.id === params.id
+    );
+    const itemData = {
+      inventoryItemToUpdate,
+      newItemData: params,
+    };
+
     try {
-      await axios.put(`/api/inventory/${params.id}`, params);
+      await axios.put(`/api/inventory/${params.id}`, itemData);
       dispatch({
         type: "FETCH_INVENTORY",
       });
@@ -75,7 +84,7 @@ const Inventory = () => {
     {
       field: "unit",
       headerName: "Unit",
-      flex: 0.2,
+      flex: 0.4,
       cellClassName: "unit-column-cell",
       editable: true,
     },
