@@ -20,24 +20,39 @@ router.post("/register", async (req, res, next) => {
     const username = req.body.username;
     const password = encryptLib.encryptPassword(req.body.password);
     const company = req.body.company;
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+    const phoneNumber = req.body.phoneNumber;
 
-    const userQueryText = `INSERT INTO "user" (email, password, access)
-    VALUES ($1, $2, $3) RETURNING id;
+    const userQueryText = `INSERT INTO "user" (username, password, access, first_name, last_name, phone_number)
+    VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;
     `;
     const userResponse = await pool.query(userQueryText, [
       username,
       password,
       3,
+      firstName,
+      lastName,
+      phoneNumber,
     ]);
 
     const userId = userResponse.rows[0].id; // get the returned id value
     const companyQueryText = `INSERT INTO "company" (company, user_id)
-        VALUES ($1, $2);
+        VALUES ($1, $2) RETURNING id;
         `;
-    await pool.query(companyQueryText, [company, userId]); // return second query
+    const companyResponse = await pool.query(companyQueryText, [
+      company,
+      userId,
+    ]);
+    const companyId = companyResponse.rows[0].id;
+    const userCompanyQueryText = `
+    INSERT INTO "user_company" (company_id, user_id)
+    VALUES($1, $2)
+    `;
+    await pool.query(userCompanyQueryText, [companyId, userId]);
     res.sendStatus(201);
-  } catch {
-    console.log("User registration failed: ", err);
+  } catch (error) {
+    console.log("User registration failed: ", error);
     res.sendStatus(500);
   }
 });
