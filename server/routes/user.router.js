@@ -37,13 +37,10 @@ router.post("/register", async (req, res, next) => {
     ]);
 
     const userId = userResponse.rows[0].id; // get the returned id value
-    const companyQueryText = `INSERT INTO "company" (company, user_id)
-        VALUES ($1, $2) RETURNING id;
+    const companyQueryText = `INSERT INTO "company" (company)
+        VALUES ($1) RETURNING id;
         `;
-    const companyResponse = await pool.query(companyQueryText, [
-      company,
-      userId,
-    ]);
+    const companyResponse = await pool.query(companyQueryText, [company]);
     const companyId = companyResponse.rows[0].id;
     const userCompanyQueryText = `
     INSERT INTO "user_company" (company_id, user_id)

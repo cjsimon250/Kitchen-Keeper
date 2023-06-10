@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { Box, useTheme } from "@mui/system";
 import { tokens } from "../../../theme";
 import { useState } from "react";
+import axios from "axios";
 
 function AddTeamMemberForm() {
   const dispatch = useDispatch();
@@ -24,8 +25,6 @@ function AddTeamMemberForm() {
   const [teamMember, setTeamMember] = useState({
     name: "",
     email: "",
-    phoneNumber: "",
-    access: 1,
   });
 
   //Function to close the add contact form via redux
@@ -38,17 +37,23 @@ function AddTeamMemberForm() {
 
   //Function to handle adding a team member
   const handleAddTeamMember = (teamMember) => {
-    dispatch({
-      type: "POST_TEAM",
-      payload: teamMember,
-    });
+    axios
+      .post("/api/team", teamMember)
+      .then(() => {
+        //Clear inputs
+        setTeamMember({
+          name: "",
+          email: "",
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
     //Clear inputs
     setTeamMember({
       name: "",
       email: "",
-      phoneNumber: "",
-      access: 1,
     });
   };
 
@@ -70,7 +75,7 @@ function AddTeamMemberForm() {
           },
         }}
       >
-        <DialogTitle>Add New Team Member</DialogTitle>
+        <DialogTitle>Invite New Team Member</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -104,7 +109,7 @@ function AddTeamMemberForm() {
               })
             }
           />
-          <TextField
+          {/* <TextField
             autoFocus
             margin="dense"
             id="phone"
@@ -119,8 +124,8 @@ function AddTeamMemberForm() {
                 phoneNumber: evt.target.value,
               })
             }
-          />
-          <Box sx={{ mt: "10px" }}>
+          /> */}
+          {/* <Box sx={{ mt: "10px" }}>
             <FormControl>
               <FormLabel id="access">Access</FormLabel>
               <RadioGroup
@@ -144,7 +149,7 @@ function AddTeamMemberForm() {
                 <FormControlLabel value={2} control={<Radio />} label="Admin" />
               </RadioGroup>
             </FormControl>
-          </Box>
+          </Box> */}
         </DialogContent>
         <DialogActions>
           <Button

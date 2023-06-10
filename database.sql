@@ -13,9 +13,7 @@ CREATE TABLE "user" (
 CREATE TABLE "company" (
     "id" SERIAL NOT NULL,
     "company" VARCHAR(255) NOT NULL UNIQUE,
-    "user_id" INT NOT NULL,
     CONSTRAINT "company_pk" PRIMARY KEY ("id"),
-    CONSTRAINT "company_fk0" FOREIGN KEY ("user_id") REFERENCES "user" ("id")
 );
 
 CREATE TABLE "user_company" (

@@ -1,9 +1,12 @@
 const express = require("express");
 const pool = require("../modules/pool");
 const router = express.Router();
+const {
+  rejectUnauthenticated,
+} = require("../modules/authentication-middleware");
 
 //Get low quantity items
-router.get("/", async (req, res) => {
+router.get("/", rejectUnauthenticated, async (req, res) => {
   try {
     const companyId = req.user.companyId;
     //Query to select all inventory items that are below the specified minimum stock
