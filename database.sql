@@ -110,3 +110,12 @@ CREATE TABLE "orders_inventory" (
     CONSTRAINT "orders_inventory_fk0" FOREIGN KEY ("inventory_id") REFERENCES "inventory" ("id"),
     CONSTRAINT "orders_inventory_fk1" FOREIGN KEY ("orders_id") REFERENCES "orders" ("id") ON DELETE CASCADE
 );
+
+CREATE TABLE "pending_users" (
+    "id" SERIAL NOT NULL,
+    "email" VARCHAR(200) NOT NULL,
+    "passkey" VARCHAR(10) NOT NULL UNIQUE,
+    "timestamp" TIMESTAMP NOT NULL,
+    "company_id" INT NOT NULL,
+    CONSTRAINT "pending_users_fk0" FOREIGN KEY ("company_id") REFERENCES "company" ("id")
+);
