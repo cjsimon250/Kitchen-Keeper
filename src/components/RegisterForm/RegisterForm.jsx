@@ -5,9 +5,14 @@ import TextField from "@mui/material/TextField";
 import { tokens } from "../../theme";
 
 function RegisterForm() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [company, setCompany] = useState("");
+  const [userData, setUserData] = useState({
+    username: "",
+    password: "",
+    company: "",
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
+  });
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -19,11 +24,7 @@ function RegisterForm() {
 
     dispatch({
       type: "REGISTER",
-      payload: {
-        username: username,
-        password: password,
-        company: company,
-      },
+      payload: userData,
     });
   }; // end registerUser
 
@@ -52,12 +53,14 @@ function RegisterForm() {
             type="text"
             name="username"
             label="Username"
-            value={username}
+            value={userData.username}
             variant="filled"
             inputProps={{ style: { fontSize: 15 } }}
             required
             sx={{ mt: "5%", width: "100%" }}
-            onChange={(event) => setUsername(event.target.value)}
+            onChange={(event) =>
+              setUserData({ ...userData, username: event.target.value })
+            }
           />
         </Box>
         <Box>
@@ -65,23 +68,66 @@ function RegisterForm() {
             type="password"
             name="password"
             label="Password"
-            value={password}
+            value={userData.password}
             variant="filled"
             inputProps={{ style: { fontSize: 15 } }}
             required
             sx={{ mt: "5%", width: "100%" }}
-            onChange={(event) => setPassword(event.target.value)}
+            onChange={(event) =>
+              setUserData({ ...userData, password: event.target.value })
+            }
           />
           <TextField
             type="text"
             name="company"
             label="Company Name"
-            value={company}
+            value={userData.company}
             variant="filled"
             inputProps={{ style: { fontSize: 15 } }}
             required
             sx={{ mt: "5%", width: "100%" }}
-            onChange={(event) => setCompany(event.target.value)}
+            onChange={(event) =>
+              setUserData({ ...userData, company: event.target.value })
+            }
+          />
+          <TextField
+            type="text"
+            name="firstName"
+            label="First Name"
+            value={userData.firstName}
+            variant="filled"
+            inputProps={{ style: { fontSize: 15 } }}
+            required
+            sx={{ mt: "5%", width: "100%" }}
+            onChange={(event) =>
+              setUserData({ ...userData, firstName: event.target.value })
+            }
+          />
+          <TextField
+            type="text"
+            name="company"
+            label="Last Name"
+            value={userData.lastName}
+            variant="filled"
+            inputProps={{ style: { fontSize: 15 } }}
+            required
+            sx={{ mt: "5%", width: "100%" }}
+            onChange={(event) =>
+              setUserData({ ...userData, lastName: event.target.value })
+            }
+          />
+          <TextField
+            type="text"
+            name="company"
+            label="Phone Number"
+            value={userData.phoneNumber}
+            variant="filled"
+            inputProps={{ style: { fontSize: 15 } }}
+            required
+            sx={{ mt: "5%", width: "100%" }}
+            onChange={(event) =>
+              setUserData({ ...userData, phoneNumber: event.target.value })
+            }
           />
         </Box>
         <Box style={{ display: "flex", justifyContent: "space-around" }}>

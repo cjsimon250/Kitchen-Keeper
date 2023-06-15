@@ -16,14 +16,20 @@ passport.deserializeUser(async (id, done) => {
 
     //Selecting the user's company id
     const companyResult = await pool.query(
-      'SELECT id FROM "company" WHERE user_id = $1',
+      `SELECT "user_company".company_id, "company".company FROM "user_company" 
+      JOIN "company" ON "company".id = "user_company".company_id
+      WHERE user_id = $1`,
       [id]
     );
 
-    if (user) {
+    // Handle Errors
+    let company = companyResult && companyResult.rows && companyResult.rows[0];
+
+    if (user && company) {
       user = {
         ...user,
-        companyId: companyResult.rows[0].id,
+        companyId: companyResult.rows[0].company_id,
+        companyName: companyResult.rows[0].company,
       };
 
       // user found
